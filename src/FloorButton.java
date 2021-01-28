@@ -35,4 +35,12 @@ public class FloorButton {
 		isPressed = true;
 		return direction;
 	}
+	
+	/**
+	 * Getter for isPressed
+	 * @return isPressed
+	 */
+	public boolean getIsPressed() {
+		return isPressed;
+	}
 }
