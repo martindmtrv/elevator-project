@@ -1,12 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
+ * Floor Subsystem for the elevator project. Controls all the floors and handles sending input to the scheduler
  * @author Martin Dimitrov
- *
  */
 public class FloorSubsystem implements Runnable {
 	private String inputFile;
@@ -81,11 +80,22 @@ public class FloorSubsystem implements Runnable {
 			
 			buffers[floor].addLast(s);
 		}
+		
+		// end the program
+		for (Thread t: floors) {
+			t.interrupt();
+		}
 	}
 	
 	public static void main(String[] args) {
 		Thread f = new Thread(new FloorSubsystem("Test.txt", 10));
 		
 		f.start();
+		try {
+			f.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

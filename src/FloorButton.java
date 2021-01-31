@@ -1,14 +1,13 @@
 /**
  * A class representing the FloorButton Object in the Floor subsystem
  * @author Martin Dimitrov
- *
  */
 public class FloorButton {
 	// Constants for direction types
 	static final String UP = "Up", DOWN = "Down";
 	
-	private String direction;
-	private boolean isPressed;
+	private String direction; 	/* Direction of this button */
+	private boolean isPressed;	/* State of the button pressed or not */
 	
 	/**
 	 * Create a new FloorButton
@@ -24,16 +23,8 @@ public class FloorButton {
 	 * @param b - boolean to set the value
 	 */
 	public void setIsPressed(boolean b){
+		System.out.println("FLOORBUTTON: Set pressed: " + b);
 		isPressed = b;
-	}
-	
-	/**
-	 * Press the button, sets isPressed true
-	 * @return direction - the value which this floor button should send in the request
-	 */
-	public String press() {
-		isPressed = true;
-		return direction;
 	}
 	
 	/**
