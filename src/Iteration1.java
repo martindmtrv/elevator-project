@@ -2,8 +2,8 @@
 public class Iteration1 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		//Put threads together and run main
+			
 	}
 
 }
