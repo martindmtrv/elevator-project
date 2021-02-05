@@ -48,7 +48,7 @@ public class Floor {
 	 */
 	public boolean requestUp(int destination) {
 		// add to the list of people going up
-		System.out.println(String.format("FLOOR %d: %d Added to floor destinations DOWN", floorNum, destination));
+		System.out.println(String.format("FLOOR %d: %d Added to floor destinations UP", floorNum, destination));
 		buttons.get(DirectionType.UP).add(destination);
 		
 		// check to see if this request should be sent to the scheduler
@@ -82,14 +82,16 @@ public class Floor {
 	
 	public boolean requestDirection(FloorButtonPressEvent e) {
 		System.out.println(String.format("FLOOR %d: %s Button Pressed", floorNum, e.getDirection()));
-		if (e.getDirection().equals(DirectionType.UP)) {
+		if (e.getDirection() == DirectionType.UP) {
 			return requestUp(e.getDestination());
 		}
 		return requestDown(e.getDestination());
 	}
 	
 	/**
-	 * What to do on elevator arrival event
+	 * What to do on elevator arrival, empties the set of destinations and return them
+	 * @param dir - DirectionType UP or DOWN
+	 * @return the list of floor destinations for that direction
 	 */
 	public Integer[] elevatorArrived(DirectionType dir) {
 		System.out.println(String.format("FLOOR %d: Elevator arrived, going %s", floorNum, dir));
@@ -99,15 +101,13 @@ public class Floor {
 		buttons.get(dir).toArray(elevatorButtons);
 		buttons.get(dir).clear();
 		
-		if (dir.equals(DirectionType.DOWN)) {
+		if (dir == DirectionType.DOWN) {
 			downButton.setIsPressed(false);
 			downLamp.setIsLit(false);
 		} else {
 			upButton.setIsPressed(false);
 			upLamp.setIsLit(false);
 		}
-		
-		
 		return elevatorButtons;
 	}
 }

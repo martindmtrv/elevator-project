@@ -54,6 +54,11 @@ public class FloorSubsystem implements Runnable {
 		}
 	}
 	
+	/**
+	 * Convert one line of input into an Event
+	 * @param s - line from the input file
+	 * @return FloorButtonPressEvent
+	 */
 	public FloorButtonPressEvent parseLine(String s) {
 		
 		String[] input = s.split(" ");
@@ -63,9 +68,6 @@ public class FloorSubsystem implements Runnable {
 		
 	}
 	
-	/**
-	 * the floor subsystem will receive inputs from a file and pass them to the scheduler
-	 */
 	@Override
 	public void run() {
 		// parse input
@@ -75,8 +77,6 @@ public class FloorSubsystem implements Runnable {
 			return;
 		}
 		
-		String[] input;
-		
 		// add inputs to floor buffers
 		for (String s: file) {
 			// parse data
@@ -84,9 +84,12 @@ public class FloorSubsystem implements Runnable {
 			events.addLast(parseLine(s));
 		}
 		
+		
+		
 		// MOCK EVEVATOR ARRIVE EVENT to floor 3 (going down)
 		ElevatorArriveEvent r = new ElevatorArriveEvent(1, 3, DirectionType.DOWN);
 		events.addLast(r);
+		
 		
 		boolean notPressed;
 		Integer[] elevatorButtons;
@@ -102,6 +105,7 @@ public class FloorSubsystem implements Runnable {
 			if (event.getType() == EventType.FLOOR_BUTTON) {
 				// send to scheduler after setting buttons of that
 				fbEvent = (FloorButtonPressEvent) event;
+				
 				notPressed = floors[fbEvent.getFloor() - 1].requestDirection(fbEvent);
 				
 				// if notPressed is false that means button was already clicked (no need to request an elevator)
@@ -113,10 +117,8 @@ public class FloorSubsystem implements Runnable {
 				elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
 				
 				reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
-				
+		
 				schedulerEvents.addLast(reply);
-				
-				
 			}
 			
 		}
