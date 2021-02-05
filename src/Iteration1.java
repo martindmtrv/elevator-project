@@ -10,19 +10,18 @@ public class Iteration1 {
     	
         
         Thread floor = new Thread(new FloorSubsystem(testFile, Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
-        
+        Thread elevator = new Thread(new ElevatorSubsysem(Configuration.NUM_CARS, Configuration.NUM_FLOORS, elevatorQueue, schedulerQueue));
+       
         // scheduler needs a copy of all three queues
         Thread scheduler;
-        Thread elevator;
         //scheduler = new Thread(new Scheduler(), "scheduler");
-        //elevator = new Thread(new Elevator(),"elevator"));
 
 
         floor.start();
+        elevator.start();
         while (true) {
         	System.out.println("Scheduler would receive " + (Event)schedulerQueue.removeFirst());
         }
         //scheduler.start();
-        //elevator.start();
     }
 }
