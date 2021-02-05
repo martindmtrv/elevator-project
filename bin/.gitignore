@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /BoundedBuffer.class
 /Floor.class
 /FloorButton.class
@@ -9,3 +10,6 @@
 /ElevatorDoor.class
 /ElevatorMotor.class
 /ElevatorSubsystem.class
+=======
+/*.class
+>>>>>>> branch 'master' of https://github.com/martindmtrv/sysc3303-elevator-project.git

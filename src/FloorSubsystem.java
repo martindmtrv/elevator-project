@@ -9,9 +9,7 @@ import java.util.Scanner;
  */
 public class FloorSubsystem implements Runnable {
 	private String inputFile;
-	
-	private Thread[] floors;
-	private BoundedBuffer[] buffers;
+	private Floor[] floors;
 	
 	/**
 	 * Create a new FloorSubsystem 
@@ -20,13 +18,11 @@ public class FloorSubsystem implements Runnable {
 	 */
 	FloorSubsystem(String fp, int n) {
 		inputFile = fp;
-		floors = new Thread[n];
-		buffers = new BoundedBuffer[n];
+		floors = new Floor[n];
 		
 		// create all the floors and buffers
 		for (int x = 0; x < n; x++) {
-			buffers[x] = new BoundedBuffer();
-			floors[x] = new Thread(new Floor(x+1, buffers[x]));
+			floors[x] = new Floor(x+1);
 		}
 	}
 	
@@ -45,20 +41,20 @@ public class FloorSubsystem implements Runnable {
 			while (scan.hasNextLine()) {
 				lines.add(scan.nextLine());
 			}
+			
+			scan.close();
 			return lines;
 		} catch (FileNotFoundException e) {
-			System.out.println(String.format("FLOORSUBSYSTEM: File %s not found", fp));
+			System.out.println(String.format("Floor System: File %s not found", fp));
 			return null;
 		}
+		
+		
 	}
 	
 	/**
-	 * the floor subsystem will receive inputs from floors and pass them to the scheduler
-	 * Need to use the bufferbox class later to allow many inputs to be received at once
-	 * 
-	 * For iteration 1 it will be read from a file
+	 * the floor subsystem will receive inputs from a file and pass them to the scheduler
 	 */
-	
 	@Override
 	public void run() {
 		// parse input
@@ -68,34 +64,36 @@ public class FloorSubsystem implements Runnable {
 			return;
 		}
 		
-		// start all the floors
-		for (Thread t: floors) {
-			t.start();
-		}
-		
 		// add inputs to floor buffers
 		for (String s: file) {
-			String[] data = s.split(" ");
-			int floor = Integer.parseInt(data[1]) - 1;
+			// parse data
+			// TODO: with the data obj
 			
-			buffers[floor].addLast(s);
-		}
-		
-		// end the program
-		for (Thread t: floors) {
-			t.interrupt();
-		}
+			// send to appropriate floor
+			// floors[x].requestDown() or floors[x].requestUp()
+			
+			
+			// send to the scheduler
+			System.out.println(String.format("Floor System: send to scheduler %s",s));
+			
+			// TODO: send to scheduler
+			
+			// TODO: await response from scheduler
+			System.out.println("Floor System: waiting for response from scheduler");
+			try {
+				Thread.sleep(2500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			System.out.println("Floor System: do something with response");
+		}	
 	}
 	
 	public static void main(String[] args) {
-		Thread f = new Thread(new FloorSubsystem("Test.txt", 10));
+		Thread f = new Thread(new FloorSubsystem("Test.txt", Configuration.NUM_FLOORS));
 		
 		f.start();
-		try {
-			f.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
