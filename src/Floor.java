@@ -110,4 +110,33 @@ public class Floor {
 		}
 		return elevatorButtons;
 	}
+	
+	/**
+	 *  Getter method which returns down lamp
+	 * @return the down lamp
+	 */
+	public FloorLamp getDownLamp() {
+		return downLamp;
+	}
+	/**
+	 *  Getter method which returns up lamp
+	 * @return the up lamp
+	 */
+	public FloorLamp getUpLamp() {
+		return upLamp;
+	}
+	/**
+	 *  Getter method which returns down button
+	 * @return the down button
+	 */
+	public FloorButton getDownButton(){
+		return downButton;
+	}
+	/**
+	 *  Getter method which returns up button
+	 * @return the up button
+	 */
+	public FloorButton getUpButton(){
+		return downButton;
+	}
 }

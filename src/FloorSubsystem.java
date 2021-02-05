@@ -123,6 +123,13 @@ public class FloorSubsystem implements Runnable {
 			
 		}
 	}
+	/**
+	 *  Getter method for number floors in subsystem
+	 * @return number of floors
+	 */
+	public int getNumFloors() {
+		return floors.length;
+	}
 	
 	public static void main(String[] args) {
 		Thread f = new Thread(new FloorSubsystem("Test.txt", Configuration.NUM_FLOORS, new BoundedBuffer(), new BoundedBuffer()));
