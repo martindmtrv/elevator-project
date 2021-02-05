@@ -2,7 +2,6 @@
  * Class representing a single elevator. Will receive inputs from the ElevatorSubsystem to toggle its lights, buttons, motor and door
  * on arrival of floor and on input entered
  * @author Ammar Tosun
- *
  */
 public class Elevator {
 	
