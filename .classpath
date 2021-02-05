@@ -10,10 +10,10 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Downloads/JUnit/junit-4.13.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rhonda/Downloads/eclipse-java-2020-12-R-win32-x86_64/eclipse/plugins/org.junit.jupiter.api_5.7.0.v20201026-1537.jar">
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry exported="true" kind="lib" path="/Users/martindimitrov/.p2/pool/plugins/org.junit_4.13.0.v20200204-1500.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="http://junit.org/junit5/docs/current/api/"/>
+			<attribute name="javadoc_location" value="http://junit.org/junit4/javadoc/latest/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

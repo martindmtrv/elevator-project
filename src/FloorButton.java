@@ -24,7 +24,6 @@ public class FloorButton {
 	 * @param b - boolean to set the value
 	 */
 	public void setIsPressed(boolean b){
-		System.out.println("FLOORBUTTON: Set pressed: " + b);
 		isPressed = b;
 	}
 	
