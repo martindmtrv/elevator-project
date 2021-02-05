@@ -4,7 +4,9 @@
  * @author Ammar Tosun
  */
 public class Elevator implements Runnable {
+	
 	static final String UP = "Moving Up", DOWN = "Moving Down", STILL = "Stopped";
+	
 	private ElevatorButton[] eButton;
 	private ElevatorLamp[] eLamp;
 	private ElevatorMotor eMotor;

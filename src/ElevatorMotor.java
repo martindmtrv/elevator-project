@@ -3,6 +3,7 @@
  * @author Ammar Tosun
  */
 public class ElevatorMotor {
+	
 	private boolean isRunning;
 	
 	public ElevatorMotor() {

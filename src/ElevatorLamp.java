@@ -3,6 +3,7 @@
  * @author Ammar Tosun
  */
 public class ElevatorLamp {
+	
 	private boolean isLit; 		/* State of the lamp lit or not */
 	private int floorNum; 		/* Floor number that it's showing (not really used right now) */
 	

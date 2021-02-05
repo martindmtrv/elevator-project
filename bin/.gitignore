@@ -15,3 +15,7 @@
 /RequestList.class
 /RequestType.class
 /Requests.class
+/Elevator.class
+/ElevatorDoor.class
+/ElevatorMotor.class
+/ElevatorSubsystem.class
