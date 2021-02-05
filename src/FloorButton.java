@@ -7,14 +7,14 @@ public class FloorButton {
 	// Constants for direction types
 	static final String UP = "Up", DOWN = "Down";
 	
-	private String direction; 	/* Direction of this button */
+	private DirectionType direction; 	/* Direction of this button */
 	private boolean isPressed;	/* State of the button pressed or not */
 	
 	/**
 	 * Create a new FloorButton
 	 * @param d - which direction does this button signal FloorButton.UP or FloorButton.DOWN
 	 */
-	FloorButton(String d) {
+	FloorButton(DirectionType d) {
 		direction = d;
 		isPressed = false;
 	}

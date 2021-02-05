@@ -1,39 +1,41 @@
 
 public class Request {
 	private String requestTime;
-	private String direction;
+	private DirectionType direction;
 	private int destination;
 	private int floor;
-	private RequestType requestType;
+	private EventType requestType;
+	private Integer[] elevatorButtons;
 	
 	/**
-	 * This will generate a request whenever a button is pressed
+	 * This will generate a request FROM the txt file input
 	 * 
 	 * @param req String value of the line read in from file
 	 * @param type integer that will correspond to the enum of the request type
 	 */
-	public Request(String req, RequestType type) {
+	public Request(String req, EventType type) {
 		String tempList[] = req.split(" ");
 		this.setRequestTime(tempList[0]);
 		this.setFloor(Integer.parseInt(tempList[1]));
-		this.setDirection(tempList[2]);
+		// get direction from enum
+		this.setDirection(DirectionType.valueOf(tempList[2].toUpperCase()));
 		this.setDestination(Integer.parseInt(tempList[3]));
 		this.requestType = type;
 	}
 	
 	/**
-	 * for single event requests
+	 * for single event requests (rest is built through setters for what the Request needs)
 	 * @param type
 	 */
-	public Request(RequestType type) {
+	public Request(EventType type) {
 		this.requestType = type;
 	}
 	
 	public String toString() {
-		return String.format("EVENT: type %d", requestType);
+		return String.format("%s %s %d %s %d", requestType, requestTime, floor, direction, destination);
 	}
 	
-	public RequestType getRequestType() {
+	public EventType getRequestType() {
 		return this.requestType;
 	}
 
@@ -53,11 +55,11 @@ public class Request {
 		this.floor = floor;
 	}
 
-	public String getDirection() {
+	public DirectionType getDirection() {
 		return direction;
 	}
 
-	public void setDirection(String direction) {
+	public void setDirection(DirectionType direction) {
 		this.direction = direction;
 	}
 
@@ -67,5 +69,13 @@ public class Request {
 
 	public void setRequestTime(String requestTime) {
 		this.requestTime = requestTime;
+	}
+
+	public Integer[] getElevatorButtons() {
+		return elevatorButtons;
+	}
+
+	public void setElevatorButtons(Integer[] elevatorButtons) {
+		this.elevatorButtons = elevatorButtons;
 	}
 }

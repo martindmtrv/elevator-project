@@ -1,4 +1,5 @@
-
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Class representing a single floor. Will receive inputs from the FloorSubsystem to toggle its lights and buttons
@@ -17,6 +18,8 @@ public class Floor {
 	private FloorLamp upLamp;
 	private FloorLamp downLamp;
 	
+	private HashMap<DirectionType, HashSet<Integer>> buttons;
+	
 	/**
 	 * Create a new floor object
 	 * @param f - floor number
@@ -24,15 +27,18 @@ public class Floor {
 	Floor(int f) {
 		// maybe should check here max sure it's in range
 		floorNum = f;
+		buttons = new HashMap<>();
 		
 		// floor will either have both directions or just one (top and bottom floors)
 		if (floorNum != Configuration.NUM_FLOORS) {
-			upButton = new FloorButton(FloorButton.UP);
-			upLamp = new FloorLamp(FloorButton.UP);
+			upButton = new FloorButton(DirectionType.UP);
+			upLamp = new FloorLamp(DirectionType.UP);
+			buttons.put(DirectionType.UP, new HashSet<>());
 		}
 		if (floorNum != 1) {
-			downButton = new FloorButton(FloorButton.DOWN);
-			downLamp = new FloorLamp(FloorButton.DOWN);
+			downButton = new FloorButton(DirectionType.DOWN);
+			downLamp = new FloorLamp(DirectionType.DOWN);
+			buttons.put(DirectionType.DOWN, new HashSet<>());
 		}
 	}
 	
@@ -40,13 +46,18 @@ public class Floor {
 	 * Request to go up is sent (this is like user clicking up button)
 	 * @return status (success or not)
 	 */
-	public boolean requestUp() {
-		// make sure this floor can request going up
-		if (upButton != null && !upButton.getIsPressed()) {
+	public boolean requestUp(int destination) {
+		// add to the list of people going up
+		System.out.println(String.format("FLOOR %d: %d Added to floor destinations DOWN", floorNum, destination));
+		buttons.get(DirectionType.UP).add(destination);
+		
+		// check to see if this request should be sent to the scheduler
+		if (!upButton.getIsPressed()) {
 			upButton.setIsPressed(true);
 			upLamp.setIsLit(true);
 			return true;
 		}
+		
 		return false;
 	}
 	
@@ -54,9 +65,13 @@ public class Floor {
 	 * Request to go down (this is like user clicking down button)
 	 * @return status (success or not)
 	 */
-	public boolean requestDown() {
+	public boolean requestDown(int destination) {
+		// add to the list of people going up
+		System.out.println(String.format("FLOOR %d: %d Added to floor destinations DOWN", floorNum, destination));
+		buttons.get(DirectionType.DOWN).add(destination);
+		
 		// make sure this floor can request going down
-		if (downButton != null && !downButton.getIsPressed()) {
+		if (!downButton.getIsPressed()) {
 			downButton.setIsPressed(true);
 			downLamp.setIsLit(true);
 			return true;
@@ -64,28 +79,35 @@ public class Floor {
 		return false;
 	}
 	
-	public boolean requestDirection(String dir) {
-		System.out.println(String.format("FLOOR %d: %s Button Pressed", floorNum, dir));
-		if (dir.equals("Up")) {
-			return requestUp();
+	
+	public boolean requestDirection(FloorButtonPressEvent e) {
+		System.out.println(String.format("FLOOR %d: %s Button Pressed", floorNum, e.getDirection()));
+		if (e.getDirection().equals(DirectionType.UP)) {
+			return requestUp(e.getDestination());
 		}
-		return requestDown();
+		return requestDown(e.getDestination());
 	}
 	
 	/**
 	 * What to do on elevator arrival event
 	 */
-	public void elevatorArrived() {
-		System.out.println(String.format("FLOOR %d: Elevator arrived!", floorNum));
-		if (downButton != null) {
+	public Integer[] elevatorArrived(DirectionType dir) {
+		System.out.println(String.format("FLOOR %d: Elevator arrived, going %s", floorNum, dir));
+		Integer[] elevatorButtons = new Integer[buttons.get(dir).size()];
+		
+		// return all the buttons of waiting people
+		buttons.get(dir).toArray(elevatorButtons);
+		buttons.get(dir).clear();
+		
+		if (dir.equals(DirectionType.DOWN)) {
 			downButton.setIsPressed(false);
 			downLamp.setIsLit(false);
-		}
-		
-		if (upButton != null) {
+		} else {
 			upButton.setIsPressed(false);
 			upLamp.setIsLit(false);
 		}
 		
+		
+		return elevatorButtons;
 	}
 }
