@@ -21,7 +21,6 @@ public class FloorLamp {
 	 * @param b - boolean to set it to
 	 */
 	public void setIsLit(boolean b){
-		System.out.println("FLOORLAMP: Set lamp: " + b);
 		isLit = b;
 	}
 	

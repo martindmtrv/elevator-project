@@ -65,9 +65,27 @@ public class Floor {
 	}
 	
 	public boolean requestDirection(String dir) {
+		System.out.println(String.format("FLOOR %d: %s Button Pressed", floorNum, dir));
 		if (dir.equals("Up")) {
 			return requestUp();
 		}
 		return requestDown();
+	}
+	
+	/**
+	 * What to do on elevator arrival event
+	 */
+	public void elevatorArrived() {
+		System.out.println(String.format("FLOOR %d: Elevator arrived!", floorNum));
+		if (downButton != null) {
+			downButton.setIsPressed(false);
+			downLamp.setIsLit(false);
+		}
+		
+		if (upButton != null) {
+			upButton.setIsPressed(false);
+			upLamp.setIsLit(false);
+		}
+		
 	}
 }

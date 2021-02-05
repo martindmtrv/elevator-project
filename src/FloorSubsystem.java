@@ -52,8 +52,6 @@ public class FloorSubsystem implements Runnable {
 		}
 	}
 	
-	
-	
 	/**
 	 * the floor subsystem will receive inputs from a file and pass them to the scheduler
 	 */
@@ -73,15 +71,22 @@ public class FloorSubsystem implements Runnable {
 			events.addLast(new Request(s, RequestType.FLOOR_BUTTON));
 		}
 		
+		// MOCK EVEVATOR ARRIVE EVENT to floor 3
+		Request r = new Request(RequestType.ELEVATOR_ARRIVE);
+		r.setFloor(3);
+		events.addLast(r);
+		
 		// run until stopped
 		while(!Thread.interrupted()) {
 			Request event = (Request) events.removeFirst();
 			
 			if (event.getRequestType() == RequestType.FLOOR_BUTTON) {
 				// send to scheduler after setting buttons of that
-				floors[event.getFloor()].requestDirection(event.getDirection());
+				floors[event.getFloor() - 1].requestDirection(event.getDirection());
 				
 				// send to scheduler
+			} else if (event.getRequestType() == RequestType.ELEVATOR_ARRIVE) {
+				floors[event.getFloor()-1].elevatorArrived();
 			}
 			
 		}
@@ -89,7 +94,6 @@ public class FloorSubsystem implements Runnable {
 	
 	public static void main(String[] args) {
 		Thread f = new Thread(new FloorSubsystem("Test.txt", Configuration.NUM_FLOORS));
-		
 		f.start();
 	}
 }

@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 
 public class Request {
 	private String requestTime;
@@ -22,6 +18,14 @@ public class Request {
 		this.setFloor(Integer.parseInt(tempList[1]));
 		this.setDirection(tempList[2]);
 		this.setDestination(Integer.parseInt(tempList[3]));
+		this.requestType = type;
+	}
+	
+	/**
+	 * for single event requests
+	 * @param type
+	 */
+	public Request(RequestType type) {
 		this.requestType = type;
 	}
 	
