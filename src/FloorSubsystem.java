@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class FloorSubsystem implements Runnable {
 	private String inputFile;
 	private Floor[] floors;
+	private BoundedBuffer events;
 	
 	/**
 	 * Create a new FloorSubsystem 
@@ -19,6 +20,7 @@ public class FloorSubsystem implements Runnable {
 	FloorSubsystem(String fp, int n) {
 		inputFile = fp;
 		floors = new Floor[n];
+		events = new BoundedBuffer();
 		
 		// create all the floors and buffers
 		for (int x = 0; x < n; x++) {
@@ -48,9 +50,9 @@ public class FloorSubsystem implements Runnable {
 			System.out.println(String.format("Floor System: File %s not found", fp));
 			return null;
 		}
-		
-		
 	}
+	
+	
 	
 	/**
 	 * the floor subsystem will receive inputs from a file and pass them to the scheduler
@@ -67,28 +69,26 @@ public class FloorSubsystem implements Runnable {
 		// add inputs to floor buffers
 		for (String s: file) {
 			// parse data
-			// TODO: with the data obj
 			
-			// send to appropriate floor
-			// floors[x].requestDown() or floors[x].requestUp()
+			// add to my event queue
+			events.addLast(s);
+		}
+		
+		// run until stopped
+		while(!Thread.interrupted()) {
+			String event = (String) events.removeFirst();
 			
+			System.out.println("Handle event" + event);
 			
-			// send to the scheduler
-			System.out.println(String.format("Floor System: send to scheduler %s",s));
-			
-			// TODO: send to scheduler
-			
-			// TODO: await response from scheduler
-			System.out.println("Floor System: waiting for response from scheduler");
-			try {
-				Thread.sleep(2500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			// handle floor button press
+			if (true) {
+				//
 			}
 			
-			System.out.println("Floor System: do something with response");
-		}	
+			
+		}
+		
+		
 	}
 	
 	public static void main(String[] args) {

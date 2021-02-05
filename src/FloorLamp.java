@@ -1,3 +1,4 @@
+
 /**
  * A Class to represent the Floor Lamp in the floor subsystem
  * @author Martin Dimitrov
