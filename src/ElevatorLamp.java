@@ -8,7 +8,7 @@ public class ElevatorLamp {
 	
 	/**
 	 * Create a ElevatorLamp Object
-	 * @param n - floor this ElevatorLamp represents the floor number that is requested to go
+	 * @param n - floor number this ElevatorLamp represents
 	 */
 	ElevatorLamp(int n) {
 		floorNum = n;
