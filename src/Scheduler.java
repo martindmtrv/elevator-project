@@ -3,40 +3,25 @@
  * @author Erdem Yanikomeroglu
  */
 public class Scheduler {
-	
-	private boolean empty = true;
+
 	private String request = null;
+	public BoundedBuffer requestQueue;
 	
-	
-	public Scheduler(boolean empty, String request) {
-		this.empty = empty;
+	public Scheduler(String request) {
 		this.request = request;
 	}
 	
 	public synchronized void submitRequest(String task) {
-		while (!empty) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                return;
-            }
-        }
+		
 		request = task;
-		empty = false;
+		requestQueue.addLast(request);
 		notifyAll();
 	}
 	
 	public synchronized String assignTask() {
-		while (empty) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                return null;
-            }
-        }
-		String task = request;
-		request = null;
-		empty = true;
+
+		
+		request = (String)requestQueue.removeFirst();
 		notifyAll();
 		return request;
 	}

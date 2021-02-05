@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+/dataStruct.class
+/Scheduler.class
+=======
+<<<<<<< HEAD
 /DirectionType.class
 /AbstractEvent.class
 /Event.class
@@ -29,3 +33,4 @@
 /ElevatorMotor.class
 /ElevatorSubsystem.class
 >>>>>>> branch 'master' of https://github.com/martindmtrv/sysc3303-elevator-project.git
+>>>>>>> branch 'master' of https://github.com/martindmtrv/sysc3303-elevator-project
