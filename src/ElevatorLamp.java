@@ -3,12 +3,13 @@
  * @author Ammar Tosun
  */
 public class ElevatorLamp {
+	
 	private boolean isLit; 		/* State of the lamp lit or not */
 	private int floorNum; 		/* Floor number that it's showing (not really used right now) */
 	
 	/**
 	 * Create a ElevatorLamp Object
-	 * @param n - floor this ElevatorLamp represents the floor number that is requested to go
+	 * @param n - floor number this ElevatorLamp represents
 	 */
 	ElevatorLamp(int n) {
 		floorNum = n;
@@ -32,4 +33,3 @@ public class ElevatorLamp {
 		return isLit;
 	}
 }
-

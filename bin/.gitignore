@@ -1,2 +1,36 @@
+<<<<<<< HEAD
 /dataStruct.class
 /Scheduler.class
+=======
+<<<<<<< HEAD
+/DirectionType.class
+/AbstractEvent.class
+/Event.class
+/EventType.class
+/ElevatorArriveEvent.class
+/ElevatorButtonPressEvent.class
+/FloorButtonPressEvent.class
+=======
+/BoundedBuffer.class
+/Configuration.class
+/ElevatorButton.class
+/ElevatorLamp.class
+/Floor.class
+/FloorButton.class
+/FloorLamp.class
+/FloorSubsystem.class
+/Iteration1.class
+/Scheduler.class
+/DataStructure.class
+/Request.class
+/FloorRequest.class
+/ElevatorRequest.class
+/RequestList.class
+/RequestType.class
+/Requests.class
+/Elevator.class
+/ElevatorDoor.class
+/ElevatorMotor.class
+/ElevatorSubsystem.class
+>>>>>>> branch 'master' of https://github.com/martindmtrv/sysc3303-elevator-project.git
+>>>>>>> branch 'master' of https://github.com/martindmtrv/sysc3303-elevator-project

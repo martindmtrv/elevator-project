@@ -32,4 +32,5 @@ public class ElevatorButton {
 	public boolean getIsPressed() {
 		return isPressed;
 	}
+	
 }

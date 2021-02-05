@@ -12,7 +12,7 @@ public class BoundedBuffer
     // A simple ring buffer is used to hold the data
 
     // buffer capacity
-    public static final int SIZE = 20;
+    public static final int SIZE = 200;
     private Object[] buffer = new Object[SIZE];
     private int inIndex = 0, outIndex = 0, count = 0;
 

@@ -10,15 +10,19 @@ import java.util.Scanner;
 public class FloorSubsystem implements Runnable {
 	private String inputFile;
 	private Floor[] floors;
+	private BoundedBuffer events;
+	private BoundedBuffer schedulerEvents;
 	
 	/**
 	 * Create a new FloorSubsystem 
 	 * @param fp - path to input file
 	 * @param n - number of floors
 	 */
-	FloorSubsystem(String fp, int n) {
+	FloorSubsystem(String fp, int n, BoundedBuffer myQueue, BoundedBuffer sQueue) {
 		inputFile = fp;
 		floors = new Floor[n];
+		events = myQueue;
+		schedulerEvents = sQueue;
 		
 		// create all the floors and buffers
 		for (int x = 0; x < n; x++) {
@@ -48,13 +52,22 @@ public class FloorSubsystem implements Runnable {
 			System.out.println(String.format("Floor System: File %s not found", fp));
 			return null;
 		}
-		
-		
 	}
 	
 	/**
-	 * the floor subsystem will receive inputs from a file and pass them to the scheduler
+	 * Convert one line of input into an Event
+	 * @param s - line from the input file
+	 * @return FloorButtonPressEvent
 	 */
+	public FloorButtonPressEvent parseLine(String s) {
+		
+		String[] input = s.split(" ");
+		
+		return new FloorButtonPressEvent(input[0], Integer.parseInt(input[1]), 
+				Integer.parseInt(input[3]), DirectionType.valueOf(input[2].toUpperCase()));
+		
+	}
+	
 	@Override
 	public void run() {
 		// parse input
@@ -67,33 +80,52 @@ public class FloorSubsystem implements Runnable {
 		// add inputs to floor buffers
 		for (String s: file) {
 			// parse data
-			// TODO: with the data obj
+			// add to FloorSubsystem event queue
+			events.addLast(parseLine(s));
+		}
+		
+		
+		
+		// MOCK EVEVATOR ARRIVE EVENT to floor 3 (going down)
+		ElevatorArriveEvent r = new ElevatorArriveEvent(1, 3, DirectionType.DOWN);
+		events.addLast(r);
+		
+		
+		boolean notPressed;
+		Integer[] elevatorButtons;
+		Event reply, event;
+		
+		FloorButtonPressEvent fbEvent;
+		ElevatorArriveEvent eaEvent;
+		
+		// run until stopped
+		while(!Thread.interrupted()) {
+			event = (Event) events.removeFirst();
 			
-			// send to appropriate floor
-			// floors[x].requestDown() or floors[x].requestUp()
-			
-			
-			// send to the scheduler
-			System.out.println(String.format("Floor System: send to scheduler %s",s));
-			
-			// TODO: send to scheduler
-			
-			// TODO: await response from scheduler
-			System.out.println("Floor System: waiting for response from scheduler");
-			try {
-				Thread.sleep(2500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (event.getType() == EventType.FLOOR_BUTTON) {
+				// send to scheduler after setting buttons of that
+				fbEvent = (FloorButtonPressEvent) event;
+				
+				notPressed = floors[fbEvent.getFloor() - 1].requestDirection(fbEvent);
+				
+				// if notPressed is false that means button was already clicked (no need to request an elevator)
+				if (notPressed) {
+					schedulerEvents.addLast(fbEvent);
+				}
+			} else if (event.getType() == EventType.ELEVATOR_ARRIVED) {
+				eaEvent = (ElevatorArriveEvent) event;
+				elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
+				
+				reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
+		
+				schedulerEvents.addLast(reply);
 			}
 			
-			System.out.println("Floor System: do something with response");
-		}	
+		}
 	}
 	
 	public static void main(String[] args) {
-		Thread f = new Thread(new FloorSubsystem("Test.txt", Configuration.NUM_FLOORS));
-		
+		Thread f = new Thread(new FloorSubsystem("Test.txt", Configuration.NUM_FLOORS, new BoundedBuffer(), new BoundedBuffer()));
 		f.start();
 	}
 }

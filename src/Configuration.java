@@ -5,10 +5,10 @@
 public abstract class Configuration {
 	// elevator system parameters
 	static final int NUM_FLOORS = 10;
-	static final int NUM_CARS = 4;
-	
+	static final int NUM_CARS = 1;
+
 	// kinematics of the elevator (for position calculations)
 	static final double VELOCITY = 0;
 	static final double ACCELERATION = 0;
-	
+
 }

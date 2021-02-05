@@ -1,16 +1,17 @@
+
 /**
  * A Class to represent the Floor Lamp in the floor subsystem
  * @author Martin Dimitrov
  */
 public class FloorLamp {
 	private boolean isLit; 		/* State of the lamp lit or not */
-	private String direction; 	/* Direction lamp points (not really used right now) */
+	private DirectionType direction; 	/* Direction lamp points (not really used right now) */
 	
 	/**
 	 * Create a FloorLamp Object
-	 * @param d - direction this FloorLamp represents FloorButton.UP or FloorButton.DOWN
+	 * @param d - DirectionType this FloorLamp represents
 	 */
-	FloorLamp(String d) {
+	FloorLamp(DirectionType d) {
 		direction = d;
 		isLit = false;
 	}
@@ -20,7 +21,6 @@ public class FloorLamp {
 	 * @param b - boolean to set it to
 	 */
 	public void setIsLit(boolean b){
-		System.out.println("FLOORLAMP: Set lamp: " + b);
 		isLit = b;
 	}
 	
