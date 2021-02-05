@@ -5,7 +5,7 @@
 public class ElevatorDoor {
 	
 	private boolean isOpen;		/* State of the door open or not */ 
-	
+
 	
 	/**
 	 * Create a new ElevatorDoor
@@ -31,4 +31,5 @@ public class ElevatorDoor {
 	public boolean getIsOpen() {
 		return isOpen;
 	}
+	
 }
