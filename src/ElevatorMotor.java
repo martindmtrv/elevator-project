@@ -25,4 +25,5 @@ public class ElevatorMotor {
 	public boolean getIsRunning() {
 		return isRunning;
 	}
+	
 }

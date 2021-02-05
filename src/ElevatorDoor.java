@@ -31,4 +31,5 @@ public class ElevatorDoor {
 	public boolean getIsOpen() {
 		return isOpen;
 	}
+	
 }
