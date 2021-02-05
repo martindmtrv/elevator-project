@@ -3,3 +3,9 @@
 /FloorButton.class
 /FloorLamp.class
 /FloorSubsystem.class
+/Elevator.class
+/ElevatorLamp.class
+/ElevatorButton.class
+/ElevatorDoor.class
+/ElevatorMotor.class
+/ElevatorSubsystem.class

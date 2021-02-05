@@ -3,22 +3,24 @@
  * on arrival of floor and on input entered
  * @author Ammar Tosun
  */
-public class Elevator {
+public class Elevator implements Runnable{
 	
 	private ElevatorButton[] eButton;
 	private ElevatorLamp[] eLamp;
 	private ElevatorMotor eMotor;
 	private ElevatorDoor eDoor;
+	private String eName;
 	
 	/**
 	 * Create a new Elevator 
 	 * @param n - number of floors
 	 */
-	public Elevator(int n) {
+	public Elevator(String s, int n) {
 		eButton = new ElevatorButton[n];
 		eLamp = new ElevatorLamp[n];
 		eMotor = new ElevatorMotor();
 		eDoor = new ElevatorDoor();
+		eName = s;
 		
 		// create all the elevator buttons and lamps
 		for (int i = 1; i <= n; ++i) {
@@ -53,6 +55,12 @@ public class Elevator {
 		//maybe can un-lit lamp, only when the elevator door is open and motor has stopped??
 		eButton[n].setIsPressed(false);
 		eLamp[n].setIsLit(false);
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
