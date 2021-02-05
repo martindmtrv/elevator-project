@@ -69,26 +69,22 @@ public class FloorSubsystem implements Runnable {
 		// add inputs to floor buffers
 		for (String s: file) {
 			// parse data
-			
 			// add to my event queue
-			events.addLast(s);
+			events.addLast(new Request(s, RequestType.FLOOR_BUTTON));
 		}
 		
 		// run until stopped
 		while(!Thread.interrupted()) {
-			String event = (String) events.removeFirst();
+			Request event = (Request) events.removeFirst();
 			
-			System.out.println("Handle event" + event);
-			
-			// handle floor button press
-			if (true) {
-				//
+			if (event.getRequestType() == RequestType.FLOOR_BUTTON) {
+				// send to scheduler after setting buttons of that
+				floors[event.getFloor()].requestDirection(event.getDirection());
+				
+				// send to scheduler
 			}
 			
-			
 		}
-		
-		
 	}
 	
 	public static void main(String[] args) {

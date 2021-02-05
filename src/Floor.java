@@ -63,4 +63,11 @@ public class Floor {
 		}
 		return false;
 	}
+	
+	public boolean requestDirection(String dir) {
+		if (dir.equals("Up")) {
+			return requestUp();
+		}
+		return requestDown();
+	}
 }
