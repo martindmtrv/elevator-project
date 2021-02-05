@@ -12,7 +12,7 @@ public class Elevator implements Runnable {
 	private ElevatorMotor eMotor;
 	private ElevatorDoor eDoor;
 	
-	private String eName;
+	private int eID;
 	private int currFloor;
 	private int maxFloor;
 	private String status;	//movingUP, movingDown, stopped
@@ -23,12 +23,12 @@ public class Elevator implements Runnable {
 	 * @param s - elevator name/ID
 	 * @param c - currFloor
 	 */
-	public Elevator(String s, int n, int c) {
+	public Elevator(int s, int n, int c) {
 		eButton = new ElevatorButton[n];
 		eLamp = new ElevatorLamp[n];
 		eMotor = new ElevatorMotor();
 		eDoor = new ElevatorDoor();
-		eName = s;
+		eID = s;
 		maxFloor = n;
 		currFloor = c;
 		status = STILL;
@@ -93,13 +93,6 @@ public class Elevator implements Runnable {
 		//maybe can un-lit lamp, only when the elevator door is open and motor has stopped??
 		eButton[n].setIsPressed(false);
 		eLamp[n].setIsLit(false);
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
-	
+	}	
 	
 }

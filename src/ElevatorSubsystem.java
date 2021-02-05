@@ -4,21 +4,26 @@
  */
 public class ElevatorSubsystem implements Runnable {
 	
-	private Thread[] elevators;
-
+	private Elevator[] elevators;
+	private BoundedBuffer elevatorEvents;
+	private BoundedBuffer schedulerEvents;
+	
 	/**
 	 * Create a new ElevatorSubsystem 
-	 * @param n - number of elevators
+	 * @param n - number of elevators/cars
 	 * @param f - number of floors
-	 * @param c - current floor of the elevator
+	 * @param c - initial floor of the elevators
+	 * @param elevatorQueue - events queue to be handled by the elevator subsystem 
+	 * @param schedulerQueue - events to be read that come from the scheduler subsystem
 	 */
-	public ElevatorSubsystem(int n, int f, int c) {
-		elevators = new Thread[n];
+	public ElevatorSubsystem(int n, int f, int c, BoundedBuffer elevatorQueue, BoundedBuffer schedulerQueue) {
+		elevators = new Elevator[n];
+		elevatorEvents = new BoundedBuffer();
+		schedulerEvents = new BoundedBuffer();
 		
-		// create all the elevator threads
+		// create elevators
 		for (int x = 0; x < n; x++) {
-			String eThreadName = "Elevator" + (x+1);
-			elevators[x] = new Thread(new Elevator(eThreadName, f, c));
+			elevators[x] = new Elevator(x, f, c);
 		}
 	}
 
@@ -30,29 +35,48 @@ public class ElevatorSubsystem implements Runnable {
 	
 	@Override
 	public void run() {
+		// MOCK EVEVATOR ARRIVE EVENT to floor 3 (going down)
+		ElevatorArriveEvent r = new ElevatorArriveEvent(1, 3, DirectionType.DOWN);
+		elevatorEvents.addLast(r);
 		
-		// start all the floors
-		for (Thread t: elevators) {
-			t.start();
-		}
-
+		boolean notPressed;
+		Integer[] elevatorButtons;
+		Event reply, event;
 		
-		// end the program
-		for (Thread t: elevators) {
-			t.interrupt();
+		FloorButtonPressEvent fbEvent;
+		ElevatorArriveEvent eaEvent;
+		
+		// run until stopped
+		while(!Thread.interrupted()) {
+			event = (Event) events.removeFirst();
+			
+			if (event.getType() == EventType.FLOOR_BUTTON) {
+				// send to scheduler after setting buttons of that
+				fbEvent = (FloorButtonPressEvent) event;
+				notPressed = floors[fbEvent.getFloor() - 1].requestDirection(fbEvent);
+				
+				// if notPressed is false that means button was already clicked (no need to request an elevator)
+				if (notPressed) {
+					schedulerEvents.addLast(fbEvent);
+				}
+			} else if (event.getType() == EventType.ELEVATOR_ARRIVED) {
+				eaEvent = (ElevatorArriveEvent) event;
+				elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
+				
+				reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
+				
+				schedulerEvents.addLast(reply);
+				
+				
+			}
+			
 		}
+		
 	}
 	
 	public static void main(String[] args) {
-		Thread f = new Thread(new ElevatorSubsystem(1, 10, 0));
-		
-		f.start();
-		try {
-			f.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Thread e = new Thread(new ElevatorSubsysem(Configuration.NUM_CARS, Configuration.NUM_FLOORS, elevatorQueue, schedulerQueue));
+		e.start();
 	}
 	
 }
