@@ -81,13 +81,11 @@ public class FloorSubsystem implements Runnable {
 		}
 		
 		// add inputs to floor buffers
-	//	for (String s: file) {
+		for (String s: file) {
 			// parse data
 			// add to FloorSubsystem event queue
-		//	events.addLast(parseLine(s));
-//		}
-		
-		events.addLast(parseLine(file.get(0)));
+			events.addLast(parseLine(s));
+		}
 		
 		boolean notPressed;
 		Integer[] elevatorButtons;
