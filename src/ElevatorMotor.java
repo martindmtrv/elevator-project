@@ -15,7 +15,10 @@ public class ElevatorMotor {
 	 * @param b - boolean to set it to
 	 */
 	public void setIsRunning(boolean b){
-		System.out.println("ELEVATORMOTOR: Set isRunning motor: " + b);
+		if (b)
+			System.out.println("\tELEVATORMOTOR: starts running");
+		else
+			System.out.println("\tELEVATORMOTOR: stops running");
 		isRunning = b;
 	}
 	

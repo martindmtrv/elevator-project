@@ -21,7 +21,7 @@ public class ElevatorLamp {
 	 * @param b - boolean to set it to
 	 */
 	public void setIsLit(boolean b){
-		System.out.println("ELEVATORLAMP: Set lamp: " + b);
+		System.out.println("\tELEVATORLAMP: lamp " + this.floorNum + " is lit: " + b);
 		isLit = b;
 	}
 	

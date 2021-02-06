@@ -24,8 +24,8 @@ public class Elevator implements Runnable {
 	 * @param c - currFloor
 	 */
 	public Elevator(int s, int n, int c) {
-		eButton = new ElevatorButton[n];
-		eLamp = new ElevatorLamp[n];
+		eButton = new ElevatorButton[n+1];
+		eLamp = new ElevatorLamp[n+1];
 		eMotor = new ElevatorMotor();
 		eDoor = new ElevatorDoor();
 		eID = s;
@@ -34,9 +34,9 @@ public class Elevator implements Runnable {
 		status = DirectionType.STILL;
 		
 		// create all the elevator buttons and lamps
-		for (int i = 0; i < n; ++i) {
-			eButton[i] = new ElevatorButton(i+1);
-			eLamp[i] = new ElevatorLamp(i+1);
+		for (int i = 1; i < n+1; ++i) {
+			eButton[i] = new ElevatorButton(i);
+			eLamp[i] = new ElevatorLamp(i);
 		}
 	}
 	
@@ -46,13 +46,28 @@ public class Elevator implements Runnable {
 	public int getID() { return eID; }
 	public DirectionType getDirection() { return status; }
 	
+	
 	//Go to the destination floor 
 	//@param d - destination floor number
 	public boolean visitFloor(int d) {
+		this.getStatus();
+		System.out.println("\tCar " + eID + " is in floor " + currFloor + " and will go to floor: " + d);
+		
+		//if elevator door is not closed yet, close elevator door
+		if (eDoor.getIsOpen() ==  true)
+			this.eDoor.setIsOpen(false);
+
+		//if elevator button not pressed, press the button with the destination floor number
+		if (eButton[d].getIsPressed() != true)
+			this.eButton[d].setIsPressed(true);
+		
+		//if elevator lamp on for that floor not lit yet, lit the eLamp for that floor number button
+		if (eLamp[d].getIsLit() != true)
+			this.eLamp[d].setIsLit(true);
+		
 		//if destination is at an upper floor, go up until you reach it
 		if (this.currFloor < d) {
 			while (this.currFloor != d) {
-				this.getStatus();
 				this.moveUp();
 			}
 			this.arrived(d);
@@ -61,7 +76,6 @@ public class Elevator implements Runnable {
 		}
 		else if (this.currFloor > d) {
 			while (this.currFloor != d) {
-				this.getStatus();
 				this.moveDown();
 			}
 			this.arrived(d);
@@ -75,36 +89,38 @@ public class Elevator implements Runnable {
 	}
 	
 	public void getStatus() {
-		System.out.println(eID + " is moving " + status + " and is in this floor: " + currFloor);
+		if (this.status != DirectionType.STILL)
+			System.out.println("ELEVATOR: Car " + eID + " moving " + status + ", is currently on floor: " + currFloor);
+		else
+			System.out.println("ELEVATOR: Car " + eID + " is " + status + ", and currently on floor: " + currFloor);
 	}
 	
 	public void moveUp() {
 		if (currFloor < maxFloor) {
 			status = DirectionType.UP;
 			++currFloor;
-			this.runMotor(true);
+			if(this.eMotor.getIsRunning() != true)
+				this.runMotor(true);
 		}
 		else {
 			status = DirectionType.STILL;
 			this.runMotor(false);
 		}
+		System.out.println("\tCar " + eID + (status==DirectionType.STILL ? " is " : " moving ") +  status + ", currently on floor: " + currFloor);
 		
 	}
 	public void moveDown() {
 		if (currFloor > 0) {
 			status = DirectionType.DOWN;
 			--currFloor;
-			this.runMotor(true);
+			if(this.eMotor.getIsRunning() != true)
+				this.runMotor(true);
 		}
 		else {
 			status = DirectionType.STILL;
 			this.runMotor(false);
 		}
 	}
-	
-	//Opening and closing the elevator door
-	public void openDoor() { eDoor.setIsOpen(true); }
-	public void closeDoor() { eDoor.setIsOpen(false); }
 	
 	//Running and stopping the elevator motor
 	public void runMotor(boolean b) { eMotor.setIsRunning(b); }
@@ -124,9 +140,14 @@ public class Elevator implements Runnable {
 	 * @param n - number of the floor the elevator has arrived
 	 */
 	public void arrived(int n) {
-		//maybe can un-lit lamp, only when the elevator door is open and motor has stopped??
-		eButton[n].setIsPressed(false);
+		//upon arrival: stop motor, open door, un-lit lamp, un-press button
+		System.out.println("ELEVATOR: Car " + eID + " has arrived floor " + n);
+		
+		this.runMotor(false);
+		this.eDoor.setIsOpen(true);
 		eLamp[n].setIsLit(false);
+		eButton[n].setIsPressed(false);
+		
 	}	
 	
 }

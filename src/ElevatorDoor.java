@@ -20,7 +20,10 @@ public class ElevatorDoor {
 	 * @param b - boolean to set it to
 	 */
 	public void setIsOpen(boolean b){
-		System.out.println("ELEVATORDOOR: Set isOpen door: " + b);
+		if (b)
+			System.out.println("\tELEVATORDOOR: is opening");
+		else
+			System.out.println("\tELEVATORDOOR: is closing");
 		isOpen = b;
 	}
 	

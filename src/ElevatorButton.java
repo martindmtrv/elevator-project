@@ -21,7 +21,7 @@ public class ElevatorButton {
 	 * @param b - boolean to set the value
 	 */
 	public void setIsPressed(boolean b){
-		System.out.println("ELEVATORBUTTON: Set pressed: " + b);
+		System.out.println("\tELEVATORBUTTON: button " + this.floorNum + " is pressed: " + b);
 		isPressed = b;
 	}
 	
