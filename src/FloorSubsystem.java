@@ -17,6 +17,8 @@ public class FloorSubsystem implements Runnable {
 	 * Create a new FloorSubsystem 
 	 * @param fp - path to input file
 	 * @param n - number of floors
+	 * @param myQueue - floor queue
+	 * @param sQueue - scheduler queue
 	 */
 	FloorSubsystem(String fp, int n, BoundedBuffer myQueue, BoundedBuffer sQueue) {
 		inputFile = fp;
@@ -119,6 +121,7 @@ public class FloorSubsystem implements Runnable {
 				reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
 		
 				schedulerEvents.addLast(reply);
+				System.out.println("sent reply");
 			}
 			
 		}

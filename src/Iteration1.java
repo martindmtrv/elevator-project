@@ -17,9 +17,9 @@ public class Iteration1 {
         Thread scheduler;
         //scheduler = new Thread(new Scheduler(), "scheduler");
 
-
-        floor.start();
         elevator.start();
+        floor.start();
+        
        // while (true) {
         //	System.out.println("Scheduler would receive " + (Event)schedulerQueue.removeFirst());
         //}

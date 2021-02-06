@@ -39,7 +39,6 @@ public class BoundedBuffer
         count++;
         if (count == SIZE)
             writeable = false;
-
         notifyAll();
     }
 

@@ -20,8 +20,8 @@ public class ElevatorSubsystem implements Runnable {
 	 */
 	public ElevatorSubsystem(int n, int f, int c, BoundedBuffer elevatorQueue, BoundedBuffer schedulerQueue) {
 		elevators = new Elevator[n];
-		elevatorEvents = new BoundedBuffer();
-		schedulerEvents = new BoundedBuffer();
+		elevatorEvents = elevatorQueue;
+		schedulerEvents = schedulerQueue;
 		
 		// create elevators
 		for (int x = 0; x < n; x++) {
@@ -68,15 +68,13 @@ public class ElevatorSubsystem implements Runnable {
 				
 				//loop through destinations
 				for (int f: destinations) {
-					//go up
-					if (elevators[ebEvent.getCar()].getCurrFloor() < f)	{
-						//visitFloor(int d)
-						visitFloor(f);
+					//visitFloor(int f)
+					elevators[ebEvent.getCar()].visitFloor(f);
 						
-						//send elevator arrived for each destination to the scheduler
-						reply = new ElevatorArriveEvent(elevators[event.getCar()], f, UP);
-						schedulerEvents.addLast(reply);
-					}		
+					//send elevator arrived for each destination to the scheduler
+					reply = new ElevatorArriveEvent(elevators[event.getCar()], f, UP);
+					schedulerEvents.addLast(reply);
+				
 				}
 			} 
 			else if (event.getType() == EventType.FLOOR_BUTTON) {
