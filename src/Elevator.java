@@ -43,6 +43,7 @@ public class Elevator implements Runnable {
 	
 	//Getter for current  floor of the elevator (currFloor)
 	public int getCurrFloor() { return currFloor; }
+	public int getID() { return eID; }
 	public DirectionType getDirection() { return status; }
 	
 	//Go to the destination floor 
@@ -51,16 +52,26 @@ public class Elevator implements Runnable {
 		//if destination is at an upper floor, go up until you reach it
 		if (this.currFloor < d) {
 			while (this.currFloor != d) {
-				this.moveUp();
 				this.getStatus();
+				this.moveUp();
 			}
 			this.arrived(d);
 			this.getStatus();
 			return true;
 		}
 		else if (this.currFloor > d) {
-			
+			while (this.currFloor != d) {
+				this.getStatus();
+				this.moveDown();
+			}
+			this.arrived(d);
+			this.getStatus();
+			return true;
 		}
+		else {
+			this.arrived(d);
+		}
+		return false;
 	}
 	
 	public void getStatus() {
@@ -68,7 +79,7 @@ public class Elevator implements Runnable {
 	}
 	
 	public void moveUp() {
-		if (currFloor <= maxFloor) {
+		if (currFloor < maxFloor) {
 			status = DirectionType.UP;
 			++currFloor;
 			this.runMotor(true);

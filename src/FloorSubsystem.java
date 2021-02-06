@@ -80,17 +80,17 @@ public class FloorSubsystem implements Runnable {
 		}
 		
 		// add inputs to floor buffers
-		for (String s: file) {
+	//	for (String s: file) {
 			// parse data
 			// add to FloorSubsystem event queue
-			events.addLast(parseLine(s));
-		}
+		//	events.addLast(parseLine(s));
+//		}
 		
-		
+		events.addLast(parseLine(file.get(0)));
 		
 		// MOCK EVEVATOR ARRIVE EVENT to floor 3 (going down)
-		ElevatorArriveEvent r = new ElevatorArriveEvent(1, 3, DirectionType.DOWN);
-		events.addLast(r);
+		//ElevatorArriveEvent r = new ElevatorArriveEvent(1, 3, DirectionType.DOWN);
+		//events.addLast(r);
 		
 		
 		boolean notPressed;

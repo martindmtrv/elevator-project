@@ -36,31 +36,20 @@ public class ElevatorSubsystem implements Runnable {
 	 */
 	
 	@Override
-	public void run() {
-		// MOCK ELEVATOR CALLED EVENT to floor 3
-		//ElevatorCalledEvent r = new ElevatorCalledEvent(1, 3, DirectionType.DOWN);
-		//elevatorEvents.addLast(r);
-		
-		boolean notPressed;
-		Integer[] elevatorButtons;
+	public void run() {		
 		Event reply, event;
-		
-		
-		
-		ElevatorArriveEvent eaEvent;
 		
 		ElevatorButtonPressEvent ebEvent;
 		FloorButtonPressEvent fbEvent;
+		ElevatorMoveEvent emEvent;
 		
 		// run until stopped
 		while(!Thread.interrupted()) {
 			
 			event = (Event) elevatorEvents.removeFirst();
 			
-			System.out.println(event);
-			
+			//when the elevator is on the floor that is called
 			if (event.getType() == EventType.ELEVATOR_BUTTONS) {
-				//when the elevator is on the floor that is called
 				ebEvent = (ElevatorButtonPressEvent) event;
 	
 				//get the destinations
@@ -69,24 +58,34 @@ public class ElevatorSubsystem implements Runnable {
 				//sort the destinations
 				Arrays.sort(destinations);
 				
-				//loop through destinations and visit each floor. Send reply to scheduler
+				//loop through destinations and add a MoveElevatorEvent to the  elevatorEvents
 				for (int f: destinations) {
-					//visitFloor(int f)
-					boolean arrived = elevators[ebEvent.getCar()].visitFloor(f);	
-					
-					//when arrived to the floor, send elevator arrived event for each destination to the scheduler
-					if (arrived) {
-						reply = new ElevatorArriveEvent(elevators[event.getCar()], f, elevators[event.getCar()].getDirection());
-						schedulerEvents.addLast(reply);
-					}
+					reply = new ElevatorMoveEvent(ebEvent.getCar(), elevators[ebEvent.getCar()].getCurrFloor(), f, elevators[ebEvent.getCar()].getDirection());
+					elevatorEvents.addLast(reply);
 				}
 			} 
+			//elevator called from a floor
 			else if (event.getType() == EventType.FLOOR_BUTTON) {
-				//elevator called from that floor
-				//check the floor number that car is called
-				//move the car to that floor
-				//send elevator arrived to the scheduler
+				fbEvent = (FloorButtonPressEvent) event;
+				
+				reply = new ElevatorMoveEvent(elevators[0].getID(),elevators[0].getCurrFloor(), fbEvent.getFloor(), elevators[0].getDirection());
+				elevatorEvents.addLast(reply);
+			
 			}
+			//elevator is moving to a destination and sending a notification to the scheduler that elevator arrived
+			else if (event.getType() == EventType.ELEVATOR_MOVING) {
+				emEvent = (ElevatorMoveEvent) event;
+				
+				//go to the floor
+				boolean arrived = elevators[emEvent.getCar()].visitFloor(emEvent.getDestination());
+				
+				//when arrived, notify scheduler
+				if (arrived) {
+					reply = new ElevatorArriveEvent(emEvent.getCar(), emEvent.getDestination(), elevators[emEvent.getCar()].getDirection());
+					schedulerEvents.addLast(reply);
+				}
+			}
+			
 		}
 		
 	}
