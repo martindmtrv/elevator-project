@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Elevator Subsystem for the elevator project. Controls all the elevators and handles sending input to the scheduler
  * @author Ammar Tosun
@@ -45,19 +47,37 @@ public class ElevatorSubsystem implements Runnable {
 		
 		FloorButtonPressEvent fbEvent;
 		ElevatorArriveEvent eaEvent;
+		ElevatorButtonPressEvent ebEvent;
 		
 		// run until stopped
 		while(!Thread.interrupted()) {
+			
 			event = (Event) elevatorEvents.removeFirst();
+			
 			System.out.println(event);
+			
 			if (event.getType() == EventType.ELEVATOR_BUTTONS) {
 				//when the elevator is on the floor that is called
+				ebEvent = (ElevatorButtonPressEvent) event;
+	
 				//get the destinations
+				Integer[] destinations = ebEvent.getButtons();
+	
 				//sort the destinations
-				//loop through destinations
-				//visitFloor(int d)
-				//send elevator arrived for each destination to the scheduler
+				Arrays.sort(destinations);
 				
+				//loop through destinations
+				for (int f: destinations) {
+					//go up
+					if (elevators[ebEvent.getCar()].getCurrFloor() < f)	{
+						//visitFloor(int d)
+						visitFloor(f);
+						
+						//send elevator arrived for each destination to the scheduler
+						reply = new ElevatorArriveEvent(elevators[event.getCar()], f, UP);
+						schedulerEvents.addLast(reply);
+					}		
+				}
 			} 
 			else if (event.getType() == EventType.FLOOR_BUTTON) {
 				//elevator called from that floor

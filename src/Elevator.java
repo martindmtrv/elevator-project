@@ -40,6 +40,24 @@ public class Elevator implements Runnable {
 		}
 	}
 	
+	//Getter for current  floor of the elevator (currFloor)
+	public int getCurrFloor() { return currFloor; }
+	
+	//Go to the destination floor 
+	//@param d - destination floor number
+	public void visitFloor(int d) {
+		//if destination is at an upper floor, go up until you reach it
+		if (this.currFloor < d) {
+			while (this.currFloor != d) {
+				this.moveUp();
+			}
+			return;
+		}
+		else {
+			
+		}
+	}
+	
 	public void getStatus() {
 		System.out.println(eName + " is " + status + " and is in this floor: " + currFloor);
 	}
