@@ -1,3 +1,5 @@
+package event;
+
 /**
  * Event to represent Elevator moving
  * @author Ammar Tosun

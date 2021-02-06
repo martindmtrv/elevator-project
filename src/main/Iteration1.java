@@ -1,3 +1,9 @@
+package main;
+import elevator.ElevatorSubsystem;
+import floor.FloorSubsystem;
+import scheduler.BoundedBuffer;
+import scheduler.Scheduler;
+
 public class Iteration1 {
 
     private final static String testFile = "Test.txt";
@@ -12,7 +18,7 @@ public class Iteration1 {
     	// floor get scheduler and floor queues
         Thread floor = new Thread(new FloorSubsystem(testFile, Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
         
-        // elevator gets scheulder and elevator queues
+        // elevator gets scheduler and elevator queues
         Thread elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue), "elevator");
        
         // scheduler needs a copy of all three queues

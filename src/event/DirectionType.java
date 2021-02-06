@@ -1,3 +1,4 @@
+package event;
 /**
  * Possible values for directions
  * @author Martin Dimitrov

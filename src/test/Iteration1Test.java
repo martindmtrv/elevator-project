@@ -1,6 +1,13 @@
+package test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
+
+import elevator.ElevatorSubsystem;
+import floor.FloorSubsystem;
+import main.Configuration;
+import scheduler.BoundedBuffer;
+import scheduler.Scheduler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
@@ -74,7 +81,7 @@ class Iteration1Test {
         String buttonPress = "FLOOR 2: UP Button Pressed";
         String destinationSent = "SCHEDULER: Sending event FLOOR_BUTTON";
         for(int i=0; i<threadOutput.length ;i++){
-            System.out.println(threadOutput[i]); //testing purposes
+            //System.out.println(threadOutput[i]); //testing purposes
             if(threadOutput[i].contains(buttonPress)){
                 assertEquals(buttonPress, threadOutput[i]);
                 buttonPressLine =i;

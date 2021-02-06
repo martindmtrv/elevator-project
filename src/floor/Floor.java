@@ -1,5 +1,12 @@
+package floor;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+
+import event.DirectionType;
+import event.FloorButtonPressEvent;
+import main.Configuration;
 
 /**
  * Class representing a single floor. Will receive inputs from the FloorSubsystem to toggle its lights and buttons
@@ -24,7 +31,7 @@ public class Floor {
 	 * Create a new floor object
 	 * @param f - floor number
 	 */
-	Floor(int f) {
+	public Floor(int f) {
 		// maybe should check here max sure it's in range
 		floorNum = f;
 		buttons = new HashMap<>();
@@ -94,20 +101,32 @@ public class Floor {
 	 * @return the list of floor destinations for that direction
 	 */
 	public Integer[] elevatorArrived(DirectionType dir) {
+		if (floorNum == 1) {
+			dir = DirectionType.UP;
+		} else if (floorNum == Configuration.NUM_FLOORS) {
+			dir = DirectionType.DOWN;
+		}
 		System.out.println(String.format("FLOOR %d: Elevator arrived, going %s", floorNum, dir));
 		Integer[] elevatorButtons = new Integer[buttons.get(dir).size()];
+		
 		
 		// return all the buttons of waiting people
 		buttons.get(dir).toArray(elevatorButtons);
 		buttons.get(dir).clear();
 		
+		// fix lights and sort destinations as fit (ascending when going up)
+		// descending when going down
 		if (dir == DirectionType.DOWN) {
 			downButton.setIsPressed(false);
 			downLamp.setIsLit(false);
+			
+			Arrays.sort(elevatorButtons, Collections.reverseOrder());
 		} else {
 			upButton.setIsPressed(false);
 			upLamp.setIsLit(false);
+			Arrays.sort(elevatorButtons);
 		}
+		
 		return elevatorButtons;
 	}
 	

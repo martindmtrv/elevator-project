@@ -1,3 +1,6 @@
+package scheduler;
+import event.Event;
+
 /**
  * Scheduler thread that handles the communication between the elevator thread and the floor thread.
  * Currently, it passes requests from the elevator thread to the floor thread and vice versa on a first-in,

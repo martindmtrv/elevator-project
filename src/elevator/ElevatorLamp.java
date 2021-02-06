@@ -1,3 +1,4 @@
+package elevator;
 /**
  * A Class to represent the Elevator Lamp in the elevator subsystem
  * @author Ammar Tosun

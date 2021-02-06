@@ -1,3 +1,5 @@
+package floor;
+import event.DirectionType;
 
 /**
  * A class representing the FloorButton Object in the Floor subsystem

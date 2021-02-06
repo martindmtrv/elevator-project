@@ -1,3 +1,4 @@
+package elevator;
 /**
  * A class representing the ElevatorButton Object in the Elevator subsystem
  * @author Ammar Tosun

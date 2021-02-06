@@ -1,3 +1,5 @@
+package event;
+
 /**
  * Event to represent Floor button presses
  * @author Martin Dimitrov

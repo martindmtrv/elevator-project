@@ -1,8 +1,18 @@
+package floor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import event.DirectionType;
+import event.ElevatorArriveEvent;
+import event.ElevatorButtonPressEvent;
+import event.Event;
+import event.EventType;
+import event.FloorButtonPressEvent;
+import main.Configuration;
+import scheduler.BoundedBuffer;
 
 /**
  * Floor Subsystem for the elevator project. Controls all the floors and handles sending input to the scheduler
@@ -21,7 +31,7 @@ public class FloorSubsystem implements Runnable {
 	 * @param myQueue - floor queue
 	 * @param sQueue - scheduler queue
 	 */
-	FloorSubsystem(String fp, int n, BoundedBuffer myQueue, BoundedBuffer sQueue) {
+	public FloorSubsystem(String fp, int n, BoundedBuffer myQueue, BoundedBuffer sQueue) {
 		inputFile = fp;
 		floors = new Floor[n];
 		events = myQueue;

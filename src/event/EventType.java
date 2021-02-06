@@ -1,3 +1,5 @@
+package event;
+
 /**
  * Enum for all the Event types (will be used when sending bytes)
  * @author Martin Dimitrov

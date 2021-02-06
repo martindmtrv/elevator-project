@@ -1,3 +1,4 @@
+package scheduler;
 /**
  * BoundedBuffer.java
  *
@@ -28,7 +29,7 @@ public class BoundedBuffer
             try { 
                 wait();
             } catch (InterruptedException e) {
-                System.err.println(e);
+            	continue;
             }
         }
         
@@ -50,7 +51,7 @@ public class BoundedBuffer
             try { 
                 wait();
             } catch (InterruptedException e) {
-                System.err.println(e);
+                continue;
             }
         }
 
