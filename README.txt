@@ -3,23 +3,23 @@ Iteration: 1
 
 Members:
  -> Martin Dimitrov -101111948
- ->	Ammar Tosun - 101172948
- ->	Erdem Yanikomeroglu - 101080085
- ->	Alex Cameron - 101114698
- ->	David Casciano - 101069255
+ -> Ammar Tosun - 101172948
+ -> Erdem Yanikomeroglu - 101080085
+ -> Alex Cameron - 101114698
+ -> David Casciano - 101069255
  
 Files:
-	BoundedBuffer.java				Event.java
-	Configuration.java				EventType.java
-	DirectionType.java				Floor.java
-	Elevator.java					FloorButton.java
+	BoundedBuffer.java			Event.java
+	Configuration.java			EventType.java
+	DirectionType.java			Floor.java
+	Elevator.java				FloorButton.java
 	ElevatorArriveEvent.java		FloorButtonPressEvent.java
-	ElevatorButton.java				FloorLamp.java
-	ElevatorButtonPressEvent.java	FloorSubsystem.java
-	ElevatorDoor.java				FloorSubsystemTest.java
-	ElevatorLamp.java				Iteration1.java
-	ElevatorMotor.java				ElevatorSubsystem.java			
-	Scheduler.java					ElevatorCalledEvent.java
+	ElevatorButton.java			FloorLamp.java
+	ElevatorButtonPressEvent.java		FloorSubsystem.java
+	ElevatorDoor.java			FloorSubsystemTest.java
+	ElevatorLamp.java			Iteration1.java
+	ElevatorMotor.java			ElevatorSubsystem.java			
+	Scheduler.java				ElevatorCalledEvent.java
 	ElevatorMoveEvent.java			ElevatorSubsystemTest.java
 	FloorSubsystemTest.java			Iteration1Test.java
 	
