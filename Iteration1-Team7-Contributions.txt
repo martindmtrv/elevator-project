@@ -22,7 +22,7 @@ Contributions:
 		
 	Ammar Tosun 101172948
 		- Elevator subsystem work creating all related classes
-		- Sequence diagram
+		- UML Sequence diagram
 		
 	Erdem Yanikomeroglu 101080085
 		- Scheduler to handle passing events between subsystems
