@@ -90,6 +90,14 @@ public class ElevatorSubsystem implements Runnable {
 		
 	}
 	
+	/**
+	 * Getter method to get the elevators in the subsystem
+	 * @return Array of elevators
+	 */
+	public Elevator[] getElevators(){
+		return elevators;
+	}
+	
 	public static void main(String[] args) {
 		Thread e = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer()));
 		e.start();
