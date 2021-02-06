@@ -33,7 +33,7 @@ Setup Instructions:
 	
 	To Run The Project:
 		-> Navigate to the Main Package
-		-> Run Scheduler.java
+		-> Run Iteration1.java
 
 Contributions:
 	Martin 101111948
