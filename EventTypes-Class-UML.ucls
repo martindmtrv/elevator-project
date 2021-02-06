@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.2.4" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
   realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="ElevatorArriveEvent" project="sysc3303-elevator-project" 
-    file="/sysc3303-elevator-project/src/ElevatorArriveEvent.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="191" width="246" x="38" y="20"/>    
+  <class id="1" language="java" name="event.Event" project="sysc3303-elevator-project" 
+    file="/sysc3303-elevator-project/src/event/Event.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="493" y="131"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="Event" project="sysc3303-elevator-project" 
-    file="/sysc3303-elevator-project/src/Event.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="494" y="120"/>    
+  <class id="2" language="java" name="event.ElevatorMoveEvent" project="sysc3303-elevator-project" 
+    file="/sysc3303-elevator-project/src/event/ElevatorMoveEvent.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="169" y="117"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="FloorButtonPressEvent" project="sysc3303-elevator-project" 
-    file="/sysc3303-elevator-project/src/FloorButtonPressEvent.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="493" y="355"/>    
+  <class id="3" language="java" name="event.ElevatorArriveEvent" project="sysc3303-elevator-project" 
+    file="/sysc3303-elevator-project/src/event/ElevatorArriveEvent.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="196" y="337"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="ElevatorButtonPressEvent" project="sysc3303-elevator-project" 
-    file="/sysc3303-elevator-project/src/ElevatorButtonPressEvent.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="800" y="116"/>    
+  <class id="4" language="java" name="event.ElevatorButtonPressEvent" project="sysc3303-elevator-project" 
+    file="/sysc3303-elevator-project/src/event/ElevatorButtonPressEvent.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="777" y="304"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="ElevatorMoveEvent" project="sysc3303-elevator-project" 
-    file="/sysc3303-elevator-project/src/ElevatorMoveEvent.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="138" y="360"/>    
+  <class id="5" language="java" name="event.ElevatorCalledEvent" project="sysc3303-elevator-project" 
+    file="/sysc3303-elevator-project/src/event/ElevatorCalledEvent.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="795" y="102"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="ElevatorCalledEvent" project="sysc3303-elevator-project" 
-    file="/sysc3303-elevator-project/src/ElevatorCalledEvent.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="834" y="362"/>    
+  <class id="6" language="java" name="event.FloorButtonPressEvent" project="sysc3303-elevator-project" 
+    file="/sysc3303-elevator-project/src/event/FloorButtonPressEvent.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="497" y="415"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -56,24 +56,24 @@
     </display>  
   </class>  
   <generalization id="7">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="8">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="9">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="10">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="11">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
   </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
