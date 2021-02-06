@@ -3,7 +3,9 @@
  * @author Martin Dimitrov
  */
 public enum EventType {
-	FLOOR_BUTTON,
-	ELEVATOR_ARRIVED,
-	ELEVATOR_BUTTONS,
+	FLOOR_BUTTON,		//Requesting elevator from floor
+	ELEVATOR_ARRIVED,	//
+	ELEVATOR_BUTTONS,	//Requesting destination
+	ELEVATOR_CALLED,	
+	ELEVATOR_MOVING
 }

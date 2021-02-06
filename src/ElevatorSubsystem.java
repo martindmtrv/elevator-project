@@ -4,7 +4,7 @@
  */
 public class ElevatorSubsystem implements Runnable {
 	
-	private Elevator[] elevators;
+	private Elevator[] elevators;				
 	private BoundedBuffer elevatorEvents;
 	private BoundedBuffer schedulerEvents;
 	
@@ -35,9 +35,9 @@ public class ElevatorSubsystem implements Runnable {
 	
 	@Override
 	public void run() {
-		// MOCK EVEVATOR ARRIVE EVENT to floor 3 (going down)
-		ElevatorArriveEvent r = new ElevatorArriveEvent(1, 3, DirectionType.DOWN);
-		elevatorEvents.addLast(r);
+		// MOCK ELEVATOR CALLED EVENT to floor 3
+		//ElevatorCalledEvent r = new ElevatorCalledEvent(1, 3, DirectionType.DOWN);
+		//elevatorEvents.addLast(r);
 		
 		boolean notPressed;
 		Integer[] elevatorButtons;
@@ -48,34 +48,29 @@ public class ElevatorSubsystem implements Runnable {
 		
 		// run until stopped
 		while(!Thread.interrupted()) {
-			event = (Event) events.removeFirst();
-			
-			if (event.getType() == EventType.FLOOR_BUTTON) {
-				// send to scheduler after setting buttons of that
-				fbEvent = (FloorButtonPressEvent) event;
-				notPressed = floors[fbEvent.getFloor() - 1].requestDirection(fbEvent);
+			event = (Event) elevatorEvents.removeFirst();
+			System.out.println(event);
+			if (event.getType() == EventType.ELEVATOR_BUTTONS) {
+				//when the elevator is on the floor that is called
+				//get the destinations
+				//sort the destinations
+				//loop through destinations
+				//visitFloor(int d)
+				//send elevator arrived for each destination to the scheduler
 				
-				// if notPressed is false that means button was already clicked (no need to request an elevator)
-				if (notPressed) {
-					schedulerEvents.addLast(fbEvent);
-				}
-			} else if (event.getType() == EventType.ELEVATOR_ARRIVED) {
-				eaEvent = (ElevatorArriveEvent) event;
-				elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
-				
-				reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
-				
-				schedulerEvents.addLast(reply);
-				
-				
+			} 
+			else if (event.getType() == EventType.FLOOR_BUTTON) {
+				//elevator called from that floor
+				//check the floor number that car is called
+				//move the car to that floor
+				//send elevator arrived to the scheduler
 			}
-			
 		}
 		
 	}
 	
 	public static void main(String[] args) {
-		Thread e = new Thread(new ElevatorSubsysem(Configuration.NUM_CARS, Configuration.NUM_FLOORS, elevatorQueue, schedulerQueue));
+		Thread e = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer()));
 		e.start();
 	}
 	

@@ -9,8 +9,9 @@ public class Iteration1 {
     	BoundedBuffer elevatorQueue = new BoundedBuffer();
     	
         
-        Thread floor = new Thread(new FloorSubsystem(testFile, Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
-        Thread elevator = new Thread(new ElevatorSubsysem(Configuration.NUM_CARS, Configuration.NUM_FLOORS, elevatorQueue, schedulerQueue));
+        Thread floor = new Thread(new FloorSubsystem(testFile, Configuration.NUM_FLOORS, floorQueue, elevatorQueue), "floor");
+        //Don't forget to change the floorQueue to schedulerQueue
+        Thread elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, floorQueue));
        
         // scheduler needs a copy of all three queues
         Thread scheduler;
@@ -19,9 +20,9 @@ public class Iteration1 {
 
         floor.start();
         elevator.start();
-        while (true) {
-        	System.out.println("Scheduler would receive " + (Event)schedulerQueue.removeFirst());
-        }
+       // while (true) {
+        //	System.out.println("Scheduler would receive " + (Event)schedulerQueue.removeFirst());
+        //}
         //scheduler.start();
     }
 }

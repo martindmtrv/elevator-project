@@ -34,7 +34,7 @@ public class Elevator implements Runnable {
 		status = STILL;
 		
 		// create all the elevator buttons and lamps
-		for (int i = 1; i <= n; ++i) {
+		for (int i = 0; i < n; ++i) {
 			eButton[i] = new ElevatorButton(i);
 			eLamp[i] = new ElevatorLamp(i);
 		}
