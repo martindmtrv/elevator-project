@@ -20,3 +20,7 @@ Contributions:
 		- Events framework all classes regarding different events to send
 		- Event UML
 		
+	Ammar Tosun 101172948
+		- Elevator subsystem work creating all related classes
+		- Sequence diagram
+		
