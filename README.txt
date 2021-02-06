@@ -22,6 +22,9 @@ Files:
 	Scheduler.java				ElevatorCalledEvent.java
 	ElevatorMoveEvent.java			ElevatorSubsystemTest.java
 	FloorSubsystemTest.java			Iteration1Test.java
+	EventTypes-Class-UML.png		README.txt
+	Test.txt					TestComm.txt
+	UML_OBJECT_DIAGRAM.png		UML_Sequence_Diagram.png
 	
 Setup Instructions:
 
