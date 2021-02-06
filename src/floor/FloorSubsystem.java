@@ -1,7 +1,18 @@
+package floor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+
+import event.DirectionType;
+import event.ElevatorArriveEvent;
+import event.ElevatorButtonPressEvent;
+import event.Event;
+import event.EventType;
+import event.FloorButtonPressEvent;
+import main.Configuration;
+import scheduler.BoundedBuffer;
 
 /**
  * Floor Subsystem for the elevator project. Controls all the floors and handles sending input to the scheduler
@@ -20,7 +31,7 @@ public class FloorSubsystem implements Runnable {
 	 * @param myQueue - floor queue
 	 * @param sQueue - scheduler queue
 	 */
-	FloorSubsystem(String fp, int n, BoundedBuffer myQueue, BoundedBuffer sQueue) {
+	public FloorSubsystem(String fp, int n, BoundedBuffer myQueue, BoundedBuffer sQueue) {
 		inputFile = fp;
 		floors = new Floor[n];
 		events = myQueue;
@@ -80,18 +91,11 @@ public class FloorSubsystem implements Runnable {
 		}
 		
 		// add inputs to floor buffers
-	//	for (String s: file) {
+		for (String s: file) {
 			// parse data
 			// add to FloorSubsystem event queue
-		//	events.addLast(parseLine(s));
-//		}
-		
-		events.addLast(parseLine(file.get(0)));
-		
-		// MOCK EVEVATOR ARRIVE EVENT to floor 3 (going down)
-		//ElevatorArriveEvent r = new ElevatorArriveEvent(1, 3, DirectionType.DOWN);
-		//events.addLast(r);
-		
+			events.addLast(parseLine(s));
+		}
 		
 		boolean notPressed;
 		Integer[] elevatorButtons;
@@ -118,10 +122,12 @@ public class FloorSubsystem implements Runnable {
 				eaEvent = (ElevatorArriveEvent) event;
 				elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
 				
-				reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
-		
-				schedulerEvents.addLast(reply);
-				System.out.println("sent reply");
+				if (elevatorButtons.length > 0) {
+					System.out.println("FLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
+					reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
+					
+					schedulerEvents.addLast(reply);
+				}
 			}
 			
 		}

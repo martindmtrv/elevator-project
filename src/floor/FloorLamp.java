@@ -1,3 +1,5 @@
+package floor;
+import event.DirectionType;
 
 /**
  * A Class to represent the Floor Lamp in the floor subsystem

@@ -1,3 +1,4 @@
+package elevator;
 /**
  * A class representing the ElevatorDoor Object in the Elevator subsystem
  * @author Ammar Tosun

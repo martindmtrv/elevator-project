@@ -1,4 +1,14 @@
+package elevator;
 import java.util.Arrays;
+
+import event.ElevatorArriveEvent;
+import event.ElevatorButtonPressEvent;
+import event.ElevatorMoveEvent;
+import event.Event;
+import event.EventType;
+import event.FloorButtonPressEvent;
+import main.Configuration;
+import scheduler.BoundedBuffer;
 
 /**
  * Elevator Subsystem for the elevator project. Controls all the elevators and handles sending input to the scheduler
@@ -54,9 +64,6 @@ public class ElevatorSubsystem implements Runnable {
 	
 				//get the destinations
 				Integer[] destinations = ebEvent.getButtons();
-	
-				//sort the destinations
-				Arrays.sort(destinations);
 				
 				//loop through destinations and add a MoveElevatorEvent to the  elevatorEvents
 				for (int f: destinations) {
@@ -88,6 +95,14 @@ public class ElevatorSubsystem implements Runnable {
 			
 		}
 		
+	}
+	
+	/**
+	 * Getter method to get the elevators in the subsystem
+	 * @return Array of elevators
+	 */
+	public Elevator[] getElevators(){
+		return elevators;
 	}
 	
 	public static void main(String[] args) {

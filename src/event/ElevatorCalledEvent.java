@@ -1,8 +1,10 @@
+package event;
+
 /**
- * Event to describe an elevator arriving at a floor
- * @author Martin Dimitrov
+ * Event to describe an elevator called at a floor
+ * @author Ammar Tosun
  */
-public class ElevatorArriveEvent extends Event {
+public class ElevatorCalledEvent extends Event {
 	private int car;
 	private int floor;
 	private DirectionType direction;
@@ -10,11 +12,11 @@ public class ElevatorArriveEvent extends Event {
 	/**
 	 * Create elevator arrive event
 	 * @param c - int car number
-	 * @param f - int floor it arrived at
+	 * @param f - int floor elevator is called at
 	 * @param dir - DirectionType where it is going (UP/DOWN)
 	 */
-	public ElevatorArriveEvent(int c, int f, DirectionType dir) {
-		super("", EventType.ELEVATOR_ARRIVED);
+	public ElevatorCalledEvent(int c, int f, DirectionType dir) {
+		super("", EventType.ELEVATOR_CALLED);
 		car = c;
 		floor = f;
 		direction = dir;

@@ -1,9 +1,12 @@
+package elevator;
+import event.DirectionType;
+
 /**
  * Class representing a single elevator. Will receive inputs from the ElevatorSubsystem to toggle its lights, buttons, motor and door
  * on arrival of floor and on input entered
  * @author Ammar Tosun
  */
-public class Elevator implements Runnable {
+public class Elevator {
 	
 	//static final String UP = "Moving Up", DOWN = "Moving Down", STILL = "Stopped";
 	
@@ -148,6 +151,14 @@ public class Elevator implements Runnable {
 		eLamp[n].setIsLit(false);
 		eButton[n].setIsPressed(false);
 		
-	}	
+	}
+	
+	/**
+	 * Getter method to return number of floors
+	 * @return maxFloor - number of floors
+	 */
+	public int getNumFloors(){
+		return maxFloor;
+	}
 	
 }
