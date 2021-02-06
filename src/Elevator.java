@@ -5,7 +5,7 @@
  */
 public class Elevator implements Runnable {
 	
-	static final String UP = "Moving Up", DOWN = "Moving Down", STILL = "Stopped";
+	//static final String UP = "Moving Up", DOWN = "Moving Down", STILL = "Stopped";
 	
 	private ElevatorButton[] eButton;
 	private ElevatorLamp[] eLamp;
@@ -15,7 +15,7 @@ public class Elevator implements Runnable {
 	private int eID;
 	private int currFloor;
 	private int maxFloor;
-	private String status;	//movingUP, movingDown, stopped
+	private DirectionType status;	//UP, DOWN, STILL/stopped
 	
 	/**
 	 * Create a new Elevator 
@@ -31,7 +31,7 @@ public class Elevator implements Runnable {
 		eID = s;
 		maxFloor = n;
 		currFloor = c;
-		status = STILL;
+		status = DirectionType.STILL;
 		
 		// create all the elevator buttons and lamps
 		for (int i = 0; i < n; ++i) {
@@ -40,8 +40,10 @@ public class Elevator implements Runnable {
 		}
 	}
 	
+	
 	//Getter for current  floor of the elevator (currFloor)
 	public int getCurrFloor() { return currFloor; }
+	public DirectionType getDirection() { return status; }
 	
 	//Go to the destination floor 
 	//@param d - destination floor number
@@ -50,7 +52,10 @@ public class Elevator implements Runnable {
 		if (this.currFloor < d) {
 			while (this.currFloor != d) {
 				this.moveUp();
+				this.getStatus();
 			}
+			this.arrived(d);
+			this.getStatus();
 			return;
 		}
 		else {
@@ -59,29 +64,29 @@ public class Elevator implements Runnable {
 	}
 	
 	public void getStatus() {
-		System.out.println(eName + " is " + status + " and is in this floor: " + currFloor);
+		System.out.println(eID + " is moving " + status + " and is in this floor: " + currFloor);
 	}
 	
 	public void moveUp() {
 		if (currFloor <= maxFloor) {
-			status = UP;
+			status = DirectionType.UP;
 			++currFloor;
 			this.runMotor(true);
 		}
 		else {
-			status = STILL;
+			status = DirectionType.STILL;
 			this.runMotor(false);
 		}
 		
 	}
 	public void moveDown() {
-		if (currFloor >= 0) {
-			status = DOWN;
+		if (currFloor > 0) {
+			status = DirectionType.DOWN;
 			--currFloor;
 			this.runMotor(true);
 		}
 		else {
-			status = STILL;
+			status = DirectionType.STILL;
 			this.runMotor(false);
 		}
 	}

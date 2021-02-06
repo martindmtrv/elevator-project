@@ -46,7 +46,9 @@ public class ElevatorSubsystem implements Runnable {
 		Event reply, event;
 		
 		FloorButtonPressEvent fbEvent;
+		
 		ElevatorArriveEvent eaEvent;
+		
 		ElevatorButtonPressEvent ebEvent;
 		
 		// run until stopped
@@ -69,11 +71,13 @@ public class ElevatorSubsystem implements Runnable {
 				//loop through destinations and visit each floor. Send reply to scheduler
 				for (int f: destinations) {
 					//visitFloor(int f)
-					elevators[ebEvent.getCar()].visitFloor(f);	
+					boolean arrived = elevators[ebEvent.getCar()].visitFloor(f);	
 					
-					//send elevator arrived for each destination to the scheduler
-					reply = new ElevatorArriveEvent(elevators[event.getCar()], f, UP);
-					schedulerEvents.addLast(reply);
+					//when arrived to the floor, send elevator arrived event for each destination to the scheduler
+					if (arrived) {
+						reply = new ElevatorArriveEvent(elevators[event.getCar()], f, elevators[event.getCar()].getDirection());
+						schedulerEvents.addLast(reply);
+					}
 				}
 			} 
 			else if (event.getType() == EventType.FLOOR_BUTTON) {

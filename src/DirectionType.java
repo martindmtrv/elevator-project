@@ -4,5 +4,6 @@
  */
 public enum DirectionType {
 	UP,
-	DOWN
+	DOWN,
+	STILL
 }
