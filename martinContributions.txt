@@ -22,5 +22,5 @@ Contributions:
 		
 	Ammar Tosun 101172948
 		- Elevator subsystem work creating all related classes
-		- Sequence diagram
+		- UML Sequence diagram
 		
