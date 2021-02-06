@@ -47,7 +47,7 @@ public class Elevator implements Runnable {
 	
 	//Go to the destination floor 
 	//@param d - destination floor number
-	public void visitFloor(int d) {
+	public boolean visitFloor(int d) {
 		//if destination is at an upper floor, go up until you reach it
 		if (this.currFloor < d) {
 			while (this.currFloor != d) {
@@ -56,9 +56,9 @@ public class Elevator implements Runnable {
 			}
 			this.arrived(d);
 			this.getStatus();
-			return;
+			return true;
 		}
-		else {
+		else if (this.currFloor > d) {
 			
 		}
 	}
