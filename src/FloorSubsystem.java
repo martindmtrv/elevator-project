@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -88,11 +89,6 @@ public class FloorSubsystem implements Runnable {
 		
 		events.addLast(parseLine(file.get(0)));
 		
-		// MOCK EVEVATOR ARRIVE EVENT to floor 3 (going down)
-		//ElevatorArriveEvent r = new ElevatorArriveEvent(1, 3, DirectionType.DOWN);
-		//events.addLast(r);
-		
-		
 		boolean notPressed;
 		Integer[] elevatorButtons;
 		Event reply, event;
@@ -118,10 +114,12 @@ public class FloorSubsystem implements Runnable {
 				eaEvent = (ElevatorArriveEvent) event;
 				elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
 				
-				reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
-		
-				schedulerEvents.addLast(reply);
-				System.out.println("sent reply");
+				if (elevatorButtons.length > 0) {
+					System.out.println("FLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
+					reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
+					
+					schedulerEvents.addLast(reply);
+				}
 			}
 			
 		}

@@ -3,7 +3,7 @@
  * on arrival of floor and on input entered
  * @author Ammar Tosun
  */
-public class Elevator implements Runnable {
+public class Elevator {
 	
 	//static final String UP = "Moving Up", DOWN = "Moving Down", STILL = "Stopped";
 	
