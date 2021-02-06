@@ -54,6 +54,6 @@ Contributions:
 		- Thread assembly
 		
 	David Casciano 101069255
-		- Partially developed help class
+		- Partially developed request class
 		- UML Object diagram
 		- README.txt
