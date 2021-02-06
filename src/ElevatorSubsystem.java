@@ -45,11 +45,12 @@ public class ElevatorSubsystem implements Runnable {
 		Integer[] elevatorButtons;
 		Event reply, event;
 		
-		FloorButtonPressEvent fbEvent;
+		
 		
 		ElevatorArriveEvent eaEvent;
 		
 		ElevatorButtonPressEvent ebEvent;
+		FloorButtonPressEvent fbEvent;
 		
 		// run until stopped
 		while(!Thread.interrupted()) {
