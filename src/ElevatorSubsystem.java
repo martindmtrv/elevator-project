@@ -18,8 +18,8 @@ public class ElevatorSubsystem implements Runnable {
 	 */
 	public ElevatorSubsystem(int n, int f, int c, BoundedBuffer elevatorQueue, BoundedBuffer schedulerQueue) {
 		elevators = new Elevator[n];
-		elevatorEvents = new BoundedBuffer();
-		schedulerEvents = new BoundedBuffer();
+		elevatorEvents = elevatorQueue;
+		schedulerEvents = schedulerQueue;
 		
 		// create elevators
 		for (int x = 0; x < n; x++) {
