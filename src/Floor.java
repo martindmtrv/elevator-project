@@ -137,6 +137,6 @@ public class Floor {
 	 * @return the up button
 	 */
 	public FloorButton getUpButton(){
-		return downButton;
+		return upButton;
 	}
 }

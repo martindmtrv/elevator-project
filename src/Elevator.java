@@ -148,6 +148,14 @@ public class Elevator {
 		eLamp[n].setIsLit(false);
 		eButton[n].setIsPressed(false);
 		
-	}	
+	}
+	
+	/**
+	 * Getter method to return number of floors
+	 * @return maxFloor - number of floors
+	 */
+	public int getNumFloors(){
+		return maxFloor;
+	}
 	
 }

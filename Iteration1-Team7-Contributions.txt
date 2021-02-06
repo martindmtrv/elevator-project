@@ -24,3 +24,9 @@ Contributions:
 		- Elevator subsystem work creating all related classes
 		- Sequence diagram
 		
+	Erdem Yanikomeroglu 101080085
+		- Scheduler to handle passing events between subsystems
+		
+	Alex Cameron 101114698
+		- Developed test cases using JUnit5 framework
+		- Thread assembly
