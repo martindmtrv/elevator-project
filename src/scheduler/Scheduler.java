@@ -1,4 +1,5 @@
 package scheduler;
+import elevator.ElevatorState;
 import event.Event;
 
 /**
@@ -11,6 +12,7 @@ public class Scheduler implements Runnable {
 	public BoundedBuffer schedulerQueue;
 	private BoundedBuffer elevatorQueue;
 	private BoundedBuffer floorQueue;
+	private State state;
 	
 	/**
 	 * Create a new scheduler object
@@ -22,6 +24,7 @@ public class Scheduler implements Runnable {
 		this.schedulerQueue = schedulerQueue;
 		this.elevatorQueue = elevatorQueue;
 		this.floorQueue = floorQueue;
+		this.state = State.WAITING;
 	}
 	
 	@Override
@@ -46,5 +49,21 @@ public class Scheduler implements Runnable {
 			}
 			
 		}
+	}
+	
+	/**
+	 * Set the new state for the elevator 
+	 * @param elevState State the elevator is in
+	 */
+	public void setState(State newState) {
+		this.state = newState;
+	}
+	/**
+	 * Getter method to get the current state of Scheduler.
+	 * i.e: WAITING, RECEIVING, SENDING or INVALID
+	 * @return The schedulers current state
+	 */
+	public State getState() {
+		return state;
 	}
 }

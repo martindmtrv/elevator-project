@@ -19,6 +19,8 @@ public class ElevatorSubsystem implements Runnable {
 	private Elevator[] elevators;				
 	private BoundedBuffer elevatorEvents;
 	private BoundedBuffer schedulerEvents;
+	private ElevatorState currState;
+	private ElevatorState prevState;
 	
 	/**
 	 * Create a new ElevatorSubsystem 
@@ -32,6 +34,7 @@ public class ElevatorSubsystem implements Runnable {
 		elevators = new Elevator[n];
 		elevatorEvents = elevatorQueue;
 		schedulerEvents = schedulerQueue;
+		this.currState = ElevatorState.STILL; //init state
 		
 		// create elevators
 		for (int x = 0; x < n; x++) {
@@ -104,6 +107,20 @@ public class ElevatorSubsystem implements Runnable {
 	public Elevator[] getElevators(){
 		return elevators;
 	}
+	
+	/**
+	 * Set the new state for the elevator 
+	 * @param elevState State the elevator is in
+	 */
+	public void setState(ElevatorState elevState) {
+		this.prevState = currState; //previous elevator state (may not be useful / check later)
+		this.currState = elevState; //new elevator state
+	}
+	
+	public ElevatorState getState() {
+		return currState;
+	}
+	
 	
 	public static void main(String[] args) {
 		Thread e = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer()));
