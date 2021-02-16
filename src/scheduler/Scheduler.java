@@ -5,6 +5,7 @@ import java.util.Arrays;
 import event.DirectionType;
 import event.ElevatorButtonPressEvent;
 import event.ElevatorCallToMoveEvent;
+import elevator.ElevatorState;
 import event.Event;
 import event.FloorButtonPressEvent;
 import main.Configuration;
@@ -19,6 +20,7 @@ public class Scheduler implements Runnable {
 	public BoundedBuffer schedulerQueue;
 	private BoundedBuffer elevatorQueue;
 	private BoundedBuffer floorQueue;
+	private State state;
 	
 	private ArrayList<ElevatorStatus> elevators;
 	private ArrayList<FloorButtonPressEvent> unscheduled;
@@ -36,6 +38,7 @@ public class Scheduler implements Runnable {
 		
 		unscheduled = new ArrayList<>();
 		elevators = new ArrayList<>(Configuration.NUM_CARS);
+		this.state = State.WAITING;
 		
 		// create all the arraylists for elevator destinations
 		for (int i=0; i < Configuration.NUM_CARS; i++) {
@@ -168,4 +171,44 @@ public class Scheduler implements Runnable {
 			
 		}
 	}
+	
+	/**
+	 * Set the new state for the elevator 
+	 * @param elevState State the elevator is in
+	 */
+	public void setState(State newState) {
+		this.state = newState;
+	}
+	/**
+	 * Getter method to get the current state of Scheduler.
+	 * i.e: WAITING, RECEIVING, SENDING or INVALID
+	 * @return The schedulers current state
+	 */
+	public State getState() {
+		return state;
+	}
+	
+	/**
+	 * Return a string of current state
+	 * @return String representing the current State
+	 */
+	public String printState(){
+		String s = "";
+		switch(state) {
+			case RECEIVING:
+				s ="Receiving State";
+				break;
+			case WAITING:
+				s= "Waiting State";
+				break;
+			case SENDING:
+				s = "Sending State";
+				break;
+			case INVALID:
+				s= "Invalid State";
+				break;
+		}
+		return s;
+	}
+	
 }
