@@ -6,7 +6,7 @@ import scheduler.Scheduler;
 
 public class Iteration1 {
 
-    private final static String testFile = "Test.txt";
+    private final static String testFile = "TestComm.txt";
 
     public static void main(String[] args) {
         //Put threads together and run main

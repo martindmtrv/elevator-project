@@ -37,8 +37,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="event.ElevatorCalledEvent" project="sysc3303-elevator-project" 
-    file="/sysc3303-elevator-project/src/event/ElevatorCalledEvent.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="event.ElevatorCallToMoveEvent" project="sysc3303-elevator-project" 
+    file="/sysc3303-elevator-project/src/event/ElevatorCallToMoveEvent.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="795" y="102"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -60,15 +60,15 @@
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="8">    
-    <end type="SOURCE" refId="6"/>    
+    <end type="SOURCE" refId="2"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="9">    
-    <end type="SOURCE" refId="5"/>    
+    <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="10">    
-    <end type="SOURCE" refId="2"/>    
+    <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="11">    
