@@ -66,4 +66,28 @@ public class Scheduler implements Runnable {
 	public State getState() {
 		return state;
 	}
+	
+	/**
+	 * Return a string of current state
+	 * @return String representing the current State
+	 */
+	public String printState(){
+		String s = "";
+		switch(state) {
+			case RECEIVING:
+				s ="Receiving State";
+				break;
+			case WAITING:
+				s= "Waiting State";
+				break;
+			case SENDING:
+				s = "Sending State";
+				break;
+			case INVALID:
+				s= "Invalid State";
+				break;
+		}
+		return s;
+	}
+	
 }
