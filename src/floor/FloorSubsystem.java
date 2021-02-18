@@ -83,7 +83,7 @@ public class FloorSubsystem implements Runnable {
 	
 	@Override
 	public void run() {
-		// parse input
+		//parse input
 		ArrayList<String> file = readInput(inputFile);
 		
 		if (file == null) {
@@ -124,7 +124,7 @@ public class FloorSubsystem implements Runnable {
 				
 				if (elevatorButtons.length > 0) {
 					System.out.println("FLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
-					reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar());
+					reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar(), eaEvent.getDirection());
 					
 					schedulerEvents.addLast(reply);
 				}

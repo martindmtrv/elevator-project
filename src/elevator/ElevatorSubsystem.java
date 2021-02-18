@@ -1,12 +1,7 @@
 package elevator;
 import java.util.Arrays;
 
-import event.ElevatorArriveEvent;
-import event.ElevatorButtonPressEvent;
-import event.ElevatorMoveEvent;
-import event.Event;
-import event.EventType;
-import event.FloorButtonPressEvent;
+import event.*;
 import main.Configuration;
 import scheduler.BoundedBuffer;
 
@@ -21,6 +16,8 @@ public class ElevatorSubsystem implements Runnable {
 	private BoundedBuffer schedulerEvents;
 	private ElevatorState currState;
 	private ElevatorState prevState;
+
+	private Box box;
 	
 	/**
 	 * Create a new ElevatorSubsystem 
@@ -30,24 +27,24 @@ public class ElevatorSubsystem implements Runnable {
 	 * @param elevatorQueue - events queue to be handled by the elevator subsystem 
 	 * @param schedulerQueue - events to be read that come from the scheduler subsystem
 	 */
-	public ElevatorSubsystem(int n, int f, int c, BoundedBuffer elevatorQueue, BoundedBuffer schedulerQueue) {
+	public ElevatorSubsystem(int n, int f, int c, BoundedBuffer elevatorQueue, BoundedBuffer schedulerQueue, Box box) {
 		elevators = new Elevator[n];
 		elevatorEvents = elevatorQueue;
 		schedulerEvents = schedulerQueue;
 		this.currState = ElevatorState.STILL; //init state
-		
+
+		this.box = box;
+
 		// create elevators
 		for (int x = 0; x < n; x++) {
-			elevators[x] = new Elevator(x, f, c);
+			elevators[x] = new Elevator(x, f, c, this.box, this.schedulerEvents);
 		}
 	}
-
 	
 	/**
 	 * The elevator subsystem will receive inputs from scheduler
 	 * For iteration 1 it will be read from a file
 	 */
-	
 	@Override
 	public void run() {		
 		Event reply, event;
@@ -55,10 +52,12 @@ public class ElevatorSubsystem implements Runnable {
 		ElevatorButtonPressEvent ebEvent;
 		FloorButtonPressEvent fbEvent;
 		ElevatorMoveEvent emEvent;
+		ElevatorCallToMoveEvent ectmEvent;
+		ElevatorTripUpdateEvent etuEvent;
 		
 		// run until stopped
 		while(!Thread.interrupted()) {
-			
+
 			event = (Event) elevatorEvents.removeFirst();
 			
 			//when the elevator is on the floor that is called
@@ -80,7 +79,7 @@ public class ElevatorSubsystem implements Runnable {
 				
 				reply = new ElevatorMoveEvent(elevators[0].getID(),elevators[0].getCurrFloor(), fbEvent.getFloor(), elevators[0].getDirection());
 				elevatorEvents.addLast(reply);
-			
+
 			}
 			//elevator is moving to a destination and sending a notification to the scheduler that elevator arrived
 			else if (event.getType() == EventType.ELEVATOR_MOVING) {
@@ -94,10 +93,18 @@ public class ElevatorSubsystem implements Runnable {
 					reply = new ElevatorArriveEvent(emEvent.getCar(), emEvent.getDestination(), elevators[emEvent.getCar()].getDirection());
 					schedulerEvents.addLast(reply);
 				}
+			//new logic with iteration 2 scheduler implementations
+			}else if(event.getType() == EventType.ELEVATOR_CALLED){
+				//Elevator shall move
+				ectmEvent = (ElevatorCallToMoveEvent) event;
+				//set direction of the car which the scheduler has assigned to move
+				box.put(ectmEvent);
+			}else if(event.getType() == EventType.ELEVATOR_ARRIVAL_SENSOR) {
+				etuEvent = (ElevatorTripUpdateEvent) event;
+				//Notify elevators of and ElevatorTripUpdate
+				box.put(etuEvent);
 			}
-			
 		}
-		
 	}
 	
 	/**
@@ -121,10 +128,9 @@ public class ElevatorSubsystem implements Runnable {
 		return currState;
 	}
 	
-	
 	public static void main(String[] args) {
-		Thread e = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer()));
+		Box box = new Box();
+		Thread e = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer(), box));
 		e.start();
 	}
-	
 }
