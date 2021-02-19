@@ -66,6 +66,7 @@ public class Scheduler implements Runnable {
 		for (ElevatorStatus e: elevators) {
 			destinations = e.getDestinations();
 			if (d == DirectionType.UP && d == e.getDirection() && pickup > e.getLocation()) {
+				System.out.println(String.format("SCHEDULER: found enroute elevator %d going up adding new stop %d to its destinations", e.getId(), pickup));
 				// maintaining sorted
 				if (pickup == Configuration.NUM_FLOORS) {
 					// add to the end (but dont duplicate)
@@ -82,7 +83,8 @@ public class Scheduler implements Runnable {
 					}
 				}
 				return e.getId();
-			} else if (d == DirectionType.DOWN && d == e.getDirection() && pickup < e.getLocation()) {				
+			} else if (d == DirectionType.DOWN && d == e.getDirection() && pickup < e.getLocation()) {	
+				System.out.println(String.format("SCHEDULER: found enroute elevator %d going down adding new stop %d to its destinations", e.getId(), pickup));
 				// maintaining sorted
 				if (pickup == 1) {
 					// add to the end
@@ -104,51 +106,78 @@ public class Scheduler implements Runnable {
 		return -1;
 	}
 	
+	/**
+	 * Logic for handling floor button presses, this method goes through the options for scheduling,
+	 * updating scheduler elevator states, and passing the event appropriately to the elevator subsystem
+	 * @param buttonEv - the event to handle
+	 */
+	private void handleFloorButtonPressEvent(FloorButtonPressEvent buttonEv) {
+		ElevatorStatus elevator;
+		int assigned;
+		ElevatorCallToMoveEvent elevatorRequest;
+		
+		System.out.println("SCHEDULER: Handling floor button press");
+		
+		// check if an elevator is on the way
+		assigned = elevatorEnRouteAdd(buttonEv.getDirection(), buttonEv.getFloor());
+		// if unsuccessful
+		if (assigned == -1) {
+			System.out.println("SCHEDULER: Unable to find elevator enroute to schedule");
+			// assign to a free elevator
+			elevator = findIdleElevator();
+			
+			// no idle elevators ... 
+			if (elevator == null) {
+				System.out.println("SCHEDULER: Placed in unassigned queue, going to wait for a free elevator");
+				// leave in unassigned
+				unscheduled.add(buttonEv);
+			} else {
+				System.out.println(String.format("SCHEDULER: elevator %d is IDLE sending request to move for pickup", elevator.getId()));
+				elevatorRequest = new ElevatorCallToMoveEvent(elevator.getId(), buttonEv.getDirection());
+				elevatorQueue.addLast(elevatorRequest);
+			}
+		}
+	}
+	
+	/**
+	 * Logic for handling elevatorbutton presses, this method goes through the options for scheduling,
+	 * updating scheduler elevator states, and passing the event appropriately to the elevator subsystem
+	 * @param elevatorBEv - the event to handle
+	 */
+	private void handleElevatorButtonPressEvent(ElevatorButtonPressEvent elevatorBEv) {
+		ElevatorStatus elevator;
+		ElevatorCallToMoveEvent elevatorRequest;
+		
+		// update elevator state
+		elevator = elevators.get(elevatorBEv.getCar());
+		
+		// TODO: account for existing destinations
+		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
+		elevator.setDirection(elevatorBEv.getDirection());
+
+		// get the elevator moving
+		elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevatorBEv.getDirection());
+		System.out.println("SCHEDULER: Sending event " + elevatorRequest + " to elevator");
+		elevatorQueue.addLast(elevatorRequest);
+	}
+	
 	@Override
 	public void run() {
 		Event event;
-		FloorButtonPressEvent buttonEv;
-		ElevatorButtonPressEvent elevatorBEv;
-		ElevatorCallToMoveEvent elevatorRequest;
-		ElevatorStatus elevator;
-		int assigned;
 
+		// handle events forever
 		while(!Thread.interrupted()) {
 			event = (Event)schedulerQueue.removeFirst();
 			
 			switch(event.getType()) {
 				case FLOOR_BUTTON: {
-					buttonEv = (FloorButtonPressEvent) event;
-					// check if an elevator is on the way
-					assigned = elevatorEnRouteAdd(buttonEv.getDirection(), buttonEv.getFloor());
-					// if unsuccessful
-					if (assigned == -1) {
-						// assign to a free elevator
-						elevator = findIdleElevator();
-						
-						// no idle elevators ... 
-						if (elevator == null) {
-							// leave in unassigned
-							unscheduled.add(buttonEv);
-						} else {
-							elevatorRequest = new ElevatorCallToMoveEvent(elevator.getId(), buttonEv.getDirection());
-							elevatorQueue.addLast(elevatorRequest);
-						}
-					}
+					handleFloorButtonPressEvent((FloorButtonPressEvent) event);
 					break;
 				}
-				case ELEVATOR_BUTTONS:
-					elevatorBEv = (ElevatorButtonPressEvent) event;
-					// update elevator state
-					elevator = elevators.get(elevatorBEv.getCar());
-					elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
-					elevator.setDirection(elevatorBEv.getDirection());
-
-					// get the elevator moving
-					elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevatorBEv.getDirection());
-					System.out.println("SCHEDULER: Sending event " + elevatorRequest + " to elevator");
-					elevatorQueue.addLast(elevatorRequest);
+				case ELEVATOR_BUTTONS: {
+					handleElevatorButtonPressEvent((ElevatorButtonPressEvent) event);
 					break;
+				}
 				case ELEVATOR_ARRIVED:
 					System.out.println("SCHEDULER: Sending event " + event + " to floor");
 					floorQueue.addLast(event);
