@@ -52,7 +52,7 @@ public class Scheduler implements Runnable {
 	 */
 	private ElevatorStatus findIdleElevator() {
 		for (ElevatorStatus e: elevators) {
-			if (e.getDirection() == DirectionType.STILL) {
+			if (e.getDestinations().size() == 0) {
 				return e;
 			}
 		}
@@ -72,7 +72,7 @@ public class Scheduler implements Runnable {
 			if (d == DirectionType.UP && d == e.getDirection() && pickup > e.getLocation()) {
 				// maintaining sorted
 				if (pickup == Configuration.NUM_FLOORS) {
-					// add to the end
+					// add to the end (but dont duplicate)
 					if (destinations.size() == 0 || destinations.get(destinations.size() - 1) != pickup) {
 						destinations.add(pickup);
 					}
