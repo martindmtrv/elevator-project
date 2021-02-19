@@ -1,12 +1,13 @@
 package elevator;
-import event.DirectionType;
+import event.*;
+import scheduler.BoundedBuffer;
 
 /**
  * Class representing a single elevator. Will receive inputs from the ElevatorSubsystem to toggle its lights, buttons, motor and door
  * on arrival of floor and on input entered
  * @author Ammar Tosun
  */
-public class Elevator {
+public class Elevator implements Runnable{
 	
 	//static final String UP = "Moving Up", DOWN = "Moving Down", STILL = "Stopped";
 	
@@ -19,6 +20,9 @@ public class Elevator {
 	private int currFloor;
 	private int maxFloor;
 	private DirectionType status;	//UP, DOWN, STILL/stopped
+
+	private Box box;
+	private BoundedBuffer schedulerEvents;
 	
 	/**
 	 * Create a new Elevator 
@@ -26,7 +30,7 @@ public class Elevator {
 	 * @param s - elevator name/ID
 	 * @param c - currFloor
 	 */
-	public Elevator(int s, int n, int c) {
+	public Elevator(int s, int n, int c, Box box, BoundedBuffer schedulerQueue) {
 		eButton = new ElevatorButton[n+1];
 		eLamp = new ElevatorLamp[n+1];
 		eMotor = new ElevatorMotor();
@@ -35,7 +39,8 @@ public class Elevator {
 		maxFloor = n;
 		currFloor = c;
 		status = DirectionType.STILL;
-		
+		this.box = box;
+		this.schedulerEvents = schedulerQueue;
 		// create all the elevator buttons and lamps
 		for (int i = 1; i < n+1; ++i) {
 			eButton[i] = new ElevatorButton(i);
@@ -57,15 +62,15 @@ public class Elevator {
 		System.out.println("\tCar " + eID + " is in floor " + currFloor + " and will go to floor: " + d);
 		
 		//if elevator door is not closed yet, close elevator door
-		if (eDoor.getIsOpen() ==  true)
+		if (eDoor.getIsOpen())
 			this.eDoor.setIsOpen(false);
 
 		//if elevator button not pressed, press the button with the destination floor number
-		if (eButton[d].getIsPressed() != true)
+		if (!eButton[d].getIsPressed())
 			this.eButton[d].setIsPressed(true);
 		
 		//if elevator lamp on for that floor not lit yet, lit the eLamp for that floor number button
-		if (eLamp[d].getIsLit() != true)
+		if (!eLamp[d].getIsLit())
 			this.eLamp[d].setIsLit(true);
 		
 		//if destination is at an upper floor, go up until you reach it
@@ -102,7 +107,7 @@ public class Elevator {
 		if (currFloor < maxFloor) {
 			status = DirectionType.UP;
 			++currFloor;
-			if(this.eMotor.getIsRunning() != true)
+			if(!this.eMotor.getIsRunning())
 				this.runMotor(true);
 		}
 		else {
@@ -116,7 +121,7 @@ public class Elevator {
 		if (currFloor > 0) {
 			status = DirectionType.DOWN;
 			--currFloor;
-			if(this.eMotor.getIsRunning() != true)
+			if(!this.eMotor.getIsRunning())
 				this.runMotor(true);
 		}
 		else {
@@ -160,5 +165,65 @@ public class Elevator {
 	public int getNumFloors(){
 		return maxFloor;
 	}
-	
+	@Override
+
+	public void run(){
+		while(true){
+			synchronized (box){
+				ElevatorCallToMoveEvent ectmEvent;
+				ElevatorTripUpdateEvent etuEvent;
+				Event event = box.get();
+
+				switch(event.getType()) {
+					case ELEVATOR_CALLED:
+						ectmEvent = (ElevatorCallToMoveEvent) event;
+						if(eID == ectmEvent.getCar() ){ //check if car is the desired car
+							if(ectmEvent.getDirection() == DirectionType.UP){
+								//direction => go up & turn on motor
+								status = DirectionType.UP;
+								runMotor(true);
+							}else{
+								//direction => go down & turn on motor
+								status = DirectionType.DOWN;
+								runMotor(true);
+							}
+								try {
+									Thread.sleep(5000); //sleep 5s
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID,status);
+								schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+
+						}else{ //notify other elevators
+							box.notifyAll();
+						}
+						break;
+					case ELEVATOR_ARRIVAL_SENSOR:
+						etuEvent = (ElevatorTripUpdateEvent) event;
+						if(eID == etuEvent.getCar()) { //car IDs are same
+							if (etuEvent.getElevatorUpdate()) {
+								try {
+									Thread.sleep(5000); //sleep 5s and stop
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								arrived(etuEvent.getDestinationFloor()); //arrive at next floor
+							} else {
+								try {
+									Thread.sleep(10000); //sleep 10s and send another Elevator arrival sensor event
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID, status);
+								schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+							}
+						}else{
+							box.notifyAll();
+						}
+						break;
+				}
+			}
+		}
+	}
 }

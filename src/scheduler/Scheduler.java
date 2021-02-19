@@ -2,12 +2,8 @@ package scheduler;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import event.DirectionType;
-import event.ElevatorButtonPressEvent;
-import event.ElevatorCallToMoveEvent;
+import event.*;
 import elevator.ElevatorState;
-import event.Event;
-import event.FloorButtonPressEvent;
 import main.Configuration;
 
 /**
@@ -116,17 +112,15 @@ public class Scheduler implements Runnable {
 		ElevatorCallToMoveEvent elevatorRequest;
 		ElevatorStatus elevator;
 		int assigned;
-		
-		
+
 		while(!Thread.interrupted()) {
 			event = (Event)schedulerQueue.removeFirst();
 			
 			switch(event.getType()) {
 				case FLOOR_BUTTON: {
 					buttonEv = (FloorButtonPressEvent) event;
-					// find a elevator on the way
+					// check if an elevator is on the way
 					assigned = elevatorEnRouteAdd(buttonEv.getDirection(), buttonEv.getFloor());
-					
 					// if unsuccessful
 					if (assigned == -1) {
 						// assign to a free elevator
@@ -142,17 +136,14 @@ public class Scheduler implements Runnable {
 						}
 					}
 					break;
-					
 				}
 				case ELEVATOR_BUTTONS:
 					elevatorBEv = (ElevatorButtonPressEvent) event;
-					
 					// update elevator state
 					elevator = elevators.get(elevatorBEv.getCar());
-					elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons()));
+					elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
 					elevator.setDirection(elevatorBEv.getDirection());
-					
-					
+
 					// get the elevator moving
 					elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevatorBEv.getDirection());
 					System.out.println("SCHEDULER: Sending event " + elevatorRequest + " to elevator");
@@ -163,8 +154,15 @@ public class Scheduler implements Runnable {
 					floorQueue.addLast(event);
 					break;
 				case ELEVATOR_DOORS_OPEN:
-					
+
 					break;
+				case ELEVATOR_APPROACH_SENSOR: //Event sent from elevator informing of approach of a arrival sensor
+					ElevatorApproachSensorEvent easEvent = (ElevatorApproachSensorEvent) event;
+					int car = easEvent.getCar();
+					ElevatorTripUpdateEvent etuEvent = new ElevatorTripUpdateEvent(car,elevators.get(car).getLocation(),elevators.get(car).getNearestFloor(easEvent.getDirection(),elevators.get(car).getLocation()),elevators.get(car).getDirection());
+					elevatorQueue.addLast(etuEvent); //add new ElevatorTripUpdateEvent to elevator's queue
+					break;
+
 				default:
 					System.out.println("SCHEDULER: Unhandled event " + event);
 			}
@@ -174,7 +172,7 @@ public class Scheduler implements Runnable {
 	
 	/**
 	 * Set the new state for the elevator 
-	 * @param elevState State the elevator is in
+	 * @param newState State the elevator is in
 	 */
 	public void setState(State newState) {
 		this.state = newState;
