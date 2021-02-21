@@ -147,20 +147,16 @@ public class Elevator implements Runnable{
 
 	@Override
 	public void run(){
-		ElevatorCallToMoveEvent ectmEvent;
-		ElevatorTripUpdateEvent etuEvent;
 		while(true){
 			synchronized (box){
 				Event event = box.get();
 				switch (event.getType()) {
 					case ELEVATOR_CALLED: //Elevator called to move
-						ectmEvent = (ElevatorCallToMoveEvent) event;
-						handleElevatorCalledEvent(ectmEvent);
+						handleElevatorCalledEvent((ElevatorCallToMoveEvent) event);
 						break;
 					
 					case ELEVATOR_TRIP_UPDATE: //Arrival sensor
-						etuEvent = (ElevatorTripUpdateEvent) event;
-						handleElevatorTripUpdateEvent(etuEvent);
+						handleElevatorTripUpdateEvent((ElevatorTripUpdateEvent) event);
 						break;
 				}
 			}

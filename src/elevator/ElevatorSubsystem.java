@@ -60,9 +60,6 @@ public class ElevatorSubsystem implements Runnable {
 	@Override
 	public void run() {
 		Event event;
-		ElevatorArriveEvent eaEvent;
-		ElevatorCallToMoveEvent ectmEvent;
-		ElevatorTripUpdateEvent etuEvent;
 		runElevatorThreads(); //start elevator threads
 		// run until stopped
 		while (!Thread.interrupted()) {
@@ -70,20 +67,16 @@ public class ElevatorSubsystem implements Runnable {
 			//new logic with iteration 2 scheduler implementations
 			switch(event.getType()){
 				case ELEVATOR_CALLED:
-					ectmEvent = (ElevatorCallToMoveEvent) event; //Elevator shall move
-					box.put(ectmEvent); //set direction of the car which the scheduler has assigned to move
+					box.put((ElevatorCallToMoveEvent) event); //set direction of the car which the scheduler has assigned to move
 				break;
 				case ELEVATOR_TRIP_UPDATE:
-					etuEvent = (ElevatorTripUpdateEvent) event;
-					box.put(etuEvent); //Notify elevators of and ElevatorTripUpdate
+					box.put((ElevatorTripUpdateEvent) event); //Notify elevators of and ElevatorTripUpdate
 				break;
 				case ELEVATOR_APPROACH_SENSOR:
-					ElevatorApproachSensorEvent easEvent = (ElevatorApproachSensorEvent) event;
-					schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+					schedulerEvents.addLast((ElevatorApproachSensorEvent) event); //notify scheduler that arrival sensor triggered
 				break;
 				case ELEVATOR_ARRIVED:
-					eaEvent = (ElevatorArriveEvent) event;
-					schedulerEvents.addLast(eaEvent); //forward elevator arrival event to scheduler from elevator
+					schedulerEvents.addLast((ElevatorArriveEvent) event); //forward elevator arrival event to scheduler from elevator
 				break;
 			}
 		}
