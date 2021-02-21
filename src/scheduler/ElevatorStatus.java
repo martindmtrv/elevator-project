@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import event.DirectionType;
+import main.Configuration;
 
 /**
  * Class to keep track of elevator states from the scheduler side
@@ -23,7 +24,7 @@ public class ElevatorStatus {
 	 */
 	public ElevatorStatus(int i) {
 		id = i;
-		location = 0;
+		location = Configuration.INIT_CAR_FLOOR;
 		direction = DirectionType.STILL;
 		workingDirection = DirectionType.STILL;
 		status = ElevatorJobState.IDLE;

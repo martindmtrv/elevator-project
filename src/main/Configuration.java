@@ -13,4 +13,8 @@ public abstract class Configuration {
 	public static final double VELOCITY = 0;
 	public static final double ACCELERATION = 0;
 
+	//Time from floor to floor (Numbers from Iteration 0) in ms
+	public static final double LOAD_TIME = 9513.23; //9.51323
+	public static final long TRAVEL_TIME_BETWEEN_FLOOR = 9500; //~9.5s
+
 }

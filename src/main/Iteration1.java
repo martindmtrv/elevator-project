@@ -14,7 +14,6 @@ public class Iteration1 {
     	BoundedBuffer floorQueue = new BoundedBuffer();
     	BoundedBuffer schedulerQueue = new BoundedBuffer();
     	BoundedBuffer elevatorQueue = new BoundedBuffer();
-    	
         
     	// floor get scheduler and floor queues
         Thread floor = new Thread(new FloorSubsystem(testFile, Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
@@ -28,6 +27,5 @@ public class Iteration1 {
         elevator.start();
         floor.start();
         scheduler.start();
-        
     }
 }

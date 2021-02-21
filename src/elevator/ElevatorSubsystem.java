@@ -7,13 +7,15 @@ import scheduler.BoundedBuffer;
 
 /**
  * Elevator Subsystem for the elevator project. Controls all the elevators and handles sending input to the scheduler
- * @author Ammar Tosun
+ * @author Ammar Tosun (I1) & Alex Cameron (I2)
  */
 public class ElevatorSubsystem implements Runnable {
 	
-	private Elevator[] elevators;				
+	private Elevator[] elevators;
+	private Thread[] elevatorThreads;
 	private BoundedBuffer elevatorEvents;
 	private BoundedBuffer schedulerEvents;
+
 	private ElevatorState currState;
 	private ElevatorState prevState;
 
@@ -29,15 +31,25 @@ public class ElevatorSubsystem implements Runnable {
 	 */
 	public ElevatorSubsystem(int n, int f, int c, BoundedBuffer elevatorQueue, BoundedBuffer schedulerQueue, Box box) {
 		elevators = new Elevator[n];
+		elevatorThreads = new Thread[n];
 		elevatorEvents = elevatorQueue;
 		schedulerEvents = schedulerQueue;
-		this.currState = ElevatorState.STILL; //init state
 
 		this.box = box;
 
 		// create elevators
 		for (int x = 0; x < n; x++) {
 			elevators[x] = new Elevator(x, f, c, this.box, this.schedulerEvents);
+			elevatorThreads[x] = new Thread(elevators[x], "elevator" + x); //Array of each elevator thread
+		}
+	}
+
+	/**
+	 * Start the elevator threads.
+	 */
+	public void runElevatorThreads(){
+		for(int x = 0; x<elevatorThreads.length;x++){
+			elevatorThreads[x].start();
 		}
 	}
 	
@@ -46,66 +58,33 @@ public class ElevatorSubsystem implements Runnable {
 	 * For iteration 1 it will be read from a file
 	 */
 	@Override
-	public void run() {		
-		Event reply, event;
-		
-		ElevatorButtonPressEvent ebEvent;
-		FloorButtonPressEvent fbEvent;
-		ElevatorMoveEvent emEvent;
+	public void run() {
+		Event event;
+		ElevatorArriveEvent eaEvent;
 		ElevatorCallToMoveEvent ectmEvent;
 		ElevatorTripUpdateEvent etuEvent;
-		
+		runElevatorThreads(); //start elevator threads
 		// run until stopped
-		while(!Thread.interrupted()) {
-
+		while (!Thread.interrupted()) {
 			event = (Event) elevatorEvents.removeFirst();
-			
-			//when the elevator is on the floor that is called
-			if (event.getType() == EventType.ELEVATOR_BUTTONS) {
-				ebEvent = (ElevatorButtonPressEvent) event;
-	
-				//get the destinations
-				Integer[] destinations = ebEvent.getButtons();
-				
-				//loop through destinations and add a MoveElevatorEvent to the  elevatorEvents
-				for (int f: destinations) {
-					reply = new ElevatorMoveEvent(ebEvent.getCar(), elevators[ebEvent.getCar()].getCurrFloor(), f, elevators[ebEvent.getCar()].getDirection());
-					elevatorEvents.addLast(reply);
-				}
-			} 
-			//elevator called from a floor
-			else if (event.getType() == EventType.FLOOR_BUTTON) {
-				fbEvent = (FloorButtonPressEvent) event;
-				
-				reply = new ElevatorMoveEvent(elevators[0].getID(),elevators[0].getCurrFloor(), fbEvent.getFloor(), elevators[0].getDirection());
-				elevatorEvents.addLast(reply);
-
-			}
-			//elevator is moving to a destination and sending a notification to the scheduler that elevator arrived
-			else if (event.getType() == EventType.ELEVATOR_MOVING) {
-				emEvent = (ElevatorMoveEvent) event;
-				
-				//go to the floor
-				boolean arrived = elevators[emEvent.getCar()].visitFloor(emEvent.getDestination());
-				
-				//when arrived, notify scheduler
-				if (arrived) {
-					reply = new ElevatorArriveEvent(emEvent.getCar(), emEvent.getDestination(), elevators[emEvent.getCar()].getDirection());
-					schedulerEvents.addLast(reply);
-				}
 			//new logic with iteration 2 scheduler implementations
-			}else if(event.getType() == EventType.ELEVATOR_CALLED){
-				//Elevator shall move
-				ectmEvent = (ElevatorCallToMoveEvent) event;
-				//set direction of the car which the scheduler has assigned to move
-				box.put(ectmEvent);
-			}else if(event.getType() == EventType.ELEVATOR_ARRIVAL_SENSOR) {
-				etuEvent = (ElevatorTripUpdateEvent) event;
-				//Notify elevators of and ElevatorTripUpdate
-				box.put(etuEvent);
-			}else if(event.getType() == EventType.ELEVATOR_APPROACH_SENSOR){
-				ElevatorApproachSensorEvent easEvent = (ElevatorApproachSensorEvent) event;
-				schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+			switch(event.getType()){
+				case ELEVATOR_CALLED ->{
+					ectmEvent = (ElevatorCallToMoveEvent) event; //Elevator shall move
+					box.put(ectmEvent); //set direction of the car which the scheduler has assigned to move
+				}
+				case ELEVATOR_TRIP_UPDATE -> {
+					etuEvent = (ElevatorTripUpdateEvent) event;
+					box.put(etuEvent); //Notify elevators of and ElevatorTripUpdate
+				}
+				case ELEVATOR_APPROACH_SENSOR -> {
+					ElevatorApproachSensorEvent easEvent = (ElevatorApproachSensorEvent) event;
+					schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+				}
+				case ELEVATOR_ARRIVED -> {
+					eaEvent = (ElevatorArriveEvent) event;
+					schedulerEvents.addLast(eaEvent); //forward elevator arrival event to scheduler from elevator
+				}
 			}
 		}
 	}

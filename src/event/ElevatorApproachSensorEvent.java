@@ -1,5 +1,11 @@
 package event;
 
+/**
+ * This event is sent from the elevator -> elevatorsubsystem -> scheduler which indicates that the
+ * scheduler should send a ElevatorTripUpdateEvent to let the elevator know if it should continue or
+ * stop at the next floor.
+ * @Author: Alex Cameron
+ */
 public class ElevatorApproachSensorEvent extends Event {
     private int car;
     private int floor;
@@ -18,14 +24,14 @@ public class ElevatorApproachSensorEvent extends Event {
 
     public int getCar() {
             return car;
-        }
-        public int getFloor() {
-            return floor;
-        }
-
-        public DirectionType getDirection() {
-            return direction;
-        }
     }
+    public int getFloor() {
+        return floor;
+    }
+
+    public DirectionType getDirection() {
+        return direction;
+    }
+}
 
 

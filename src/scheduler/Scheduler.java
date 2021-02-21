@@ -189,7 +189,6 @@ public class Scheduler implements Runnable {
 		} else {
 			floorToReach = elevator.getLocation() + 1;
 		}
-		
 		// update the state
 		elevator.setLocation(floorToReach);
 		

@@ -8,8 +8,7 @@ public enum EventType {
 	FLOOR_BUTTON,		//Requesting elevator from floor
 	ELEVATOR_ARRIVED,	//
 	ELEVATOR_BUTTONS,	//Requesting destination
-	ELEVATOR_CALLED,	
-	ELEVATOR_MOVING,
+	ELEVATOR_CALLED,
 	ELEVATOR_TRIP_UPDATE, //it2
 	ELEVATOR_APPROACH_SENSOR //it2
 }
