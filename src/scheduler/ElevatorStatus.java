@@ -1,6 +1,7 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import event.DirectionType;
 
@@ -13,7 +14,7 @@ public class ElevatorStatus {
 	private int location;
 	private DirectionType direction; // the actual way its moving (for motors / pickups)
 	private DirectionType workingDirection; // the direction it is intended to go after picking up
-	private ArrayList<Integer> destinations;
+	private HashSet<Integer> destinations;
 	private ElevatorJobState status;
 	
 	/**
@@ -24,9 +25,9 @@ public class ElevatorStatus {
 		id = i;
 		location = 0;
 		direction = DirectionType.STILL;
-		setWorkingDirection(DirectionType.STILL);
+		workingDirection = DirectionType.STILL;
 		status = ElevatorJobState.IDLE;
-		destinations = new ArrayList<>();
+		destinations = new HashSet<>();
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class ElevatorStatus {
 		return nearestDestination;
 	}
 
-	public ArrayList<Integer> getDestinations() {
+	public HashSet<Integer> getDestinations() {
 		return destinations;
 	}
 	public DirectionType getDirection() {

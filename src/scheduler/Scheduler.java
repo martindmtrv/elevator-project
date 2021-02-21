@@ -1,6 +1,7 @@
 package scheduler;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import event.*;
 import elevator.ElevatorState;
@@ -62,49 +63,16 @@ public class Scheduler implements Runnable {
 	 * @return id of the elevator (or -1 if none)
 	 */
 	private int elevatorEnRouteAdd(DirectionType d, int pickup) {
-		ArrayList<Integer> destinations;
+		HashSet<Integer> destinations;
 		for (ElevatorStatus e: elevators) {
 			destinations = e.getDestinations();
 			if (e.getStatus() == ElevatorJobState.EN_ROUTE) {
-				if (d == DirectionType.UP && d == e.getDirection() && pickup > e.getLocation()) {
-					System.out.println(String.format("SCHEDULER: found enroute elevator %d going up adding new stop %d to its destinations", e.getId(), pickup));
-					// maintaining sorted
-					if (pickup == Configuration.NUM_FLOORS) {
-						// add to the end (but dont duplicate)
-						if (destinations.size() == 0 || destinations.get(destinations.size() - 1) != pickup) {
-							destinations.add(pickup);
-						}
-					} else {
-						// insert in the right position
-						for (int i=0; i < destinations.size(); i++) {
-							if (pickup < destinations.get(i)) {
-								destinations.add(i, pickup);
-								break;
-							}
-						}
-					}
+				if (d == e.getDirection() && ((d == DirectionType.UP && pickup > e.getLocation()) || (d == DirectionType.DOWN && pickup < e.getLocation()))) {
+					System.out.println(String.format("SCHEDULER: found enroute elevator %d going %s adding new stop %d to its destinations", e.getId(), d, pickup));
+					destinations.add(pickup);
 					return e.getId();
-				} else if (d == DirectionType.DOWN && d == e.getDirection() && pickup < e.getLocation()) {	
-					System.out.println(String.format("SCHEDULER: found enroute elevator %d going down adding new stop %d to its destinations", e.getId(), pickup));
-					// maintaining sorted
-					if (pickup == 1) {
-						// add to the end
-						if (destinations.size() == 0 || destinations.get(0) != pickup) {
-							destinations.add(0, pickup);
-						}
-					} else {
-						// insert in the right position
-						for (int i=0; i < destinations.size(); i++) {
-							if (pickup > destinations.get(i)) {
-								destinations.add(i, pickup);
-								break;
-							}
-						}
-					}
-					return e.getId();
-				}
+				} 
 			}
-			
 		}
 		return -1;
 	}
@@ -140,7 +108,10 @@ public class Scheduler implements Runnable {
 				
 				// Handle case where the elevator is already here
 				if (elevator.getLocation() == buttonEv.getFloor()) {
-					elevator.setDirection(buttonEv.getDirection());
+					elevator.setDirection(DirectionType.STILL);
+					elevator.setStatus(ElevatorJobState.EN_ROUTE);
+					elevator.setWorkingDirection(buttonEv.getDirection());
+					
 					floorQueue.addLast(new ElevatorArriveEvent(elevator.getId(), elevator.getLocation(), buttonEv.getDirection()));
 				} else {
 					elevator.getDestinations().add(buttonEv.getFloor());
@@ -150,7 +121,11 @@ public class Scheduler implements Runnable {
 					} else  {
 						toMove = DirectionType.DOWN;
 					}
+					// update elevator states
 					elevator.setStatus(ElevatorJobState.PICKING_UP);
+					elevator.setDirection(toMove);
+					elevator.setWorkingDirection(buttonEv.getDirection());
+					
 					elevatorRequest = new ElevatorCallToMoveEvent(elevator.getId(), toMove);
 					elevatorQueue.addLast(elevatorRequest);
 				}
@@ -166,12 +141,12 @@ public class Scheduler implements Runnable {
 	private void handleElevatorButtonPressEvent(ElevatorButtonPressEvent elevatorBEv) {
 		ElevatorStatus elevator;
 		ElevatorCallToMoveEvent elevatorRequest;
+		Object[] unscheduledEvents;
 		
 		// update elevator state
 		elevator = elevators.get(elevatorBEv.getCar());
 		
-		// TODO: account for existing destinations
-		ArrayList<Integer> current = elevator.getDestinations();
+		
 		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
 		elevator.setDirection(elevatorBEv.getDirection());
 		
@@ -182,13 +157,22 @@ public class Scheduler implements Runnable {
 			elevator.setDirection(elevatorBEv.getDirection());
 			
 			// get the elevator moving
-			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevatorBEv.getDirection());
+			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection());
 			System.out.println("SCHEDULER: Sending event " + elevatorRequest + " to elevator");
 			elevatorQueue.addLast(elevatorRequest);
 		} else {
 			elevator.setStatus(ElevatorJobState.IDLE);
 			elevator.setDirection(DirectionType.STILL);
 			elevator.setWorkingDirection(DirectionType.STILL);
+			// since an elevator is now free, try and schedule the unassigned events
+			
+			// call event handle with all unassigned to try and get them in
+			unscheduledEvents = unscheduled.toArray();
+			unscheduled.clear();
+			
+			for (Object e: unscheduledEvents) {
+				handleEvent((Event) e);
+			}
 		}
 	}
 	
@@ -242,6 +226,27 @@ public class Scheduler implements Runnable {
 		floorQueue.addLast(reply);
 	}
 	
+	private void handleEvent(Event event) {
+		switch(event.getType()) {
+			case FLOOR_BUTTON: {
+				handleFloorButtonPressEvent((FloorButtonPressEvent) event);
+				break;
+			}
+			case ELEVATOR_BUTTONS: {
+				handleElevatorButtonPressEvent((ElevatorButtonPressEvent) event);
+				break;
+			}
+			case ELEVATOR_ARRIVED:
+				handleElevatorArriveEvent((ElevatorArriveEvent) event);
+				break;
+			case ELEVATOR_APPROACH_SENSOR: //Event sent from elevator informing of approach of a arrival sensor
+				handleElevatorApproachSensorEvent((ElevatorApproachSensorEvent) event);
+				break;
+			default:
+				System.out.println("SCHEDULER: Unhandled event " + event);
+		}
+	}
+	
 	@Override
 	public void run() {
 		Event event;
@@ -249,26 +254,7 @@ public class Scheduler implements Runnable {
 		// handle events forever
 		while(!Thread.interrupted()) {
 			event = (Event)schedulerQueue.removeFirst();
-			
-			switch(event.getType()) {
-				case FLOOR_BUTTON: {
-					handleFloorButtonPressEvent((FloorButtonPressEvent) event);
-					break;
-				}
-				case ELEVATOR_BUTTONS: {
-					handleElevatorButtonPressEvent((ElevatorButtonPressEvent) event);
-					break;
-				}
-				case ELEVATOR_ARRIVED:
-					handleElevatorArriveEvent((ElevatorArriveEvent) event);
-					break;
-				case ELEVATOR_APPROACH_SENSOR: //Event sent from elevator informing of approach of a arrival sensor
-					handleElevatorApproachSensorEvent((ElevatorApproachSensorEvent) event);
-					break;
-				default:
-					System.out.println("SCHEDULER: Unhandled event " + event);
-			}
-			
+			handleEvent(event);
 		}
 	}
 	
