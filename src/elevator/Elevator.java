@@ -153,14 +153,15 @@ public class Elevator implements Runnable{
 			synchronized (box){
 				Event event = box.get();
 				switch (event.getType()) {
-					case ELEVATOR_CALLED -> { //Elevator called to move
+					case ELEVATOR_CALLED: //Elevator called to move
 						ectmEvent = (ElevatorCallToMoveEvent) event;
 						handleElevatorCalledEvent(ectmEvent);
-					}
-					case ELEVATOR_TRIP_UPDATE -> { //Arrival sensor
+						break;
+					
+					case ELEVATOR_TRIP_UPDATE: //Arrival sensor
 						etuEvent = (ElevatorTripUpdateEvent) event;
 						handleElevatorTripUpdateEvent(etuEvent);
-					}
+						break;
 				}
 			}
 		}

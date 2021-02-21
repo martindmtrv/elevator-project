@@ -69,22 +69,22 @@ public class ElevatorSubsystem implements Runnable {
 			event = (Event) elevatorEvents.removeFirst();
 			//new logic with iteration 2 scheduler implementations
 			switch(event.getType()){
-				case ELEVATOR_CALLED ->{
+				case ELEVATOR_CALLED:
 					ectmEvent = (ElevatorCallToMoveEvent) event; //Elevator shall move
 					box.put(ectmEvent); //set direction of the car which the scheduler has assigned to move
-				}
-				case ELEVATOR_TRIP_UPDATE -> {
+				break;
+				case ELEVATOR_TRIP_UPDATE:
 					etuEvent = (ElevatorTripUpdateEvent) event;
 					box.put(etuEvent); //Notify elevators of and ElevatorTripUpdate
-				}
-				case ELEVATOR_APPROACH_SENSOR -> {
+				break;
+				case ELEVATOR_APPROACH_SENSOR:
 					ElevatorApproachSensorEvent easEvent = (ElevatorApproachSensorEvent) event;
 					schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
-				}
-				case ELEVATOR_ARRIVED -> {
+				break;
+				case ELEVATOR_ARRIVED:
 					eaEvent = (ElevatorArriveEvent) event;
 					schedulerEvents.addLast(eaEvent); //forward elevator arrival event to scheduler from elevator
-				}
+				break;
 			}
 		}
 	}
