@@ -11,8 +11,10 @@ import event.DirectionType;
 public class ElevatorStatus {
 	private int id;
 	private int location;
-	private DirectionType direction;
+	private DirectionType direction; // the actual way its moving (for motors / pickups)
+	private DirectionType workingDirection; // the direction it is intended to go after picking up
 	private ArrayList<Integer> destinations;
+	private ElevatorJobState status;
 	
 	/**
 	 * Create an elevator status
@@ -22,6 +24,8 @@ public class ElevatorStatus {
 		id = i;
 		location = 0;
 		direction = DirectionType.STILL;
+		setWorkingDirection(DirectionType.STILL);
+		status = ElevatorJobState.IDLE;
 		destinations = new ArrayList<>();
 	}
 
@@ -71,5 +75,21 @@ public class ElevatorStatus {
 	}
 	public int getId() {
 		return id;
+	}
+
+	public ElevatorJobState getStatus() {
+		return status;
+	}
+
+	public void setStatus(ElevatorJobState status) {
+		this.status = status;
+	}
+
+	public DirectionType getWorkingDirection() {
+		return workingDirection;
+	}
+
+	public void setWorkingDirection(DirectionType workingDirection) {
+		this.workingDirection = workingDirection;
 	}
 }
