@@ -195,9 +195,9 @@ public class Scheduler implements Runnable {
 		
 		// check if this floor in the destinations OR is one of the limits (avoid crashing out)
 		if (floorToReach == 1 || floorToReach == Configuration.NUM_FLOORS || elevator.getDestinations().contains(floorToReach)) {
-			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), ElevatorTripUpdate.STOP);
+			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), floorToReach, ElevatorTripUpdate.STOP);
 		} else {
-			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), ElevatorTripUpdate.CONTINUE);
+			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), floorToReach, ElevatorTripUpdate.CONTINUE);
 		}
 		
 		elevatorQueue.addLast(etuEvent); //add new ElevatorTripUpdateEvent to elevator's queue

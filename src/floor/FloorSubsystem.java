@@ -76,7 +76,8 @@ public class FloorSubsystem implements Runnable {
 		
 		String[] input = s.split(" ");
 		
-		return new FloorButtonPressEvent(input[0], Integer.parseInt(input[1]), 
+		// do not use input file for time (use current time)
+		return new FloorButtonPressEvent("", Integer.parseInt(input[1]), 
 				Integer.parseInt(input[3]), DirectionType.valueOf(input[2].toUpperCase()));
 		
 	}
