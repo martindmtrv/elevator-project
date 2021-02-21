@@ -22,7 +22,7 @@ public class Elevator implements Runnable{
 	private DirectionType status;	//UP, DOWN, STILL/stopped
 
 	private Box box;
-	private BoundedBuffer schedulerEvents;
+	private BoundedBuffer elevatorEvents;
 	
 	/**
 	 * Create a new Elevator 
@@ -30,7 +30,7 @@ public class Elevator implements Runnable{
 	 * @param s - elevator name/ID
 	 * @param c - currFloor
 	 */
-	public Elevator(int s, int n, int c, Box box, BoundedBuffer schedulerQueue) {
+	public Elevator(int s, int n, int c, Box box, BoundedBuffer elevatorQueue) {
 		eButton = new ElevatorButton[n+1];
 		eLamp = new ElevatorLamp[n+1];
 		eMotor = new ElevatorMotor();
@@ -40,15 +40,15 @@ public class Elevator implements Runnable{
 		currFloor = c;
 		status = DirectionType.STILL;
 		this.box = box;
-		this.schedulerEvents = schedulerQueue;
+		this.elevatorEvents = elevatorQueue;
+
 		// create all the elevator buttons and lamps
 		for (int i = 1; i < n+1; ++i) {
 			eButton[i] = new ElevatorButton(i);
 			eLamp[i] = new ElevatorLamp(i);
 		}
 	}
-	
-	
+
 	//Getter for current  floor of the elevator (currFloor)
 	public int getCurrFloor() { return currFloor; }
 	public int getID() { return eID; }
@@ -193,7 +193,7 @@ public class Elevator implements Runnable{
 									e.printStackTrace();
 								}
 								ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID,status);
-								schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+								elevatorEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
 
 						}else{ //notify other elevators
 							box.notifyAll();
@@ -216,7 +216,7 @@ public class Elevator implements Runnable{
 									e.printStackTrace();
 								}
 								ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID, status);
-								schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+								elevatorEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
 							}
 						}else{
 							box.notifyAll();

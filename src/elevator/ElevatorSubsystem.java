@@ -103,6 +103,9 @@ public class ElevatorSubsystem implements Runnable {
 				etuEvent = (ElevatorTripUpdateEvent) event;
 				//Notify elevators of and ElevatorTripUpdate
 				box.put(etuEvent);
+			}else if(event.getType() == EventType.ELEVATOR_APPROACH_SENSOR){
+				ElevatorApproachSensorEvent easEvent = (ElevatorApproachSensorEvent) event;
+				schedulerEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
 			}
 		}
 	}
