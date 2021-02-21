@@ -182,6 +182,7 @@ public class Scheduler implements Runnable {
 	 */
 	private void handleElevatorApproachSensorEvent(ElevatorApproachSensorEvent easEvent) {
 		ElevatorStatus elevator = elevators.get(easEvent.getCar());
+		ElevatorTripUpdateEvent etuEvent;
 		int floorToReach;
 		if (easEvent.getDirection() == DirectionType.DOWN) {
 			floorToReach = elevator.getLocation() - 1;
@@ -194,17 +195,12 @@ public class Scheduler implements Runnable {
 		
 		// check if this floor in the destinations OR is one of the limits (avoid crashing out)
 		if (floorToReach == 1 || floorToReach == Configuration.NUM_FLOORS || elevator.getDestinations().contains(floorToReach)) {
-			//TODO send STOP trip update
+			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), ElevatorTripUpdate.STOP);
 		} else {
-			// TODO send CONTINUE trip update
+			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), ElevatorTripUpdate.CONTINUE);
 		}
 		
-		
-		// send stop if this is a destination to go to 
-		
-		
-		//ElevatorTripUpdateEvent etuEvent = new ElevatorTripUpdateEvent(car,elevators.get(car).getLocation(),elevators.get(car).getNearestFloor(easEvent.getDirection(),elevators.get(car).getLocation()),elevators.get(car).getDirection());
-		//elevatorQueue.addLast(etuEvent); //add new ElevatorTripUpdateEvent to elevator's queue
+		elevatorQueue.addLast(etuEvent); //add new ElevatorTripUpdateEvent to elevator's queue
 	}
 	
 	/**
@@ -212,7 +208,7 @@ public class Scheduler implements Runnable {
 	 * @param eaEvent - event to handle
 	 */
 	private void handleElevatorArriveEvent(ElevatorArriveEvent eaEvent) {
-		//System.out.println("SCHEDULER: Sending event " + eaEvent + " to floor");
+		System.out.println("SCHEDULER: Sending event " + eaEvent + " to floor");
 		ElevatorStatus elevator = elevators.get(eaEvent.getCar());
 		
 		elevator.setDirection(DirectionType.STILL);
@@ -226,6 +222,10 @@ public class Scheduler implements Runnable {
 		floorQueue.addLast(reply);
 	}
 	
+	/**
+	 * General method to handle events on the scheduler, breaks off into specific event types
+	 * @param event - generic event pulled from scheduler bounded buffer queue
+	 */
 	private void handleEvent(Event event) {
 		switch(event.getType()) {
 			case FLOOR_BUTTON: {
@@ -244,17 +244,6 @@ public class Scheduler implements Runnable {
 				break;
 			default:
 				System.out.println("SCHEDULER: Unhandled event " + event);
-		}
-	}
-	
-	@Override
-	public void run() {
-		Event event;
-
-		// handle events forever
-		while(!Thread.interrupted()) {
-			event = (Event)schedulerQueue.removeFirst();
-			handleEvent(event);
 		}
 	}
 	
@@ -295,6 +284,17 @@ public class Scheduler implements Runnable {
 				break;
 		}
 		return s;
+	}
+	
+	@Override
+	public void run() {
+		Event event;
+
+		// handle events forever
+		while(!Thread.interrupted()) {
+			event = (Event)schedulerQueue.removeFirst();
+			handleEvent(event);
+		}
 	}
 	
 }
