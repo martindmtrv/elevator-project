@@ -1,6 +1,4 @@
 package floor;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -114,17 +112,13 @@ public class Floor {
 		buttons.get(dir).toArray(elevatorButtons);
 		buttons.get(dir).clear();
 		
-		// fix lights and sort destinations as fit (ascending when going up)
-		// descending when going down
+		// fix lights (no need to sort destinations)
 		if (dir == DirectionType.DOWN) {
 			downButton.setIsPressed(false);
 			downLamp.setIsLit(false);
-			
-			Arrays.sort(elevatorButtons, Collections.reverseOrder());
 		} else {
 			upButton.setIsPressed(false);
 			upLamp.setIsLit(false);
-			Arrays.sort(elevatorButtons);
 		}
 		
 		return elevatorButtons;

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import event.*;
-import elevator.ElevatorState;
 import main.Configuration;
 
 /**
@@ -88,13 +87,13 @@ public class Scheduler implements Runnable {
 		ElevatorCallToMoveEvent elevatorRequest;
 		DirectionType toMove;
 		
-		System.out.println("SCHEDULER: Handling floor button press");
+		// output some info
+		System.out.println(String.format("SCHEDULER: Handling floor button event pickup %d direction %s", buttonEv.getFloor(), buttonEv.getDirection()));
 		
 		// check if an elevator is on the way
 		assigned = elevatorEnRouteAdd(buttonEv.getDirection(), buttonEv.getFloor());
 		// if unsuccessful
 		if (assigned == -1) {
-			System.out.println("SCHEDULER: Unable to find elevator enroute to schedule");
 			// assign to a free elevator
 			elevator = findIdleElevator();
 			
@@ -130,6 +129,9 @@ public class Scheduler implements Runnable {
 					elevatorQueue.addLast(elevatorRequest);
 				}
 			}
+		} else {
+			// successfully assigned to enroute elevator
+			System.out.println(String.format("SCHEDULER: Assigned pickup at %d %s to elevator %d ENROUTE", buttonEv.getFloor(), buttonEv.getDirection(), assigned));
 		}
 	}
 	
@@ -146,6 +148,8 @@ public class Scheduler implements Runnable {
 		// update elevator state
 		elevator = elevators.get(elevatorBEv.getCar());
 		
+		System.out.println("SCHEDULER: Adding elevator button presses: " + Arrays.toString(elevatorBEv.getButtons()) + " to elevator " + elevatorBEv.getCar());
+		
 		
 		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
 		elevator.setDirection(elevatorBEv.getDirection());
@@ -157,6 +161,8 @@ public class Scheduler implements Runnable {
 			elevator.setDirection(elevatorBEv.getDirection());
 			
 			// get the elevator moving
+			
+			// TODO: send over elevator buttons as well
 			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection());
 			System.out.println("SCHEDULER: Sending event " + elevatorRequest + " to elevator");
 			elevatorQueue.addLast(elevatorRequest);
@@ -164,15 +170,22 @@ public class Scheduler implements Runnable {
 			elevator.setStatus(ElevatorJobState.IDLE);
 			elevator.setDirection(DirectionType.STILL);
 			elevator.setWorkingDirection(DirectionType.STILL);
+			
+			System.out.println(String.format("SCHEDULER: Elevator %d is now IDLE", elevator.getId()));
 			// since an elevator is now free, try and schedule the unassigned events
 			
 			// call event handle with all unassigned to try and get them in
 			unscheduledEvents = unscheduled.toArray();
 			unscheduled.clear();
 			
-			for (Object e: unscheduledEvents) {
-				handleEvent((Event) e);
+			if (unscheduledEvents.length > 0) {
+				System.out.println("SCHEDULER: free elevator detected, trying to schedule " + unscheduledEvents.length + " unassigned events");
+				
+				for (Object e: unscheduledEvents) {
+					handleEvent((Event) e);
+				}
 			}
+			
 		}
 	}
 	
@@ -189,6 +202,9 @@ public class Scheduler implements Runnable {
 		} else {
 			floorToReach = elevator.getLocation() + 1;
 		}
+		
+		System.out.println(String.format("SCHEDULER: elevator %d is approaching floor %d going %s", easEvent.getCar(), floorToReach, elevator.getDirection()));
+		
 		// update the state
 		elevator.setLocation(floorToReach);
 		
@@ -198,6 +214,9 @@ public class Scheduler implements Runnable {
 		} else {
 			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), floorToReach, ElevatorTripUpdate.CONTINUE);
 		}
+		
+		System.out.println(String.format("SCHEDULER: sending trip update %s to elevator %d", etuEvent.getUpdate(), etuEvent.getCar()));
+		
 		
 		elevatorQueue.addLast(etuEvent); //add new ElevatorTripUpdateEvent to elevator's queue
 	}
@@ -226,6 +245,7 @@ public class Scheduler implements Runnable {
 	 * @param event - generic event pulled from scheduler bounded buffer queue
 	 */
 	private void handleEvent(Event event) {
+		System.out.println("SCHEDULER: handling event " + event.getType());
 		switch(event.getType()) {
 			case FLOOR_BUTTON: {
 				handleFloorButtonPressEvent((FloorButtonPressEvent) event);

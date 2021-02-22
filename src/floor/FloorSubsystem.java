@@ -9,9 +9,7 @@ import event.DirectionType;
 import event.ElevatorArriveEvent;
 import event.ElevatorButtonPressEvent;
 import event.Event;
-import event.EventType;
 import event.FloorButtonPressEvent;
-import main.Configuration;
 import scheduler.BoundedBuffer;
 
 /**
@@ -82,6 +80,59 @@ public class FloorSubsystem implements Runnable {
 		
 	}
 	
+	/**
+	 * Handler for floor button presses. It will request an elevator from the scheduler,
+	 * if the button was not already pressed.
+	 * @param fbEvent - the event to handle
+	 */
+	public void handleFloorButtonPressEvent(FloorButtonPressEvent fbEvent) {
+		boolean notPressed;
+		
+		// send to scheduler after setting buttons of that
+		notPressed = floors[fbEvent.getFloor() - 1].requestDirection(fbEvent);
+		
+		// if notPressed is false that means button was already clicked (no need to request an elevator)
+		if (notPressed) {
+			schedulerEvents.addLast(fbEvent);
+		}
+	}
+	
+	/**
+	 * Handling of elevator arrival event. This means sending over the elevator button presses for the destinations
+	 * requested by passengers
+	 * @param eaEvent - the elevator arrive event to handle
+	 */
+	public void handleElevatorArriveEvent(ElevatorArriveEvent eaEvent) {
+		Integer[] elevatorButtons;
+		ElevatorButtonPressEvent reply;
+		
+		elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
+		
+		System.out.println("FLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
+		reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar(), eaEvent.getDirection());
+		
+		schedulerEvents.addLast(reply);
+	}
+	
+	/**
+	 * General method with switch case for all event types handled by this system
+	 * @param event - the event to handle
+	 */
+	public void handleEvent(Event event) {
+		switch (event.getType()) {
+			case FLOOR_BUTTON: {
+				handleFloorButtonPressEvent((FloorButtonPressEvent) event);
+				break;
+			}
+			case ELEVATOR_ARRIVED: {
+				handleElevatorArriveEvent((ElevatorArriveEvent) event);
+				break;
+			}
+			default:
+				break;
+			}
+	}
+	
 	@Override
 	public void run() {
 		//parse input
@@ -98,51 +149,13 @@ public class FloorSubsystem implements Runnable {
 			events.addLast(parseLine(s));
 		}
 		
-		boolean notPressed;
-		Integer[] elevatorButtons;
-		Event reply, event;
+		Event event;
 		
-		FloorButtonPressEvent fbEvent;
-		ElevatorArriveEvent eaEvent;
 		
 		// run until stopped
 		while(!Thread.interrupted()) {
 			event = (Event) events.removeFirst();
-			
-			if (event.getType() == EventType.FLOOR_BUTTON) {
-				// send to scheduler after setting buttons of that
-				fbEvent = (FloorButtonPressEvent) event;
-				
-				notPressed = floors[fbEvent.getFloor() - 1].requestDirection(fbEvent);
-				
-				// if notPressed is false that means button was already clicked (no need to request an elevator)
-				if (notPressed) {
-					schedulerEvents.addLast(fbEvent);
-				}
-			} else if (event.getType() == EventType.ELEVATOR_ARRIVED) {
-				eaEvent = (ElevatorArriveEvent) event;
-				elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
-				
-				if (elevatorButtons.length > 0) {
-					System.out.println("FLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
-					reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar(), eaEvent.getDirection());
-					
-					schedulerEvents.addLast(reply);
-				}
-			}
-			
+			handleEvent(event);
 		}
-	}
-	/**
-	 *  Getter method for number floors in subsystem
-	 * @return number of floors
-	 */
-	public int getNumFloors() {
-		return floors.length;
-	}
-	
-	public static void main(String[] args) {
-		Thread f = new Thread(new FloorSubsystem("Test.txt", Configuration.NUM_FLOORS, new BoundedBuffer(), new BoundedBuffer()));
-		f.start();
 	}
 }
