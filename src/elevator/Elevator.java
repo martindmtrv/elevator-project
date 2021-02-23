@@ -61,7 +61,7 @@ public class Elevator implements Runnable{
 	}
 	
 	//Running and stopping the elevator motor
-	public void runMotor(boolean b) { eMotor.setIsRunning(b); }
+	public void runMotor(boolean b, DirectionType d) { eMotor.setIsRunning(b, d); }
 
 	/**
 	 * When the elevator arrives to the floor, the elevator lamp and button should not lit
@@ -71,11 +71,11 @@ public class Elevator implements Runnable{
 		//upon arrival: stop motor, open door, un-lit lamp, un-press button
 		System.out.println("ELEVATOR: Car " + eID + " has arrived floor " + n);
 		
-		this.runMotor(false);
 		this.eDoor.setIsOpen(true);
 		eLamp[n].setIsLit(false);
 		eButton[n].setIsPressed(false);
 		status = DirectionType.STILL;
+		this.runMotor(false, status);
 	}
 
 	/**
@@ -88,11 +88,11 @@ public class Elevator implements Runnable{
 			if(ectmEvent.getDirection() == DirectionType.UP){
 				//direction => go up & turn on motor
 				status = DirectionType.UP;
-				runMotor(true);
+				runMotor(true, status);
 			}else{
 				//direction => go down & turn on motor
 				status = DirectionType.DOWN;
-				runMotor(true);
+				runMotor(true, status);
 			}
 			if(eDoor.getIsOpen()){ //close doors if they are open
 				eDoor.setIsOpen(false);
