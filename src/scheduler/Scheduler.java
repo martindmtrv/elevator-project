@@ -161,9 +161,7 @@ public class Scheduler implements Runnable {
 			elevator.setDirection(elevatorBEv.getDirection());
 			
 			// get the elevator moving
-			
-			// TODO: send over elevator buttons as well
-			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection());
+			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection(), elevatorBEv.getButtons());
 			System.out.println("SCHEDULER: Sending event " + elevatorRequest + " to elevator");
 			elevatorQueue.addLast(elevatorRequest);
 		} else {
