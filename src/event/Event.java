@@ -9,7 +9,7 @@ import java.util.Date;
  * @author Martin Dimitrov
  */
 public class Event {
-	private String requestTime;
+	private static String requestTime;
 	private EventType type;
 	
 	/**
@@ -36,7 +36,7 @@ public class Event {
 		return String.format("%s %s", type, requestTime);
 	}
 	
-	public String getRequestTime() {
+	public static String getRequestTime() {
 		return requestTime;
 	}
 

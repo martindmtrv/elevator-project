@@ -108,7 +108,7 @@ public class FloorSubsystem implements Runnable {
 		
 		elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
 		
-		System.out.println("FLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
+		System.out.println("["+Event.getRequestTime()+"]\tFLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
 		reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar(), eaEvent.getDirection());
 		
 		schedulerEvents.addLast(reply);

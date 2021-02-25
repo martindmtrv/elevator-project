@@ -67,7 +67,7 @@ public class Scheduler implements Runnable {
 			destinations = e.getDestinations();
 			if (e.getStatus() == ElevatorJobState.EN_ROUTE) {
 				if (d == e.getDirection() && ((d == DirectionType.UP && pickup > e.getLocation()) || (d == DirectionType.DOWN && pickup < e.getLocation()))) {
-					System.out.println(String.format("SCHEDULER: found enroute elevator %d going %s adding new stop %d to its destinations", e.getId(), d, pickup));
+					System.out.println(String.format("["+Event.getRequestTime()+"]\tSCHEDULER: found enroute elevator %d going %s adding new stop %d to its destinations", e.getId(), d, pickup));
 					destinations.add(pickup);
 					return e.getId();
 				} 
@@ -88,7 +88,7 @@ public class Scheduler implements Runnable {
 		DirectionType toMove;
 		
 		// output some info
-		System.out.println(String.format("SCHEDULER: Handling floor button event pickup %d direction %s", buttonEv.getFloor(), buttonEv.getDirection()));
+		System.out.println(String.format("["+Event.getRequestTime()+"]\tSCHEDULER: Handling floor button event pickup %d direction %s", buttonEv.getFloor(), buttonEv.getDirection()));
 		
 		// check if an elevator is on the way
 		assigned = elevatorEnRouteAdd(buttonEv.getDirection(), buttonEv.getFloor());
@@ -99,11 +99,11 @@ public class Scheduler implements Runnable {
 			
 			// no idle elevators ... 
 			if (elevator == null) {
-				System.out.println("SCHEDULER: Placed in unassigned queue, going to wait for a free elevator");
+				System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: Placed in unassigned queue, going to wait for a free elevator");
 				// leave in unassigned
 				unscheduled.add(buttonEv);
 			} else {
-				System.out.println(String.format("SCHEDULER: elevator %d is IDLE sending request to move for pickup", elevator.getId()));
+				System.out.println(String.format("["+Event.getRequestTime()+"]\tSCHEDULER: elevator %d is IDLE sending request to move for pickup", elevator.getId()));
 				
 				// Handle case where the elevator is already here
 				if (elevator.getLocation() == buttonEv.getFloor()) {
@@ -131,7 +131,7 @@ public class Scheduler implements Runnable {
 			}
 		} else {
 			// successfully assigned to enroute elevator
-			System.out.println(String.format("SCHEDULER: Assigned pickup at %d %s to elevator %d ENROUTE", buttonEv.getFloor(), buttonEv.getDirection(), assigned));
+			System.out.println(String.format("["+Event.getRequestTime()+"]\tSCHEDULER: Assigned pickup at %d %s to elevator %d ENROUTE", buttonEv.getFloor(), buttonEv.getDirection(), assigned));
 		}
 	}
 	
@@ -148,7 +148,7 @@ public class Scheduler implements Runnable {
 		// update elevator state
 		elevator = elevators.get(elevatorBEv.getCar());
 		
-		System.out.println("SCHEDULER: Adding elevator button presses: " + Arrays.toString(elevatorBEv.getButtons()) + " to elevator " + elevatorBEv.getCar());
+		System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: Adding elevator button presses: " + Arrays.toString(elevatorBEv.getButtons()) + " to elevator " + elevatorBEv.getCar());
 		
 		
 		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
@@ -162,14 +162,14 @@ public class Scheduler implements Runnable {
 			
 			// get the elevator moving
 			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection(), elevatorBEv.getButtons());
-			System.out.println("SCHEDULER: Sending event " + elevatorRequest + " to elevator");
+			System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: Sending event " + elevatorRequest + " to elevator");
 			elevatorQueue.addLast(elevatorRequest);
 		} else {
 			elevator.setStatus(ElevatorJobState.IDLE);
 			elevator.setDirection(DirectionType.STILL);
 			elevator.setWorkingDirection(DirectionType.STILL);
 			
-			System.out.println(String.format("SCHEDULER: Elevator %d is now IDLE", elevator.getId()));
+			System.out.println(String.format("["+Event.getRequestTime()+"]\tSCHEDULER: Elevator %d is now IDLE", elevator.getId()));
 			// since an elevator is now free, try and schedule the unassigned events
 			
 			// call event handle with all unassigned to try and get them in
@@ -177,7 +177,7 @@ public class Scheduler implements Runnable {
 			unscheduled.clear();
 			
 			if (unscheduledEvents.length > 0) {
-				System.out.println("SCHEDULER: free elevator detected, trying to schedule " + unscheduledEvents.length + " unassigned events");
+				System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: free elevator detected, trying to schedule " + unscheduledEvents.length + " unassigned events");
 				
 				for (Object e: unscheduledEvents) {
 					handleEvent((Event) e);
@@ -201,7 +201,7 @@ public class Scheduler implements Runnable {
 			floorToReach = elevator.getLocation() + 1;
 		}
 		
-		System.out.println(String.format("SCHEDULER: elevator %d is approaching floor %d going %s", easEvent.getCar(), floorToReach, elevator.getDirection()));
+		System.out.println(String.format("["+Event.getRequestTime()+"]\tSCHEDULER: elevator %d is approaching floor %d going %s", easEvent.getCar(), floorToReach, elevator.getDirection()));
 		
 		// update the state
 		elevator.setLocation(floorToReach);
@@ -213,7 +213,7 @@ public class Scheduler implements Runnable {
 			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), floorToReach, ElevatorTripUpdate.CONTINUE);
 		}
 		
-		System.out.println(String.format("SCHEDULER: sending trip update %s to elevator %d", etuEvent.getUpdate(), etuEvent.getCar()));
+		System.out.println(String.format("["+Event.getRequestTime()+"]\tSCHEDULER: sending trip update %s to elevator %d", etuEvent.getUpdate(), etuEvent.getCar()));
 		
 		
 		elevatorQueue.addLast(etuEvent); //add new ElevatorTripUpdateEvent to elevator's queue
@@ -224,7 +224,7 @@ public class Scheduler implements Runnable {
 	 * @param eaEvent - event to handle
 	 */
 	private void handleElevatorArriveEvent(ElevatorArriveEvent eaEvent) {
-		System.out.println("SCHEDULER: Sending event " + eaEvent + " to floor");
+		System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: Sending event " + eaEvent + " to floor");
 		ElevatorStatus elevator = elevators.get(eaEvent.getCar());
 		
 		elevator.setDirection(DirectionType.STILL);
@@ -243,7 +243,7 @@ public class Scheduler implements Runnable {
 	 * @param event - generic event pulled from scheduler bounded buffer queue
 	 */
 	private void handleEvent(Event event) {
-		System.out.println("SCHEDULER: handling event " + event.getType());
+		System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: handling event " + event.getType());
 		switch(event.getType()) {
 			case FLOOR_BUTTON: {
 				handleFloorButtonPressEvent((FloorButtonPressEvent) event);
@@ -260,7 +260,7 @@ public class Scheduler implements Runnable {
 				handleElevatorApproachSensorEvent((ElevatorApproachSensorEvent) event);
 				break;
 			default:
-				System.out.println("SCHEDULER: Unhandled event " + event);
+				System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: Unhandled event " + event);
 		}
 	}
 	

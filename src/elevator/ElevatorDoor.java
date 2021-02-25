@@ -1,4 +1,7 @@
 package elevator;
+
+import event.Event;
+
 /**
  * A class representing the ElevatorDoor Object in the Elevator subsystem
  * @author Ammar Tosun
@@ -22,9 +25,9 @@ public class ElevatorDoor {
 	 */
 	public void setIsOpen(boolean b){
 		if (b)
-			System.out.println("\tELEVATORDOOR: is opening");
+			System.out.println("["+ Event.getRequestTime()+"]\t\tELEVATORDOOR: is opening");
 		else
-			System.out.println("\tELEVATORDOOR: is closing");
+			System.out.println("["+Event.getRequestTime()+"]\t\tELEVATORDOOR: is closing");
 		isOpen = b;
 	}
 	

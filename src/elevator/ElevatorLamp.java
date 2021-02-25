@@ -1,4 +1,7 @@
 package elevator;
+
+import event.Event;
+
 /**
  * A Class to represent the Elevator Lamp in the elevator subsystem
  * @author Ammar Tosun
@@ -22,7 +25,7 @@ public class ElevatorLamp {
 	 * @param b - boolean to set it to
 	 */
 	public void setIsLit(boolean b){
-		System.out.println("\tELEVATORLAMP: lamp " + this.floorNum + " is lit: " + b);
+		System.out.println("["+ Event.getRequestTime()+"]\t\tELEVATORLAMP: lamp " + this.floorNum + " is lit: " + b);
 		isLit = b;
 	}
 	

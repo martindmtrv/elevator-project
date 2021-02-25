@@ -1,6 +1,7 @@
 package elevator;
 
 import event.DirectionType;
+import event.Event;
 
 /**
  * A class representing the ElevatorMotor Object in the Elevator subsystem
@@ -22,15 +23,15 @@ public class ElevatorMotor {
 	 */
 	public void setIsRunning(boolean b, DirectionType d){
 		if (b && d == DirectionType.UP) {
-			System.out.println("\tELEVATORMOTOR: starts running to move UP");
+			System.out.println("["+ Event.getRequestTime()+"]\t\tELEVATORMOTOR: starts running to move UP");
 			direction = DirectionType.UP;
 		}
 		else if (b && d == DirectionType.DOWN) {
-			System.out.println("\tELEVATORMOTOR: starts running to move DOWN");
+			System.out.println("["+Event.getRequestTime()+"]\t\tELEVATORMOTOR: starts running to move DOWN");
 			direction = DirectionType.DOWN;
 		}	
 		else {
-			System.out.println("\tELEVATORMOTOR: stops running");
+			System.out.println("["+Event.getRequestTime()+"]\t\tELEVATORMOTOR: stops running");
 			direction = DirectionType.STILL;
 		}
 			
