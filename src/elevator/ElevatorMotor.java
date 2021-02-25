@@ -1,4 +1,7 @@
 package elevator;
+
+import event.DirectionType;
+
 /**
  * A class representing the ElevatorMotor Object in the Elevator subsystem
  * @author Ammar Tosun
