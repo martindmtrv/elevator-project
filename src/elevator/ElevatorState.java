@@ -5,10 +5,11 @@ package elevator;
  *
  */
 public enum ElevatorState {
-	STILL,
-	MOVING,
-	STOPPED,
-	INVALID
+	MOVING_UP,
+	MOVING_DOWN,
+	IDLE,
+	LOADING_PASSENGER,
+	UNLOADING_PASENGER
 	//Add state transitions:
 	//1. Door opening
 	//2. Door closing

@@ -21,12 +21,12 @@ public class ElevatorMotor {
 	 * Setter for isRunning
 	 * @param b - boolean to set it to
 	 */
-	public void setIsRunning(boolean b, DirectionType d){
-		if (b && d == DirectionType.UP) {
+	public void setIsRunning(boolean b, ElevatorState d){
+		if (b && d == ElevatorState.MOVING_UP) {
 			System.out.println("["+ Event.getRequestTime()+"]\t\tELEVATORMOTOR: starts running to move UP");
 			direction = DirectionType.UP;
 		}
-		else if (b && d == DirectionType.DOWN) {
+		else if (b && d == ElevatorState.MOVING_DOWN) {
 			System.out.println("["+Event.getRequestTime()+"]\t\tELEVATORMOTOR: starts running to move DOWN");
 			direction = DirectionType.DOWN;
 		}	

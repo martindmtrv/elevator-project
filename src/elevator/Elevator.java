@@ -11,8 +11,6 @@ import scheduler.ElevatorTripUpdate;
  */
 public class Elevator implements Runnable{
 	
-	//static final String UP = "Moving Up", DOWN = "Moving Down", STILL = "Stopped";
-	
 	private ElevatorButton[] eButton;
 	private ElevatorLamp[] eLamp;
 	private ElevatorMotor eMotor;
@@ -21,7 +19,8 @@ public class Elevator implements Runnable{
 	private int eID;
 	private int currFloor;
 	private int maxFloor;
-	private DirectionType status;	//UP, DOWN, STILL/stopped
+	private ElevatorState state;		
+	private DirectionType direction; 	//UP, DOWN, STILL
 
 	private final Box box;
 	private BoundedBuffer elevatorEvents;
@@ -40,7 +39,8 @@ public class Elevator implements Runnable{
 		eID = s;
 		maxFloor = n;
 		currFloor = c;
-		status = DirectionType.STILL;
+		direction = DirectionType.STILL;
+		state = ElevatorState.IDLE;
 		this.box = box;
 		this.elevatorEvents = elevatorQueue;
 
@@ -51,7 +51,9 @@ public class Elevator implements Runnable{
 		}
 	}
 
-	public DirectionType getDirection() { return status;}
+	public ElevatorState getState() { return state;}
+	public DirectionType getDirection() { return direction;}
+	
 
 	/**
 	 * Press an elevator button to go to that floor and lit that elevator lamp
@@ -63,14 +65,14 @@ public class Elevator implements Runnable{
 		eLamp[n].setIsLit(true);
 	}
 	public void getStatus() {
-		if (this.status != DirectionType.STILL)
-			System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " moving " + status + ", is approaching floor: " + currFloor);
+		if (this.state != ElevatorState.IDLE)
+			System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " is " + state + ", and is approaching floor: " + currFloor);
 		else
-			System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " is " + status + ", and currently on floor: " + currFloor);
+			System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " is " + state + ", and currently on floor: " + currFloor);
 	}
 	
 	//Running and stopping the elevator motor
-	public void runMotor(boolean b, DirectionType d) { eMotor.setIsRunning(b, d); }
+	public void runMotor(boolean b, ElevatorState d) { eMotor.setIsRunning(b, d); }
 
 	/**
 	 * When the elevator arrives to the floor, the elevator lamp and button should not lit
@@ -83,8 +85,9 @@ public class Elevator implements Runnable{
 		this.eDoor.setIsOpen(true);
 		eLamp[n].setIsLit(false);
 		eButton[n].setIsPressed(false);
-		status = DirectionType.STILL;
-		this.runMotor(false, status);
+		state = ElevatorState.IDLE;
+		direction = DirectionType.STILL;
+		this.runMotor(false, state);
 	}
 
 	/**
@@ -96,12 +99,14 @@ public class Elevator implements Runnable{
 			getStatus();
 			if(ectmEvent.getDirection() == DirectionType.UP){
 				//direction => go up & turn on motor
-				status = DirectionType.UP;
-				runMotor(true, status);
+				state = ElevatorState.MOVING_UP;
+				direction = DirectionType.UP;
+				runMotor(true, state);
 			}else{
 				//direction => go down & turn on motor
-				status = DirectionType.DOWN;
-				runMotor(true, status);
+				state = ElevatorState.MOVING_DOWN;
+				direction = DirectionType.DOWN;
+				runMotor(true, state);
 			}
 			if(eDoor.getIsOpen()){ //close doors if they are open
 				eDoor.setIsOpen(false);
@@ -115,7 +120,7 @@ public class Elevator implements Runnable{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID,status);
+			ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID,direction);
 			elevatorEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
 		}else{ //notify other elevators
 			box.notifyAll();
@@ -139,12 +144,14 @@ public class Elevator implements Runnable{
 					e.printStackTrace();
 				}
 				arrived(etuEvent.getApproachingFloor()); //arrive at next floor
-				ElevatorArriveEvent eaEvent = new ElevatorArriveEvent(eID,etuEvent.getApproachingFloor(), status);
+				ElevatorArriveEvent eaEvent = new ElevatorArriveEvent(eID,etuEvent.getApproachingFloor(), direction);
 				elevatorEvents.addLast(eaEvent);
 				//Elevator must now wait for passengers to get on at the arrived floor before departing
 				try {
+					state = ElevatorState.LOADING_PASSENGER;
 					System.out.println("["+Event.getRequestTime()+"]\tCAR "+ eID +": Sleeping " + Configuration.LOAD_TIME/1000 + "s for passengers to load.");
 					Thread.sleep(Configuration.LOAD_TIME);
+					state = ElevatorState.IDLE;
 				}catch(InterruptedException e){
 					e.printStackTrace();
 				}
@@ -156,7 +163,7 @@ public class Elevator implements Runnable{
 					e.printStackTrace();
 				}
 
-				ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID, status);
+				ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID, direction);
 				elevatorEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
 			}
 		}else{
