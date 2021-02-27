@@ -26,7 +26,6 @@ Contributions:
 		- Modified Scheduler to use a state machine design
 		- Created state machine diagram for the Scheduler
 		- Updated Sequence Diagram to iteration 2 standard
-		- Updated Class Diagram to iteration 2 standard
 		
 	Alex Cameron 101114698
 		- Implemented Arrival sensor 
