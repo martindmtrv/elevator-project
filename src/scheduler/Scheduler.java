@@ -10,7 +10,7 @@ import main.Configuration;
  * Scheduler thread that handles the communication between the elevator thread and the floor thread.
  * Currently, it passes requests from the elevator thread to the floor thread and vice versa on a first-in,
  * first-out basis. The scheduler's logic will be upgraded in upcoming iterations.
- * @author Erdem Yanikomeroglu (itr 1), Martin Dimitrov (itr 2)
+ * @author Erdem Yanikomeroglu (itr 1, 2), Martin Dimitrov (itr 1, 2)
  */
 public class Scheduler implements Runnable {
 	public BoundedBuffer schedulerQueue;
@@ -155,7 +155,6 @@ public class Scheduler implements Runnable {
 		
 		System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: Adding elevator button presses: " + Arrays.toString(elevatorBEv.getButtons()) + " to elevator " + elevatorBEv.getCar());
 		
-		
 		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
 		elevator.setDirection(elevatorBEv.getDirection());
 		
@@ -251,21 +250,30 @@ public class Scheduler implements Runnable {
 		System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: handling event " + event.getType());
 		switch(event.getType()) {
 			case FLOOR_BUTTON: {
+				this.setState(State.HANDLING);
 				handleFloorButtonPressEvent((FloorButtonPressEvent) event);
+				this.setState(State.WAITING);
 				break;
 			}
 			case ELEVATOR_BUTTONS: {
+				this.setState(State.HANDLING);
 				handleElevatorButtonPressEvent((ElevatorButtonPressEvent) event);
+				this.setState(State.WAITING);
 				break;
 			}
 			case ELEVATOR_ARRIVED:
+				this.setState(State.HANDLING);
 				handleElevatorArriveEvent((ElevatorArriveEvent) event);
+				this.setState(State.WAITING);
 				break;
 			case ELEVATOR_APPROACH_SENSOR: //Event sent from elevator informing of approach of a arrival sensor
+				this.setState(State.HANDLING);
 				handleElevatorApproachSensorEvent((ElevatorApproachSensorEvent) event);
+				this.setState(State.WAITING);
 				break;
 			default:
 				System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: Unhandled event " + event);
+				this.setState(State.WAITING);
 		}
 	}
 	
@@ -292,18 +300,14 @@ public class Scheduler implements Runnable {
 	public String printState(){
 		String s = "";
 		switch(state) {
-			case RECEIVING:
-				s ="Receiving State";
-				break;
 			case WAITING:
-				s= "Waiting State";
+				s = "Waiting State";
 				break;
-			case SENDING:
-				s = "Sending State";
+			case HANDLING:
+				s = "Event Handling State";
 				break;
-			case INVALID:
-				s= "Invalid State";
-				break;
+			default:
+				s = "Unknown State";
 		}
 		return s;
 	}

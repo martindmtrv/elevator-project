@@ -3,11 +3,14 @@ package scheduler;
 /**
  * Different states in which the scheduler may possess.
  * 
- * @Author: Alex Cameron
+ * @Author: Alex Cameron, Erdem Yanikomeroglu
  */
 public enum State {
-    RECEIVING,
-    WAITING,
-    SENDING,
-    INVALID
+    //RECEIVING,
+    //SENDING,
+    //INVALID
+	// ^ unused states (for now)
+	
+	WAITING,
+    HANDLING
 }
