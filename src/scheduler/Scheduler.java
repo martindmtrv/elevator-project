@@ -36,6 +36,11 @@ public class Scheduler implements Runnable {
 		elevators = new ArrayList<>(Configuration.NUM_CARS);
 		this.state = State.WAITING;
 		
+		//Added output for Unit testing purposes
+		if(Configuration.VERBOSE) {
+			System.out.println("\t\tSCHEDULER: Initialize state to WAITING");
+		}
+		
 		// create all the arraylists for elevator destinations
 		for (int i=0; i < Configuration.NUM_CARS; i++) {
 			elevators.add(new ElevatorStatus(i));

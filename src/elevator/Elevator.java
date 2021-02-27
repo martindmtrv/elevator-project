@@ -43,6 +43,10 @@ public class Elevator implements Runnable{
 		state = ElevatorState.IDLE;
 		this.box = box;
 		this.elevatorEvents = elevatorQueue;
+		
+		if(Configuration.VERBOSE) {
+			System.out.println("\t\tELEVATOR: Car " + eID + " Initialized to IDLE");
+		}
 
 		// create all the elevator buttons and lamps
 		for (int i = 1; i < n+1; ++i) {
@@ -53,6 +57,8 @@ public class Elevator implements Runnable{
 
 	public ElevatorState getState() { return state;}
 	public DirectionType getDirection() { return direction;}
+	public int getNumFloors() {return maxFloor;}
+	public int getCurrFloor() {return currFloor;}
 	
 
 	/**
@@ -82,12 +88,17 @@ public class Elevator implements Runnable{
 		//upon arrival: stop motor, open door, un-lit lamp, un-press button
 		System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " has arrived floor " + n);
 		
-		this.eDoor.setIsOpen(true);
-		eLamp[n].setIsLit(false);
-		eButton[n].setIsPressed(false);
+		if(Configuration.VERBOSE) {
+			System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->IDLE");
+		}
+		
 		state = ElevatorState.IDLE;
 		direction = DirectionType.STILL;
 		this.runMotor(false, state);
+		this.eDoor.setIsOpen(true);
+		eLamp[n].setIsLit(false);
+		eButton[n].setIsPressed(false);
+		
 	}
 
 	/**
@@ -97,23 +108,30 @@ public class Elevator implements Runnable{
 	public void handleElevatorCalledEvent(ElevatorCallToMoveEvent ectmEvent){
 		if(eID == ectmEvent.getCar()){ //check if car is the desired car
 			getStatus();
+			for(Integer i : ectmEvent.getDestinationToLight()){ //check all new destinations
+				pressButton(i); //press elevator buttons when destinations are added to elevator trip
+			}
+			if(eDoor.getIsOpen()){ //close doors if they are open
+				eDoor.setIsOpen(false);
+			}
 			if(ectmEvent.getDirection() == DirectionType.UP){
 				//direction => go up & turn on motor
+				if(Configuration.VERBOSE) {
+					System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_UP");
+				}
 				state = ElevatorState.MOVING_UP;
 				direction = DirectionType.UP;
 				runMotor(true, state);
 			}else{
 				//direction => go down & turn on motor
+				if(Configuration.VERBOSE) {
+					System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_DOWN");
+				}
 				state = ElevatorState.MOVING_DOWN;
 				direction = DirectionType.DOWN;
 				runMotor(true, state);
 			}
-			if(eDoor.getIsOpen()){ //close doors if they are open
-				eDoor.setIsOpen(false);
-			}
-			for(Integer i : ectmEvent.getDestinationToLight()){ //check all new destinations
-				pressButton(i); //press elevator buttons when destinations are added to elevator trip
-			}
+			
 			try {
 				System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: CAR "+ eID +": Sleep " +Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2000+"s");
 				Thread.sleep((Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2)); //sleep 5s
@@ -148,9 +166,15 @@ public class Elevator implements Runnable{
 				elevatorEvents.addLast(eaEvent);
 				//Elevator must now wait for passengers to get on at the arrived floor before departing
 				try {
+					if(Configuration.VERBOSE) {
+						System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->LOADING_PASSENGER");
+					}
 					state = ElevatorState.LOADING_PASSENGER;
 					System.out.println("["+Event.getRequestTime()+"]\tCAR "+ eID +": Sleeping " + Configuration.LOAD_TIME/1000 + "s for passengers to load.");
 					Thread.sleep(Configuration.LOAD_TIME);
+					if(Configuration.VERBOSE) {
+						System.out.println("["+Event.getRequestTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_UP");
+					}
 					state = ElevatorState.IDLE;
 				}catch(InterruptedException e){
 					e.printStackTrace();

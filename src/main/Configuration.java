@@ -4,6 +4,10 @@ package main;
  * @author Martin Dimitrov
  */
 public abstract class Configuration {
+	
+	// Flags for alternate operate modes
+	public static boolean VERBOSE = false;
+	
 	// elevator system parameters
 	public static final int NUM_FLOORS = 10;
 	public static final int NUM_CARS = 1;

@@ -2,6 +2,7 @@ package main;
 import elevator.Box;
 import elevator.ElevatorSubsystem;
 import floor.FloorSubsystem;
+import floor.InputStream;
 import scheduler.BoundedBuffer;
 import scheduler.Scheduler;
 
@@ -23,9 +24,13 @@ public class Iteration1 {
        
         // scheduler needs a copy of all three queues
         Thread scheduler = new Thread(new Scheduler(schedulerQueue, elevatorQueue, floorQueue));
+        
+        // InputStream gets the floors queue
+        Thread inputstream = new Thread(new InputStream(testFile,floorQueue));
 
         elevator.start();
         floor.start();
+        inputstream.start();
         scheduler.start();
     }
 }

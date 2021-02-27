@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import event.DirectionType;
+import event.Event;
 import main.Configuration;
 
 /**
@@ -29,6 +30,10 @@ public class ElevatorStatus {
 		workingDirection = DirectionType.STILL;
 		status = ElevatorJobState.IDLE;
 		destinations = new HashSet<>();
+		
+		if(Configuration.VERBOSE) {
+			System.out.println("\t\tELEVATOR: Car " + this.id + " Job State Initialized to IDLE");
+		}
 	}
 
 	/**
@@ -84,6 +89,9 @@ public class ElevatorStatus {
 	}
 
 	public void setStatus(ElevatorJobState status) {
+		if(Configuration.VERBOSE) {
+			System.out.println("\t\tELEVATOR: Car " + this.id + " Job State: " + this.status + "->" + status);
+		}
 		this.status = status;
 	}
 

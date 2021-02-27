@@ -41,6 +41,8 @@ public class FloorSubsystem implements Runnable {
 		}
 	}
 	
+	public int getNumFloors() {return floors.length;}
+	
 	/**
 	 * Read the input file in
 	 * @param fp - the filepath of the input file
@@ -135,20 +137,7 @@ public class FloorSubsystem implements Runnable {
 	
 	@Override
 	public void run() {
-		//parse input
-		ArrayList<String> file = readInput(inputFile);
-		
-		if (file == null) {
-			return;
-		}
-		
-		// add inputs to floor buffers
-		for (String s: file) {
-			// parse data
-			// add to FloorSubsystem event queue
-			events.addLast(parseLine(s));
-		}
-		
+
 		Event event;
 		
 		
