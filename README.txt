@@ -24,7 +24,7 @@ Contributions:
 		
 	Erdem Yanikomeroglu 101080085
 		- Modified Scheduler to use a state machine design
-		- Created state machine diagram for Scheduler
+		- Created state machine diagram for the Scheduler
 		- Updated Sequence Diagram to iteration 2 standard
 		- Updated Class Diagram to iteration 2 standard
 		
