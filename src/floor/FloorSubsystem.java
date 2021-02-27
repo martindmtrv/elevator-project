@@ -1,11 +1,6 @@
 package floor;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
-import event.DirectionType;
 import event.ElevatorArriveEvent;
 import event.ElevatorButtonPressEvent;
 import event.Event;
@@ -17,20 +12,17 @@ import scheduler.BoundedBuffer;
  * @author Martin Dimitrov
  */
 public class FloorSubsystem implements Runnable {
-	private String inputFile;
 	private Floor[] floors;
 	private BoundedBuffer events;
 	private BoundedBuffer schedulerEvents;
 	
 	/**
 	 * Create a new FloorSubsystem 
-	 * @param fp - path to input file
 	 * @param n - number of floors
 	 * @param myQueue - floor queue
 	 * @param sQueue - scheduler queue
 	 */
-	public FloorSubsystem(String fp, int n, BoundedBuffer myQueue, BoundedBuffer sQueue) {
-		inputFile = fp;
+	public FloorSubsystem(int n, BoundedBuffer myQueue, BoundedBuffer sQueue) {
 		floors = new Floor[n];
 		events = myQueue;
 		schedulerEvents = sQueue;

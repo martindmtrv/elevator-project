@@ -24,7 +24,7 @@ import java.io.PrintStream;
  */
 
 import elevator.Box;
-class Iteration1Test {
+class TestSuite {
 
     private final static String testFile = "TestComm.txt";
     private Thread floor, elevator, scheduler;
@@ -38,7 +38,7 @@ class Iteration1Test {
 
 
         // floor get scheduler and floor queues
-        floor = new Thread(new FloorSubsystem(testFile, Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
+        floor = new Thread(new FloorSubsystem(Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
 
         // elevator gets scheulder and elevator queues
         elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue, new Box()), "elevator");

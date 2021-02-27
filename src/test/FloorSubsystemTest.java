@@ -27,7 +27,7 @@ public class FloorSubsystemTest {
 
     @BeforeEach
     public void setUp() {
-        floorSubsystem = new FloorSubsystem("Test.txt", Configuration.NUM_FLOORS, new BoundedBuffer(), new BoundedBuffer());
+        floorSubsystem = new FloorSubsystem(Configuration.NUM_FLOORS, new BoundedBuffer(), new BoundedBuffer());
     }
 
     @Test

@@ -20,5 +20,8 @@ public abstract class Configuration {
 	//Time from floor to floor (Numbers from Iteration 0) in ms
 	public static final long LOAD_TIME = 1000; //9.51323 actual but using 1s for testing
 	public static final long TRAVEL_TIME_BETWEEN_FLOOR = 9500; //~9.5s
+	
+	// test file
+	public static final String TEST_FILE = "TestComm.txt";
 
 }
