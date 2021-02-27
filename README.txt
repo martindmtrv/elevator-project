@@ -45,14 +45,14 @@ Contributions:
 		- Updated Object UML (Decluttered and Simplified)
 		
 Files:
-	/UML Diagrams:
+	UML Diagrams:
 		EventTypes-Class-UML.png
 		EventTypes-Class-UML.ucls
 		UML_Object_Diagram.png
 		UML_Sequence_Diagram.drawio
 		UML_Sequence_Diagram.png
 	
-	/state_machine_diagrams:
+	state_machine_diagrams:
 		ElevatorStateMachineDiagram.drawio
 		ElevatorStateMachineDiagram.png
 		iteration2_scheduler_state_diagram.drawio

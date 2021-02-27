@@ -248,59 +248,33 @@ public class Scheduler implements Runnable {
 	 */
 	private void handleEvent(Event event) {
 		System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: handling event " + event.getType());
+		
+		this.setState(State.HANDLING);
+		if(Configuration.VERBOSE) {
+			System.out.println("\t\tSCHEDULER: state change " + this.state + " ->HANDLING");
+		}
 		switch(event.getType()) {
 			case FLOOR_BUTTON: {
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->HANDLING");
-				}
-				this.setState(State.HANDLING);
 				handleFloorButtonPressEvent((FloorButtonPressEvent) event);
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->WAITING");
-				}
-				this.setState(State.WAITING);
 				break;
 			}
 			case ELEVATOR_BUTTONS: {
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->HANDLING");
-				}
-				this.setState(State.HANDLING);
 				handleElevatorButtonPressEvent((ElevatorButtonPressEvent) event);
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->WAITING");
-				}
-				this.setState(State.WAITING);
 				break;
 			}
 			case ELEVATOR_ARRIVED:
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->HANDLING");
-				}
-				this.setState(State.HANDLING);
 				handleElevatorArriveEvent((ElevatorArriveEvent) event);
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->WAITING");
-				}
-				this.setState(State.WAITING);
 				break;
 			case ELEVATOR_APPROACH_SENSOR: //Event sent from elevator informing of approach of a arrival sensor
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->HANDLING");
-				}
-				this.setState(State.HANDLING);
 				handleElevatorApproachSensorEvent((ElevatorApproachSensorEvent) event);
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->WAITING");
-				}
-				this.setState(State.WAITING);
 				break;
 			default:
 				System.out.println("["+Event.getRequestTime()+"]\tSCHEDULER: Unhandled event " + event);
-				if(Configuration.VERBOSE) {
-					System.out.println("\t\tSCHEDULER: state change " + this.state + " ->WAITING");
-				}
-				this.setState(State.WAITING);
+		}
+		
+		this.setState(State.WAITING);
+		if(Configuration.VERBOSE) {
+			System.out.println("\t\tSCHEDULER: state change " + this.state + " ->WAITING");
 		}
 	}
 	
