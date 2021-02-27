@@ -18,8 +18,7 @@ import scheduler.BoundedBuffer;
  *
  */
 public class InputStream implements Runnable{
-	DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-	long diffInMillies;
+	private long diffInMillies;
 	private String inputFile;
 	private BoundedBuffer events;
 	public InputStream(String fp, BoundedBuffer myQueue) {

@@ -64,15 +64,4 @@ public class FloorSubsystemTest {
         assertTrue(floor.getDownLamp().getIsLit()); //down button is pressed
     }
 
-    @Test
-    @DisplayName("Test if input .txt file can be read")
-    public void testReadInputFile(){
-        File file = new File(testFile);
-        assertTrue(file.exists());
-        ArrayList<String> fileInput = floorSubsystem.readInput(testFile);
-        
-        for(int i=0;i<fileInput.size();i++){
-            assertEquals(fileInput.get(i),inputData[i]);
-        }
-    }
 }

@@ -30,4 +30,8 @@ Contributions:
 		- Implemented Loading and in-between-floor timing within elevator system and added time stamps in output
 		
 	David Casciano 101069255
-		
+		- Implemented Verbose feature that can be used will testing
+		- Reworked FloorSubsystem, creating a new thread specifically for reading in requests
+		- Updated Existing testing infrastructure
+		- Created testing for new state machines
+		- Updated Object UML (Decluttered and Simplified)

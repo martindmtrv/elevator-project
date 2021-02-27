@@ -44,45 +44,6 @@ public class FloorSubsystem implements Runnable {
 	public int getNumFloors() {return floors.length;}
 	
 	/**
-	 * Read the input file in
-	 * @param fp - the filepath of the input file
-	 * @return list of the lines in the file
-	 */
-	public ArrayList<String> readInput(String fp) {
-		try {
-			ArrayList<String> lines = new ArrayList<>();
-			File input = new File(fp);
-			Scanner scan = new Scanner(input);
-			
-			// get all the lines
-			while (scan.hasNextLine()) {
-				lines.add(scan.nextLine());
-			}
-			
-			scan.close();
-			return lines;
-		} catch (FileNotFoundException e) {
-			System.out.println(String.format("Floor System: File %s not found", fp));
-			return null;
-		}
-	}
-	
-	/**
-	 * Convert one line of input into an Event
-	 * @param s - line from the input file
-	 * @return FloorButtonPressEvent
-	 */
-	public FloorButtonPressEvent parseLine(String s) {
-		
-		String[] input = s.split(" ");
-		
-		// do not use input file for time (use current time)
-		return new FloorButtonPressEvent("", Integer.parseInt(input[1]), 
-				Integer.parseInt(input[3]), DirectionType.valueOf(input[2].toUpperCase()));
-		
-	}
-	
-	/**
 	 * Handler for floor button presses. It will request an elevator from the scheduler,
 	 * if the button was not already pressed.
 	 * @param fbEvent - the event to handle
