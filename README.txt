@@ -22,11 +22,12 @@ Contributions:
 		
 	Ammar Tosun 101172948
 		
-		
 	Erdem Yanikomeroglu 101080085
 		
 	Alex Cameron 101114698
-		
+		- Implemented Arrival sensor 
+		- Reworked elevator subsystem to ensure each elevator operate as individual threads with ability to communicate with other systems.
+		- Implemented Loading and in-between-floor timing within elevator system and added time stamps in output
 		
 	David Casciano 101069255
 		
