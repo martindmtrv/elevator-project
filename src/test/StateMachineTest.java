@@ -206,4 +206,38 @@ class StateMachineTest {
             }
         }
     }
+    @Test
+    @DisplayName("Test Scheduler State Machine")
+    public void SchedulerStateTest() {
+    	String initMsg = "SCHEDULER: Initialize state to WAITING";
+    	String chg1 = "SCHEDULER: state change WAITING ->HANDLING";
+    	String chg2 = "SCHEDULER: state change HANDLING ->WAITING";
+    	
+    	int initLine = -1;
+    	int chg1Line = -1;
+    	int chg2Line = -1;
+    	
+    	for(int i=0; i<threadOutput.length; i++){
+            if(threadOutput[i].contains(initMsg)){
+                //test if the state machine properly initializes
+                initLine = i;
+                break;
+            } 
+        }
+    	for(int i=0; i<threadOutput.length; i++){
+            if(threadOutput[i].contains(chg1)){
+                //test if the state has changed from Idle to picking up
+                chg1Line = i;
+                break;
+            }
+        }
+    	for(int i=0; i<threadOutput.length; i++){
+            if(threadOutput[i].contains(chg2)){
+                //if the state machine has transitioned through the states assert that it happened in the correct order
+                chg2Line = i;
+                assertTrue((chg2Line > chg1Line) && (chg1Line > initLine) && (initLine >= 0));
+                break;
+            }
+        }
+    }
 }
