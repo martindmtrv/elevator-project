@@ -1,5 +1,6 @@
 package event;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +9,10 @@ import java.util.Date;
  * Generic Event class subclassed by proper events
  * @author Martin Dimitrov
  */
-public class Event {
+public class Event implements Serializable {
+	
+	// to support serialization
+	private static final long serialVersionUID = 5034032719498221414L;
 	private static String requestTime;
 	private EventType type;
 	

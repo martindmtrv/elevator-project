@@ -24,6 +24,7 @@ public class Project {
         
         // InputStream gets the floors queue
         Thread inputstream = new Thread(new InputStream(Configuration.TEST_FILE, floorQueue));
+        
 
         elevator.start();
         floor.start();
