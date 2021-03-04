@@ -23,5 +23,13 @@ public abstract class Configuration {
 	
 	// test file
 	public static final String TEST_FILE = "TestComm.txt";
+	
+	
+	// ports info
+	public static final int ELEVATOR_PORT = 50;
+	public static final int SCHEDULER_LISTEN_ELEVATOR_PORT = 51;
+	
+	public static final int FLOOR_PORT = 60;
+	public static final int SCHEDULER_LISTEN_FLOOR_PORT = 61;
 
 }

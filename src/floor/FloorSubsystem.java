@@ -5,7 +5,10 @@ import event.ElevatorArriveEvent;
 import event.ElevatorButtonPressEvent;
 import event.Event;
 import event.FloorButtonPressEvent;
+import main.Configuration;
+import rpc.RpcHandler;
 import scheduler.BoundedBuffer;
+import scheduler.Scheduler;
 
 /**
  * Floor Subsystem for the elevator project. Controls all the floors and handles sending input to the scheduler
@@ -63,7 +66,7 @@ public class FloorSubsystem implements Runnable {
 		
 		elevatorButtons = floors[eaEvent.getFloor()-1].elevatorArrived(eaEvent.getDirection());
 		
-		System.out.println("["+Event.getRequestTime()+"]\tFLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
+		System.out.println("["+Event.getCurrentTime()+"]\tFLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
 		reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar(), eaEvent.getDirection());
 		
 		schedulerEvents.addLast(reply);
@@ -99,5 +102,34 @@ public class FloorSubsystem implements Runnable {
 			event = (Event) events.removeFirst();
 			handleEvent(event);
 		}
+	}
+	
+	public static void main(String[] args) {
+		// create boundedbuffers as normal
+    	BoundedBuffer floorQueue = new BoundedBuffer();
+    	BoundedBuffer schedulerQueue = new BoundedBuffer();
+    	
+    	BoundedBuffer[] outQueues = new BoundedBuffer[1];
+    	
+    	outQueues[0] = schedulerQueue;
+    	
+    	int[] portsToSend = new int[1];
+    	portsToSend[0] = Configuration.SCHEDULER_LISTEN_FLOOR_PORT;
+    	
+    	int[] portsToReceive = new int[1];
+    	portsToReceive[0] = Configuration.FLOOR_PORT;
+		       
+        // scheduler needs a copy of all three queues
+    	Thread floor = new Thread(new FloorSubsystem(Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
+    	
+    	// InputStream gets the floors queue
+        Thread inputstream = new Thread(new InputStream(Configuration.TEST_FILE, floorQueue));
+        
+        // get the rpc thread running
+        Thread rpcHandler = new Thread(new RpcHandler(floorQueue, outQueues, portsToSend, portsToReceive));
+		
+        floor.start();
+        rpcHandler.start();
+        inputstream.start();
 	}
 }

@@ -54,7 +54,7 @@ public class Floor {
 	 */
 	public boolean requestUp(int destination) {
 		// add to the list of people going up
-		System.out.println(String.format("["+ Event.getRequestTime()+"]\tFLOOR %d: %d Added to floor destinations UP", floorNum, destination));
+		System.out.println(String.format("["+ Event.getCurrentTime()+"]\tFLOOR %d: %d Added to floor destinations UP", floorNum, destination));
 		buttons.get(DirectionType.UP).add(destination);
 		
 		// check to see if this request should be sent to the scheduler
@@ -73,7 +73,7 @@ public class Floor {
 	 */
 	public boolean requestDown(int destination) {
 		// add to the list of people going up
-		System.out.println(String.format("["+Event.getRequestTime()+"]\tFLOOR %d: %d Added to floor destinations DOWN", floorNum, destination));
+		System.out.println(String.format("["+Event.getCurrentTime()+"]\tFLOOR %d: %d Added to floor destinations DOWN", floorNum, destination));
 		buttons.get(DirectionType.DOWN).add(destination);
 		
 		// make sure this floor can request going down
@@ -87,7 +87,7 @@ public class Floor {
 	
 	
 	public boolean requestDirection(FloorButtonPressEvent e) {
-		System.out.println(String.format("["+Event.getRequestTime()+"]\tFLOOR %d: %s Button Pressed", floorNum, e.getDirection()));
+		System.out.println(String.format("["+Event.getCurrentTime()+"]\tFLOOR %d: %s Button Pressed", floorNum, e.getDirection()));
 		if (e.getDirection() == DirectionType.UP) {
 			return requestUp(e.getDestination());
 		}
@@ -105,7 +105,7 @@ public class Floor {
 		} else if (floorNum == Configuration.NUM_FLOORS) {
 			dir = DirectionType.DOWN;
 		}
-		System.out.println(String.format("["+Event.getRequestTime()+"]\tFLOOR %d: Elevator arrived, going %s", floorNum, dir));
+		System.out.println(String.format("["+Event.getCurrentTime()+"]\tFLOOR %d: Elevator arrived, going %s", floorNum, dir));
 		Integer[] elevatorButtons = new Integer[buttons.get(dir).size()];
 		
 		

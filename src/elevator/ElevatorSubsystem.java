@@ -2,7 +2,10 @@ package elevator;
 import java.util.Arrays;
 
 import event.*;
+import floor.FloorSubsystem;
+import floor.InputStream;
 import main.Configuration;
+import rpc.RpcHandler;
 import scheduler.BoundedBuffer;
 
 /**
@@ -104,8 +107,27 @@ public class ElevatorSubsystem implements Runnable {
 	}
 	
 	public static void main(String[] args) {
-		Box box = new Box();
-		Thread e = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer(), box));
-		e.start();
+		// create boundedbuffers as normal
+    	BoundedBuffer elevatorQueue = new BoundedBuffer();
+    	BoundedBuffer schedulerQueue = new BoundedBuffer();
+    	
+    	BoundedBuffer[] outQueues = new BoundedBuffer[1];
+    	
+    	outQueues[0] = schedulerQueue;
+    	
+    	int[] portsToSend = new int[1];
+    	portsToSend[0] = Configuration.SCHEDULER_LISTEN_ELEVATOR_PORT;
+    	
+    	int[] portsToReceive = new int[1];
+    	portsToReceive[0] = Configuration.ELEVATOR_PORT;
+		       
+        // scheduler needs a copy of all three queues
+    	Thread elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue, new Box()), "elevator");
+    	
+        // get the rpc thread running
+        Thread rpcHandler = new Thread(new RpcHandler(elevatorQueue, outQueues, portsToSend, portsToReceive));
+		
+        elevator.start();
+        rpcHandler.start();
 	}
 }

@@ -23,15 +23,15 @@ public class ElevatorMotor {
 	 */
 	public void setIsRunning(boolean b, ElevatorState d){
 		if (b && d == ElevatorState.MOVING_UP) {
-			System.out.println("["+ Event.getRequestTime()+"]\t\tELEVATORMOTOR: starts running to move UP");
+			System.out.println("["+ Event.getCurrentTime()+"]\t\tELEVATORMOTOR: starts running to move UP");
 			direction = DirectionType.UP;
 		}
 		else if (b && d == ElevatorState.MOVING_DOWN) {
-			System.out.println("["+Event.getRequestTime()+"]\t\tELEVATORMOTOR: starts running to move DOWN");
+			System.out.println("["+Event.getCurrentTime()+"]\t\tELEVATORMOTOR: starts running to move DOWN");
 			direction = DirectionType.DOWN;
 		}	
 		else {
-			System.out.println("["+Event.getRequestTime()+"]\t\tELEVATORMOTOR: stops running");
+			System.out.println("["+Event.getCurrentTime()+"]\t\tELEVATORMOTOR: stops running");
 			direction = DirectionType.STILL;
 		}
 			

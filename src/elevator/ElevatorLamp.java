@@ -25,7 +25,7 @@ public class ElevatorLamp {
 	 * @param b - boolean to set it to
 	 */
 	public void setIsLit(boolean b){
-		System.out.println("["+ Event.getRequestTime()+"]\t\tELEVATORLAMP: lamp " + this.floorNum + " is lit: " + b);
+		System.out.println("["+ Event.getCurrentTime()+"]\t\tELEVATORLAMP: lamp " + this.floorNum + " is lit: " + b);
 		isLit = b;
 	}
 	

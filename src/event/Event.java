@@ -13,7 +13,7 @@ public class Event implements Serializable {
 	
 	// to support serialization
 	private static final long serialVersionUID = 5034032719498221414L;
-	private static String requestTime;
+	private String requestTime;
 	private EventType type;
 	
 	/**
@@ -39,12 +39,19 @@ public class Event implements Serializable {
 	public String toString() {
 		return String.format("%s %s", type, requestTime);
 	}
-	
-	public static String getRequestTime() {
-		return requestTime;
-	}
 
 	public EventType getType() {
 		return type;
+	}
+	
+	/**
+	 * Gets and formats the current time
+	 * @return string representing current time
+	 */
+	public static String getCurrentTime() {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		Date date = new Date();
+		
+		return dateFormat.format(date);
 	}
 }

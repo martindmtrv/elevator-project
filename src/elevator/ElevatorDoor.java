@@ -25,9 +25,9 @@ public class ElevatorDoor {
 	 */
 	public void setIsOpen(boolean b){
 		if (b)
-			System.out.println("["+ Event.getRequestTime()+"]\t\tELEVATORDOOR: is opening");
+			System.out.println("["+ Event.getCurrentTime()+"]\t\tELEVATORDOOR: is opening");
 		else
-			System.out.println("["+Event.getRequestTime()+"]\t\tELEVATORDOOR: is closing");
+			System.out.println("["+Event.getCurrentTime()+"]\t\tELEVATORDOOR: is closing");
 		isOpen = b;
 	}
 	
