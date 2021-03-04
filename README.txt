@@ -19,32 +19,25 @@ Setup Instructions:
 
 Contributions:
 	Martin 101111948
-		- Scheduler logic for coordination and communication with elevator subsystem
-		- Trip planning and updating by handling arrival sensor notifications
-		- Managing elevator states via the scheduler (pre planning for later GUI implementation)
+		- RPC package setup and configuration
+		- Serialization utils (for sending Events as bytes over UDP)
+		- UDP setup and RpcWorker creation for sending / receiving
+		- Hooked up and configured all ports for runnning as seperate processes
 		
 	Ammar Tosun 101172948
-		- Implementing state machines into the code
-		- Design of elevator state machine + diagram
+		
 		
 	Erdem Yanikomeroglu 101080085
-		- Modified Scheduler to use a state machine design
-		- Created state machine diagram for the Scheduler
-		- Updated Sequence Diagram to iteration 2 standard
+		
 		
 	Alex Cameron 101114698
-		- Implemented Arrival sensor 
-		- Reworked elevator subsystem to ensure each elevator operate as individual threads with ability to communicate with other systems.
-		- Implemented Loading and in-between-floor timing within elevator system and added time stamps in output
+		
 		
 	David Casciano 101069255
-		- Implemented Verbose feature that can be used will testing
-		- Reworked FloorSubsystem, creating a new thread specifically for reading in requests
-		- Updated Existing testing infrastructure
-		- Created testing for new state machines
-		- Updated Object UML (Decluttered and Simplified)
+		
 		
 Files:
+TODO NEED TO UPDATE
 	UML Diagrams:
 		EventTypes-Class-UML.png
 		EventTypes-Class-UML.ucls
