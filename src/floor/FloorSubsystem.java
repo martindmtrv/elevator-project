@@ -109,17 +109,19 @@ public class FloorSubsystem implements Runnable {
     	BoundedBuffer floorQueue = new BoundedBuffer();
     	BoundedBuffer schedulerQueue = new BoundedBuffer();
     	
+    	// setup the out queues
     	BoundedBuffer[] outQueues = new BoundedBuffer[1];
-    	
     	outQueues[0] = schedulerQueue;
     	
+    	// setup the out ports
     	int[] portsToSend = new int[1];
     	portsToSend[0] = Configuration.SCHEDULER_LISTEN_FLOOR_PORT;
     	
+    	// setup the int ports
     	int[] portsToReceive = new int[1];
     	portsToReceive[0] = Configuration.FLOOR_PORT;
 		       
-        // scheduler needs a copy of all three queues
+        // floor needs a copy of all 2 queues
     	Thread floor = new Thread(new FloorSubsystem(Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
     	
     	// InputStream gets the floors queue

@@ -335,20 +335,21 @@ public class Scheduler implements Runnable {
     	BoundedBuffer schedulerQueue = new BoundedBuffer();
     	BoundedBuffer elevatorQueue = new BoundedBuffer();
     	
+    	// setup the out queues
     	BoundedBuffer[] outQueues = new BoundedBuffer[2];
-    	
     	outQueues[0] = floorQueue;
     	outQueues[1] = elevatorQueue;
     	
+    	// setup the out ports
     	int[] portsToSend = new int[2];
     	portsToSend[0] = Configuration.FLOOR_PORT;
     	portsToSend[1] = Configuration.ELEVATOR_PORT;
     	
+    	// setup the in ports
     	int[] portsToReceive = new int[2];
     	portsToReceive[0] = Configuration.SCHEDULER_LISTEN_FLOOR_PORT;
     	portsToReceive[1] = Configuration.SCHEDULER_LISTEN_ELEVATOR_PORT;
-		        
-		       
+		
         // scheduler needs a copy of all three queues
         Thread scheduler = new Thread(new Scheduler(schedulerQueue, elevatorQueue, floorQueue));
         

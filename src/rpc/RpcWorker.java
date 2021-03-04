@@ -11,6 +11,12 @@ import java.util.Arrays;
 import event.Event;
 import scheduler.BoundedBuffer;
 
+/**
+ * Rpc worker for the Handler class. Each one of these will be assigned a port to either send or receive to.
+ * Each worker will be assigned a task depending on its type (whether it is sending or receiving events)
+ * @author Martin Dimitrov
+ *
+ */
 public class RpcWorker implements Runnable {
 	private BoundedBuffer inQueue;
 	private BoundedBuffer outQueue;
@@ -19,6 +25,13 @@ public class RpcWorker implements Runnable {
 	private RpcWorkerType type;
 	private DatagramSocket socket;
 	
+	/**
+	 * Create an RpcWorker
+	 * @param in - boundedbuffer to pass in events to
+	 * @param out - boundedbuffer to send events out
+	 * @param t - type of worker
+	 * @param p - port to listen/send (depending on type)
+	 */
 	public RpcWorker(BoundedBuffer in, BoundedBuffer out, RpcWorkerType t, int p) {
 		inQueue = in;
 		outQueue = out;
@@ -37,6 +50,11 @@ public class RpcWorker implements Runnable {
 		
 	}
 	
+	/**
+	 * Send an event and await an acknowledgement,
+	 * timeouts will be handled here too in later iteration
+	 * @param send - packet to send
+	 */
 	public void rpc_send(DatagramPacket send) {
 		DatagramPacket receive = new DatagramPacket(new byte[1], 1);
 		
@@ -56,6 +74,10 @@ public class RpcWorker implements Runnable {
 		socket.close();
 	}
 	
+	/**
+	 * Receive an event and send off acknowledgement
+	 * @param receive - packet to receive
+	 */
 	public void rpc_receive(DatagramPacket receive) {
 		// receive then send
 		RpcWorker.receivePacket(socket, receive);
@@ -64,6 +86,11 @@ public class RpcWorker implements Runnable {
 		
 	}
 	
+	/**
+	 * Reuseable method to receive a packet on a particular socket
+	 * @param socket - socket to receive from
+	 * @param packet - packet to send
+	 */
 	public static void receivePacket(DatagramSocket socket, DatagramPacket packet) {
 		try {
 		   socket.receive(packet);
@@ -73,6 +100,11 @@ public class RpcWorker implements Runnable {
 		}
 	}
 	
+	/**
+	 * Reuseable method to send a packet on a particular socket
+	 * @param socket - socket to send on
+	 * @param packet - packet to receive
+	 */
 	public static void sendPacket(DatagramSocket socket, DatagramPacket packet) {
 		try {
 		   socket.send(packet);
@@ -82,7 +114,12 @@ public class RpcWorker implements Runnable {
 		}
 	}
 	
+	/**
+	 * Function for handling incoming events
+	 * this is what is handled by RpcWorkerType.RECEIVER
+	 */
 	public void handleIncoming() {
+		
 		Event event;
 		byte[] data;
 		byte[] truncatedData;
@@ -107,6 +144,10 @@ public class RpcWorker implements Runnable {
 		}
 	}
 	
+	/**
+	 * Function for handling outgoing events
+	 * this is what is handled by RpcWorkerType.SENDER
+	 */
 	public void handleOutgoing() {
 		Event event;
 		byte[] data;
@@ -135,6 +176,7 @@ public class RpcWorker implements Runnable {
 
 	@Override
 	public void run() {
+		// run the correct handler
 		if (type == RpcWorkerType.RECEIVER) {
 			handleIncoming();
 		} else {

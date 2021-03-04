@@ -111,17 +111,19 @@ public class ElevatorSubsystem implements Runnable {
     	BoundedBuffer elevatorQueue = new BoundedBuffer();
     	BoundedBuffer schedulerQueue = new BoundedBuffer();
     	
+    	// setup the out queues
     	BoundedBuffer[] outQueues = new BoundedBuffer[1];
-    	
     	outQueues[0] = schedulerQueue;
     	
+    	// setup out ports
     	int[] portsToSend = new int[1];
     	portsToSend[0] = Configuration.SCHEDULER_LISTEN_ELEVATOR_PORT;
     	
+    	// setup in ports
     	int[] portsToReceive = new int[1];
     	portsToReceive[0] = Configuration.ELEVATOR_PORT;
 		       
-        // scheduler needs a copy of all three queues
+        // elevator needs a copy of 2 queues
     	Thread elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue, new Box()), "elevator");
     	
         // get the rpc thread running
