@@ -10,7 +10,7 @@ public abstract class Configuration {
 	
 	// elevator system parameters
 	public static final int NUM_FLOORS = 10;
-	public static final int NUM_CARS = 1;
+	public static final int NUM_CARS = 2;
 	public static final int INIT_CAR_FLOOR = 1;		//initial floor of the elevator when it's created
 
 	// kinematics of the elevator (for position calculations)

@@ -22,7 +22,7 @@ public class ElevatorSubsystem implements Runnable {
 	private ElevatorState currState;
 	private ElevatorState prevState;
 
-	private Box box;
+	private Box[] boxArr;
 	
 	/**
 	 * Create a new ElevatorSubsystem 
@@ -32,17 +32,17 @@ public class ElevatorSubsystem implements Runnable {
 	 * @param elevatorQueue - events queue to be handled by the elevator subsystem 
 	 * @param schedulerQueue - events to be read that come from the scheduler subsystem
 	 */
-	public ElevatorSubsystem(int n, int f, int c, BoundedBuffer elevatorQueue, BoundedBuffer schedulerQueue, Box box) {
+	public ElevatorSubsystem(int n, int f, int c, BoundedBuffer elevatorQueue, BoundedBuffer schedulerQueue) {
 		elevators = new Elevator[n];
 		elevatorThreads = new Thread[n];
 		elevatorEvents = elevatorQueue;
 		schedulerEvents = schedulerQueue;
-
-		this.box = box;
-
+		boxArr = new Box[n];
+		
 		// create elevators
 		for (int x = 0; x < n; x++) {
-			elevators[x] = new Elevator(x, f, c, this.box, this.schedulerEvents);
+			boxArr[x] = new Box(); //each elevator car gets their own box class
+			elevators[x] = new Elevator(x, f, c, boxArr[x], this.schedulerEvents);
 			elevatorThreads[x] = new Thread(elevators[x], "elevator" + x); //Array of each elevator thread
 		}
 	}
@@ -70,10 +70,12 @@ public class ElevatorSubsystem implements Runnable {
 			//new logic with iteration 2 scheduler implementations
 			switch(event.getType()){
 				case ELEVATOR_CALLED:
-					box.put((ElevatorCallToMoveEvent) event); //set direction of the car which the scheduler has assigned to move
+					ElevatorCallToMoveEvent ectmEvent = (ElevatorCallToMoveEvent) event;
+					boxArr[ectmEvent.getCar()].put(ectmEvent); //set direction of the car which the scheduler has assigned to move
 				break;
 				case ELEVATOR_TRIP_UPDATE:
-					box.put((ElevatorTripUpdateEvent) event); //Notify elevators of and ElevatorTripUpdate
+					ElevatorTripUpdateEvent etuEvent = (ElevatorTripUpdateEvent) event;
+					boxArr[etuEvent.getCar()].put(etuEvent); //Notify elevators of and ElevatorTripUpdate
 				break;
 				case ELEVATOR_APPROACH_SENSOR:
 					schedulerEvents.addLast((ElevatorApproachSensorEvent) event); //notify scheduler that arrival sensor triggered
@@ -124,7 +126,7 @@ public class ElevatorSubsystem implements Runnable {
     	portsToReceive[0] = Configuration.ELEVATOR_PORT;
 		       
         // elevator needs a copy of 2 queues
-    	Thread elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue, new Box()), "elevator");
+    	Thread elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue), "elevator");
     	
         // get the rpc thread running
         Thread rpcHandler = new Thread(new RpcHandler(elevatorQueue, outQueues, portsToSend, portsToReceive));

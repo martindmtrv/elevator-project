@@ -1,5 +1,5 @@
 SYSC 3303 Elevator Assignment: Group 7
-Iteration: 2
+Iteration: 3
 
 Members:
  -> Martin Dimitrov -101111948
@@ -31,7 +31,8 @@ Contributions:
 		
 		
 	Alex Cameron 101114698
-		
+		- UML class diagram //TO-DO
+		- UML Sequence diagram //TO-DO
 		
 	David Casciano 101069255
 		
