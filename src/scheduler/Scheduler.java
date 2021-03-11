@@ -111,7 +111,6 @@ public class Scheduler implements Runnable {
 			destinations = elevator.getDestinations();
 			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: found enroute elevator %d going %s adding new stop %d to its destinations", elevator.getId(), buttonEv.getDirection(), buttonEv.getFloor()));
 			destinations.add(buttonEv.getFloor());
-			elevator.setDestinations(destinations);
 			// successfully assigned to enroute elevator
 			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: Assigned pickup at %d %s to elevator %d ENROUTE", buttonEv.getFloor(), buttonEv.getDirection(), elevator.getId()));
 			return;
