@@ -68,6 +68,10 @@ public class ElevatorStatus {
 	public HashSet<Integer> getDestinations() {
 		return destinations;
 	}
+	public void setDestinations(HashSet<Integer> destinations) {
+		this.destinations = destinations;
+	}
+
 	public DirectionType getDirection() {
 		return direction;
 	}
