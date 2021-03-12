@@ -25,7 +25,7 @@ Contributions:
 		- Hooked up and configured all ports for runnning as seperate processes
 		
 	Ammar Tosun 101172948
-		- Optimized business logic for Scheduler - handleFloorButtonRequest() method to minimize the waiting time for passengers at floors.
+		- Optimized business logic for Scheduler - handleFloorButtonPressEvent() method to minimize the waiting time for passengers at floors.
 		
 	Erdem Yanikomeroglu 101080085
 		
