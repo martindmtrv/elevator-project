@@ -43,22 +43,4 @@ public class RpcHandler implements Runnable {
 		}
 	}
 	
-	public static void main(String[] args) {
-		// TO BE USED IN TESTING OF SERIALIZATIONUTILS
-		FloorButtonPressEvent event = new FloorButtonPressEvent("", 0, 5, DirectionType.UP);
-		
-		
-		System.out.println(event);
-		
-		byte[] data = SerializationUtils.convertToBytes(event);
-		
-		System.out.println(Arrays.toString(data));
-		
-		Event deserialized = SerializationUtils.convertFromBytes(data);
-		
-		System.out.println(deserialized);
-		System.out.println(((FloorButtonPressEvent) deserialized ).getDestination());
-		System.out.println(((FloorButtonPressEvent) deserialized ).getDirection());
-		
-	}
 }

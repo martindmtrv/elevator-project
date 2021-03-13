@@ -1,5 +1,7 @@
 package event;
 
+import floor.Floor;
+
 /**
  * Event to represent Floor button presses
  * @author Martin Dimitrov
@@ -8,6 +10,7 @@ public class FloorButtonPressEvent extends Event {
 	private int floor;
 	private int destination;
 	private DirectionType direction;
+	private Floor currentState;
 	
 	/**
 	 * 
@@ -33,5 +36,12 @@ public class FloorButtonPressEvent extends Event {
 	
 	public int getDestination() {
 		return destination;
+	}
+	
+	public Floor getState() {
+		return currentState;
+	}
+	public void setState(Floor state) {
+		this.currentState = state;
 	}
 }

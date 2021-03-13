@@ -42,7 +42,7 @@ class StateMachineTest {
         floor = new Thread(new FloorSubsystem(Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
 
         // elevator gets scheduler and elevator queues
-        elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue, new Box()), "elevator");
+        elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue), "elevator");
 
         // scheduler needs a copy of all three queues
         scheduler = new Thread(new Scheduler(schedulerQueue, elevatorQueue, floorQueue));

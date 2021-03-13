@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 
 import event.Event;
+import main.Configuration;
 import scheduler.BoundedBuffer;
 
 /**
@@ -24,6 +25,9 @@ public class RpcWorker implements Runnable {
 	
 	private RpcWorkerType type;
 	private DatagramSocket socket;
+	
+	// for outgoing workers only
+	private InetAddress address;
 	
 	/**
 	 * Create an RpcWorker
@@ -45,6 +49,24 @@ public class RpcWorker implements Runnable {
 		        se.printStackTrace();
 		        System.exit(1);
 		    }
+		} else {
+			try {
+				if (Configuration.USE_LOCALHOST) {
+					address = InetAddress.getLocalHost();
+				} else {
+					if (port == Configuration.ELEVATOR_PORT) {
+						address = InetAddress.getByName(Configuration.ELEVATOR_SYSTEM_ADDRESS);
+					} else if (port == Configuration.FLOOR_PORT) {
+						address = InetAddress.getByName(Configuration.FLOOR_SYSTEM_ADDRESS);
+					} else if (port == Configuration.SCHEDULER_LISTEN_ELEVATOR_PORT || port == Configuration.SCHEDULER_LISTEN_FLOOR_PORT) {
+						address = InetAddress.getByName(Configuration.SCHEDULER_SYSTEM_ADDRESS);
+					}
+				}
+			} catch (Exception e) {
+				System.out.println(e);
+				return;
+			}
+			
 		}
 		
 		
@@ -83,7 +105,6 @@ public class RpcWorker implements Runnable {
 		RpcWorker.receivePacket(socket, receive);
 		DatagramPacket ack = new DatagramPacket(new byte[1], 1, receive.getAddress(), receive.getPort());
 		RpcWorker.sendPacket(socket, ack);
-		
 	}
 	
 	/**
@@ -161,13 +182,7 @@ public class RpcWorker implements Runnable {
 			data = SerializationUtils.convertToBytes(event);
 			
 			// setup datagram packet
-			try {
-				// TODO: put this in configuration
-				outgoing = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), port);
-			} catch (UnknownHostException e) {
-				System.out.println(e);
-				return;
-			}
+			outgoing = new DatagramPacket(data, data.length, address, port);
 			
 			rpc_send(outgoing);
 			
