@@ -80,6 +80,7 @@ TODO NEED TO UPDATE
 	src/test:
 		ElevatorSubsystemTest.java	StateMachineTest.java
 		FloorSubsystemTest.java		TestSuite.java
+		SerializationTest.java
 
 	Test.txt
 	TestComm.txt
