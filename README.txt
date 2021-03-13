@@ -36,6 +36,8 @@ Contributions:
 		- Updated State Machine Diagram
 		
 	David Casciano 101069255
+		- Added Testing for Serialization utils
+		- Updated Event classes to create better visibility for floor states. (To be used in later iterations)
 		
 		
 Files:
