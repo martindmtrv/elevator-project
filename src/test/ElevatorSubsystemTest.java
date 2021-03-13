@@ -46,7 +46,7 @@ class ElevatorSubsystemTest {
         floor = new Thread(new FloorSubsystem(Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
 
         // elevator gets scheulder and elevator queues
-        elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue, new Box()), "elevator");
+        elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue), "elevator");
 
         // scheduler needs a copy of all three queues
         scheduler = new Thread(new Scheduler(schedulerQueue, elevatorQueue, floorQueue));
@@ -64,7 +64,7 @@ class ElevatorSubsystemTest {
     @Test
     @DisplayName("4. Test if elevator subsystem is created")
     public void testSubsystemConstructor() {
-    	elevatorSubsystem = new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer(), new Box());
+    	elevatorSubsystem = new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer());
     	assertNotEquals(elevatorSubsystem,null);
     }
     
@@ -72,7 +72,7 @@ class ElevatorSubsystemTest {
     @Test
     @DisplayName("5. Test number of floors in subsystem match number of floors in Config file")
     public void testElevatorConstructor() {
-    	elevatorSubsystem = new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer(), new Box());
+    	elevatorSubsystem = new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR ,new BoundedBuffer(), new BoundedBuffer());
     	//Get number of cars in elevator subsystem
         Elevator[] elevatorCars = elevatorSubsystem.getElevators();
         //ensure car contains right number of floors as configuration file

@@ -17,7 +17,7 @@ public class Project {
         Thread floor = new Thread(new FloorSubsystem(Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
         
         // elevator gets scheduler and elevator queues
-        Thread elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue, new Box()), "elevator");
+        Thread elevator = new Thread(new ElevatorSubsystem(Configuration.NUM_CARS, Configuration.NUM_FLOORS,Configuration.INIT_CAR_FLOOR, elevatorQueue, schedulerQueue), "elevator");
        
         // scheduler needs a copy of all three queues
         Thread scheduler = new Thread(new Scheduler(schedulerQueue, elevatorQueue, floorQueue));

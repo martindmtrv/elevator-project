@@ -1,5 +1,5 @@
 SYSC 3303 Elevator Assignment: Group 7
-Iteration: 2
+Iteration: 3
 
 Members:
  -> Martin Dimitrov -101111948
@@ -25,13 +25,15 @@ Contributions:
 		- Hooked up and configured all ports for runnning as seperate processes
 		
 	Ammar Tosun 101172948
-		
+		- Optimized business logic for Scheduler - handleFloorButtonPressEvent() method to minimize the waiting time for passengers at floors.
 		
 	Erdem Yanikomeroglu 101080085
 		
 		
 	Alex Cameron 101114698
-		
+		- UML Class diagram
+		- UML Sequence diagram
+		- Updated State Machine Diagram
 		
 	David Casciano 101069255
 		
@@ -46,7 +48,6 @@ TODO NEED TO UPDATE
 		UML_Sequence_Diagram.png
 	
 	state_machine_diagrams:
-		ElevatorStateMachineDiagram.drawio
 		ElevatorStateMachineDiagram.png
 		iteration2_scheduler_state_diagram.drawio
 		scheduler_state_diagram.png

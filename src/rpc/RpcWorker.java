@@ -83,7 +83,6 @@ public class RpcWorker implements Runnable {
 		RpcWorker.receivePacket(socket, receive);
 		DatagramPacket ack = new DatagramPacket(new byte[1], 1, receive.getAddress(), receive.getPort());
 		RpcWorker.sendPacket(socket, ack);
-		
 	}
 	
 	/**

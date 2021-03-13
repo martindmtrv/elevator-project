@@ -15,7 +15,7 @@ import rpc.RpcHandler;
  * Scheduler thread that handles the communication between the elevator thread and the floor thread.
  * Currently, it passes requests from the elevator thread to the floor thread and vice versa on a first-in,
  * first-out basis. The scheduler's logic will be upgraded in upcoming iterations.
- * @author Erdem Yanikomeroglu (itr 1, 2), Martin Dimitrov (itr 1, 2)
+ * @author Erdem Yanikomeroglu (itr 1, 2), Martin Dimitrov (itr 1, 2), Ammar Tosun (itr 3)
  */
 public class Scheduler implements Runnable {
 	public BoundedBuffer schedulerQueue;
@@ -53,37 +53,35 @@ public class Scheduler implements Runnable {
 	}
 	
 	/**
-	 * Return the first idle elevator
-	 * @return e - idle elevator or null
-	 */
-	private ElevatorStatus findIdleElevator() {
-		for (ElevatorStatus e: elevators) {
-			if (e.getStatus() == ElevatorJobState.IDLE) {
-				return e;
-			}
-		}
-		return null;
-	}
-	/**
-	 * Method to determine if an elevator can add another stop on the way,
-	 * if it can, then add to that elevator
+	 * Business logic for the passenger pick up:
+	 * Find the closest available elevator to pick up, 
+	 * so that the waiting time for passengers at floors is minimized
+	 * 
 	 * @param d - direction the elevator should be going
 	 * @param pickup - the floor number to pickup from
-	 * @return id of the elevator (or -1 if none)
-	 */
-	private int elevatorEnRouteAdd(DirectionType d, int pickup) {
-		HashSet<Integer> destinations;
+	 * @return closestElevator - closest elevator or null if no available
+	 */ 
+	private ElevatorStatus findClosestElevator(DirectionType dir, int pickup) {
+		ElevatorStatus closestElevator = null;
+		int min = Configuration.NUM_FLOORS;
+		int diff = 0;
 		for (ElevatorStatus e: elevators) {
-			destinations = e.getDestinations();
-			if (e.getStatus() == ElevatorJobState.EN_ROUTE) {
-				if (d == e.getDirection() && ((d == DirectionType.UP && pickup > e.getLocation()) || (d == DirectionType.DOWN && pickup < e.getLocation()))) {
-					System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: found enroute elevator %d going %s adding new stop %d to its destinations", e.getId(), d, pickup));
-					destinations.add(pickup);
-					return e.getId();
-				} 
+			
+			if (e.getStatus() == ElevatorJobState.PICKING_UP)	// elevator can't pick up if it's already on-route to picking up
+				continue;
+			
+			else if ((e.getStatus() == ElevatorJobState.IDLE) || 	// if the elevator is idle or
+					(e.getStatus() == ElevatorJobState.EN_ROUTE && e.getLocation() > pickup && e.getDirection() == dir) || 	// if the elevator is on route to a destination and 
+					(e.getStatus() == ElevatorJobState.EN_ROUTE && e.getLocation() < pickup && e.getDirection() == dir)) {	// the pickup location is on the way.. 
+				diff = Math.abs(e.getLocation() - pickup);
+				if (min > diff) {
+					min  = diff;
+					closestElevator = e; 
+				}
 			}
 		}
-		return -1;
+		
+		return closestElevator;
 	}
 	
 	/**
@@ -93,55 +91,57 @@ public class Scheduler implements Runnable {
 	 */
 	private void handleFloorButtonPressEvent(FloorButtonPressEvent buttonEv) {
 		ElevatorStatus elevator;
-		int assigned;
 		ElevatorCallToMoveEvent elevatorRequest;
 		DirectionType toMove;
 		
 		// output some info
 		System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: Handling floor button event pickup %d direction %s", buttonEv.getFloor(), buttonEv.getDirection()));
 		
-		// check if an elevator is on the way
-		assigned = elevatorEnRouteAdd(buttonEv.getDirection(), buttonEv.getFloor());
-		// if unsuccessful
-		if (assigned == -1) {
-			// assign to a free elevator
-			elevator = findIdleElevator();
-			
-			// no idle elevators ... 
-			if (elevator == null) {
-				System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Placed in unassigned queue, going to wait for a free elevator");
-				// leave in unassigned
-				unscheduled.add(buttonEv);
-			} else {
-				System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator %d is IDLE sending request to move for pickup", elevator.getId()));
-				
-				// Handle case where the elevator is already here
-				if (elevator.getLocation() == buttonEv.getFloor()) {
-					elevator.setDirection(DirectionType.STILL);
-					elevator.setStatus(ElevatorJobState.EN_ROUTE);
-					elevator.setWorkingDirection(buttonEv.getDirection());
-					
-					floorQueue.addLast(new ElevatorArriveEvent(elevator.getId(), elevator.getLocation(), buttonEv.getDirection()));
-				} else {
-					elevator.getDestinations().add(buttonEv.getFloor());
-					// set the proper direction
-					if (buttonEv.getFloor() > elevator.getLocation()) {
-						toMove = DirectionType.UP;
-					} else  {
-						toMove = DirectionType.DOWN;
-					}
-					// update elevator states
-					elevator.setStatus(ElevatorJobState.PICKING_UP);
-					elevator.setDirection(toMove);
-					elevator.setWorkingDirection(buttonEv.getDirection());
-					
-					elevatorRequest = new ElevatorCallToMoveEvent(elevator.getId(), toMove);
-					elevatorQueue.addLast(elevatorRequest);
-				}
-			}
-		} else {
+		
+		elevator = findClosestElevator(buttonEv.getDirection(), buttonEv.getFloor());
+		
+		if (elevator == null) {		// no available elevator
+			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Placed in unassigned queue, going to wait for a free elevator");
+			unscheduled.add(buttonEv);	
+			return;
+		}
+		
+		if (elevator.getStatus() == ElevatorJobState.EN_ROUTE ) {
+			HashSet<Integer> destinations;
+			destinations = elevator.getDestinations();
+			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: found enroute elevator %d going %s adding new stop %d to its destinations", elevator.getId(), buttonEv.getDirection(), buttonEv.getFloor()));
+			destinations.add(buttonEv.getFloor());
 			// successfully assigned to enroute elevator
-			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: Assigned pickup at %d %s to elevator %d ENROUTE", buttonEv.getFloor(), buttonEv.getDirection(), assigned));
+			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: Assigned pickup at %d %s to elevator %d ENROUTE", buttonEv.getFloor(), buttonEv.getDirection(), elevator.getId()));
+			return;
+		}
+		
+		if (elevator.getStatus() == ElevatorJobState.IDLE) {
+			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator %d is IDLE sending request to move for pickup", elevator.getId()));
+			// Handle case where the elevator is already here
+			if (elevator.getLocation() == buttonEv.getFloor()) {
+				elevator.setDirection(DirectionType.STILL);
+				elevator.setStatus(ElevatorJobState.EN_ROUTE);
+				elevator.setWorkingDirection(buttonEv.getDirection());
+				
+				floorQueue.addLast(new ElevatorArriveEvent(elevator.getId(), elevator.getLocation(), buttonEv.getDirection()));
+			} else {
+				elevator.getDestinations().add(buttonEv.getFloor());
+				// set the proper direction
+				if (buttonEv.getFloor() > elevator.getLocation()) {
+					toMove = DirectionType.UP;
+				} else  {
+					toMove = DirectionType.DOWN;
+				}
+				// update elevator states
+				elevator.setStatus(ElevatorJobState.PICKING_UP);
+				elevator.setDirection(toMove);
+				elevator.setWorkingDirection(buttonEv.getDirection());
+				
+				elevatorRequest = new ElevatorCallToMoveEvent(elevator.getId(), toMove);
+				elevatorQueue.addLast(elevatorRequest);
+			}
+			return;
 		}
 	}
 	
