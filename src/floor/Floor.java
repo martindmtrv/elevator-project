@@ -6,6 +6,7 @@ import event.DirectionType;
 import event.Event;
 import event.FloorButtonPressEvent;
 import main.Configuration;
+import java.io.Serializable;
 
 /**
  * Class representing a single floor. Will receive inputs from the FloorSubsystem to toggle its lights and buttons
@@ -13,7 +14,9 @@ import main.Configuration;
  * @author Martin Dimitrov
  *
  */
-public class Floor {	
+public class Floor implements Serializable {
+	private static final long serialVersionUID = -7103660310755130972L;
+
 	private int floorNum; /* The number of the floor */
 	
 	// floor buttons
