@@ -1,6 +1,7 @@
 package event;
 
 import java.util.Arrays;
+import floor.Floor;
 
 /**
  * Event to represent elevator presses after elevator arrives at a floor
@@ -10,6 +11,7 @@ public class ElevatorButtonPressEvent extends Event {
 	private Integer[] buttons;
 	private int car;
 	private DirectionType direction;
+	private Floor currentState;
 	
 	/**
 	 * Create this event
@@ -38,5 +40,11 @@ public class ElevatorButtonPressEvent extends Event {
 
 	public DirectionType getDirection() {
 		return direction;
+	}
+	public void setState(Floor state) {
+		currentState = state;
+	}
+	public Floor getState() {
+		return currentState;
 	}
 }

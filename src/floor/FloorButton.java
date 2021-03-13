@@ -1,11 +1,14 @@
 package floor;
 import event.DirectionType;
+import java.io.Serializable;
 
 /**
  * A class representing the FloorButton Object in the Floor subsystem
  * @author Martin Dimitrov
  */
-public class FloorButton {
+public class FloorButton implements Serializable {
+	private static final long serialVersionUID = -2235218683007063023L;
+
 	// Constants for direction types
 	static final String UP = "Up", DOWN = "Down";
 	
