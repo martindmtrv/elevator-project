@@ -1,9 +1,6 @@
 package elevator;
-import java.util.Arrays;
 
 import event.*;
-import floor.FloorSubsystem;
-import floor.InputStream;
 import main.Configuration;
 import rpc.RpcHandler;
 import scheduler.BoundedBuffer;

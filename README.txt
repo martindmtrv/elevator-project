@@ -49,7 +49,6 @@ Contributions:
 		
 		
 Files:
-TODO NEED TO UPDATE
 	UML Diagrams:
 		EventTypes-Class-UML.png
 		EventTypes-Class-UML.ucls

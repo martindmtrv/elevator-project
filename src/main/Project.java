@@ -1,4 +1,6 @@
 package main;
+import java.net.InetAddress;
+
 import elevator.Box;
 import elevator.ElevatorSubsystem;
 import floor.FloorSubsystem;
@@ -8,6 +10,12 @@ import scheduler.Scheduler;
 
 public class Project {
     public static void main(String[] args) {
+    	try {
+    		System.out.println(InetAddress.getLocalHost().getHostAddress());
+    	} catch (Exception e) {
+    		//nothing
+    	}
+    	
         //Put threads together and run main
     	BoundedBuffer floorQueue = new BoundedBuffer();
     	BoundedBuffer schedulerQueue = new BoundedBuffer();

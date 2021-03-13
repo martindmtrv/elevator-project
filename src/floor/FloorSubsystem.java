@@ -8,7 +8,6 @@ import event.FloorButtonPressEvent;
 import main.Configuration;
 import rpc.RpcHandler;
 import scheduler.BoundedBuffer;
-import scheduler.Scheduler;
 
 /**
  * Floor Subsystem for the elevator project. Controls all the floors and handles sending input to the scheduler
