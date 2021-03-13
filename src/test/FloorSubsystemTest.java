@@ -15,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test cases using JUnit5 framework to ensure all floors are configured properly and ensure
  * the input .txt file with the appropriate data is collected properly.
  *
- * @Author: Alex Cameron
+ * @Author: Alex Cameron, Erdem Yanikomeroglu
  */
 public class FloorSubsystemTest {
 
     private FloorSubsystem floorSubsystem;
     private Floor floor;
     //Test data in input Test.txt file
-    private final String[] inputData = {"14:05:15.0 2 Up 4","14:15:30.0 3 Down 1","15:30:10.5 1 Up 2","14:05:15.0 4 Up 4","14:15:30.0 5 Down 1","15:30:10.5 7 Down 2","14:05:15.0 8 Up 4","14:15:30.0 9 Down 1","15:30:10.5 6 Down 2"} ;
+    private final String[] inputData = {"14:05:15.0 2 Up 4","14:15:30.0 3 Down 1","15:30:10.5 1 Up 2","14:15:30.0 5 Down 1","15:30:10.5 7 Down 2","14:15:30.0 9 Down 1","15:30:10.5 6 Down 2","14:15:30.0 5 Down 4","15:30:10.5 6 Up 7","14:15:30.0 4 Down 2","15:30:10.5 3 Up 6"} ;
     private final String testFile = "Test.txt";
 
     @BeforeEach
@@ -54,7 +54,7 @@ public class FloorSubsystemTest {
     }
 
     @Test
-    @DisplayName("Last floor cannot request down")
+    @DisplayName("Last floor cannot request up")
     public void testLastFloor(){
         int floorNum = 5;
         floor = new Floor(Configuration.NUM_FLOORS);
