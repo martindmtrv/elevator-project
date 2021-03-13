@@ -22,7 +22,7 @@ Contributions:
 		- RPC package setup and configuration
 		- Serialization utils (for sending Events as bytes over UDP)
 		- UDP setup and RpcWorker creation for sending / receiving
-		- Hooked up and configured all ports for runnning as seperate processes
+		- Hooked up and configured all ports for running as separate processes
 		
 	Ammar Tosun 101172948
 		- Optimized business logic for Scheduler - handleFloorButtonPressEvent() method to minimize the waiting time for passengers at floors.
@@ -46,7 +46,6 @@ TODO NEED TO UPDATE
 		EventTypes-Class-UML.png
 		EventTypes-Class-UML.ucls
 		UML_Object_Diagram.png
-		UML_Sequence_Diagram.drawio
 		UML_Sequence_Diagram.png
 	
 	state_machine_diagrams:
@@ -74,13 +73,18 @@ TODO NEED TO UPDATE
 		Configuration.java	Project.java
 	
 	src/scheduler:
-		BoundedBuffer.java	ElevatorStatus.java	Scheduler.java
-		ElevatorJobState.java	ElevatorTripUpdate.java	State.java
+		BoundedBuffer.java	ElevatorStatus.java	
+		ElevatorJobState.java	ElevatorTripUpdate.java	
+		State.java			Scheduler.java
 	
 	src/test:
 		ElevatorSubsystemTest.java	StateMachineTest.java
 		FloorSubsystemTest.java		TestSuite.java
 		SerializationTest.java
+		
+	src/rpc:
+		RpcHandler.java 	RpcWorker.java
+		RpcWorkerType.java	SerializationUtils.java
 
 	Test.txt
 	TestComm.txt
