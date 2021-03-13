@@ -153,4 +153,8 @@ public class Floor {
 	public FloorButton getUpButton(){
 		return upButton;
 	}
+
+	public int getFloorNum() {
+		return floorNum;
+	}
 }

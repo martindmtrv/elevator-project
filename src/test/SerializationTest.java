@@ -8,16 +8,20 @@ import event.FloorButtonPressEvent;
 import rpc.SerializationUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import floor.Floor;
 
 public class SerializationTest {
 	Event deserialized;
+	
 	
 	@BeforeEach
 	/**
 	 * Serialize data and deserialize it to test if the class works
 	 */
 	public void SerializeAndDeserialize() {
+		Floor state = new Floor(0);
 		FloorButtonPressEvent event = new FloorButtonPressEvent("", 0, 5, DirectionType.UP);
+		event.setState(state);
 		byte[] data = SerializationUtils.convertToBytes(event);
 		this.deserialized = SerializationUtils.convertFromBytes(data);
 	}
@@ -32,5 +36,10 @@ public class SerializationTest {
 	@DisplayName("Test once deserialized if the direction is correct")
 	public void getDirectionData() {
 		assertEquals(((FloorButtonPressEvent) deserialized).getDirection(), DirectionType.UP);
+	}
+	@Test
+	@DisplayName("Test once deserialized if the state is correct")
+	public void getStateData() {
+		assertEquals(((FloorButtonPressEvent) deserialized).getState().getFloorNum(), 0);
 	}
 }

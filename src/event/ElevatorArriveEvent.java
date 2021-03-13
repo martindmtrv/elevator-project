@@ -1,6 +1,5 @@
 package event;
 
-import floor.Floor;
 /**
  * Event to describe an elevator arriving at a floor
  * @author Martin Dimitrov
@@ -9,7 +8,6 @@ public class ElevatorArriveEvent extends Event {
 	private int car;
 	private int floor;
 	private DirectionType direction;
-	private Floor currentState;
 	
 	/**
 	 * Create elevator arrive event
@@ -34,11 +32,5 @@ public class ElevatorArriveEvent extends Event {
 
 	public DirectionType getDirection() {
 		return direction;
-	}
-	public void setState(Floor state) {
-		currentState = state;
-	}
-	public Floor getState() {
-		return currentState;
 	}
 }

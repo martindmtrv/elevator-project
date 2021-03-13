@@ -50,6 +50,8 @@ public class FloorSubsystem implements Runnable {
 		
 		// if notPressed is false that means button was already clicked (no need to request an elevator)
 		if (notPressed) {
+			//Add floor state to event
+			fbEvent.setState(floors[fbEvent.getFloor() - 1]);
 			schedulerEvents.addLast(fbEvent);
 		}
 	}
@@ -68,6 +70,8 @@ public class FloorSubsystem implements Runnable {
 		System.out.println("["+Event.getCurrentTime()+"]\tFLOORSUBSYSTEM: sending destinations " + Arrays.toString(elevatorButtons));
 		reply = new ElevatorButtonPressEvent(elevatorButtons, eaEvent.getCar(), eaEvent.getDirection());
 		
+		//Add floor state to event
+		reply.setState(floors[eaEvent.getFloor()-1]);
 		schedulerEvents.addLast(reply);
 	}
 	

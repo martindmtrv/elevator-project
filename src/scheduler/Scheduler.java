@@ -6,6 +6,7 @@ import java.util.HashSet;
 import elevator.Box;
 import elevator.ElevatorSubsystem;
 import event.*;
+import floor.Floor;
 import floor.FloorSubsystem;
 import floor.InputStream;
 import main.Configuration;
@@ -23,6 +24,7 @@ public class Scheduler implements Runnable {
 	private BoundedBuffer floorQueue;
 	private State state;
 	
+	private Floor[] floors;
 	private ArrayList<ElevatorStatus> elevators;
 	private ArrayList<FloorButtonPressEvent> unscheduled;
 	
@@ -49,6 +51,13 @@ public class Scheduler implements Runnable {
 		// create all the arraylists for elevator destinations
 		for (int i=0; i < Configuration.NUM_CARS; i++) {
 			elevators.add(new ElevatorStatus(i));
+		}
+		
+		floors = new Floor[Configuration.NUM_FLOORS];
+		
+		// create all the floors and buffers
+		for (int x = 0; x < Configuration.NUM_FLOORS; x++) {
+			floors[x] = new Floor(x+1);
 		}
 	}
 	
@@ -90,6 +99,12 @@ public class Scheduler implements Runnable {
 	 * @param buttonEv - the event to handle
 	 */
 	private void handleFloorButtonPressEvent(FloorButtonPressEvent buttonEv) {
+		
+		//Updating floor states
+		if(!buttonEv.getSeen()) {
+			floors[buttonEv.getFloor() - 1] = buttonEv.getState();
+		}
+		
 		ElevatorStatus elevator;
 		ElevatorCallToMoveEvent elevatorRequest;
 		DirectionType toMove;
@@ -151,6 +166,12 @@ public class Scheduler implements Runnable {
 	 * @param elevatorBEv - the event to handle
 	 */
 	private void handleElevatorButtonPressEvent(ElevatorButtonPressEvent elevatorBEv) {
+		
+		//Updating floor states
+				if(!elevatorBEv.getSeen()) {
+					floors[elevatorBEv.getState().getFloorNum() - 1] = elevatorBEv.getState();
+				}
+		
 		ElevatorStatus elevator;
 		ElevatorCallToMoveEvent elevatorRequest;
 		Object[] unscheduledEvents;
@@ -276,6 +297,7 @@ public class Scheduler implements Runnable {
 			default:
 				System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Unhandled event " + event);
 		}
+		event.setSeen();
 		
 		this.setState(State.WAITING);
 		if(Configuration.VERBOSE) {
