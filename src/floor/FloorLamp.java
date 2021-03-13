@@ -1,11 +1,13 @@
 package floor;
 import event.DirectionType;
+import java.io.Serializable;
 
 /**
  * A Class to represent the Floor Lamp in the floor subsystem
  * @author Martin Dimitrov
  */
-public class FloorLamp {
+public class FloorLamp implements Serializable {
+	private static final long serialVersionUID = -1511142249331589724L;
 	private boolean isLit; 		/* State of the lamp lit or not */
 	private DirectionType direction; 	/* Direction lamp points (not really used right now) */
 	
