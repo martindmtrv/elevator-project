@@ -36,7 +36,7 @@ Contributions:
 		- Optimized business logic for Scheduler - handleFloorButtonPressEvent() method to minimize the waiting time for passengers at floors.
 		
 	Erdem Yanikomeroglu 101080085
-		
+		- Updated test cases and test input
 		
 	Alex Cameron 101114698
 		- UML Class diagram
