@@ -8,7 +8,15 @@ Members:
  -> Alex Cameron - 101114698
  -> David Casciano - 101069255
 	
-Setup Instructions:
+Setup Instructions (Iteration 3 (With UDP)):
+	To run iteration 3 elevator system there are 3 .java files which must be run in the following order:
+		1. Scheduler.java
+		2. ElevatorSubsystem.java
+		3. FloorSubsystem.java
+		
+	The 3 classes will communicate via UDP and print their respected outputs in their individual consoles.
+	
+Setup Instructions (No UDP + All output in one console):
 	Run Project.java input is fed in from the file specified in Configuration.java (there is alternative running 
 	options in there as well).
 	
