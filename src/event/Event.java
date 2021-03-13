@@ -15,6 +15,7 @@ public class Event implements Serializable {
 	private static final long serialVersionUID = 5034032719498221414L;
 	private String requestTime;
 	private EventType type;
+	private boolean eventSeen = false;
 	
 	/**
 	 * Create a generic event (should not really be called since generic events are unused)
@@ -53,5 +54,13 @@ public class Event implements Serializable {
 		Date date = new Date();
 		
 		return dateFormat.format(date);
+	}
+	
+	public void setSeen() {
+		this.eventSeen = true;
+	}
+	
+	public boolean getSeen() {
+		return this.eventSeen;
 	}
 }
