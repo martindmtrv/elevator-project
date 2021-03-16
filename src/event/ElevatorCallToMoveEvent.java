@@ -5,6 +5,7 @@ package event;
  * @author Ammar Tosun
  */
 public class ElevatorCallToMoveEvent extends Event {
+	private static final long serialVersionUID = 6048675164479301938L;
 	private int car;
 	private DirectionType direction;
 	private Integer[] destinationToLight;

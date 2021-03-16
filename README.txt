@@ -1,5 +1,5 @@
 SYSC 3303 Elevator Assignment: Group 7
-Iteration: 3
+Iteration: 4
 
 Members:
  -> Martin Dimitrov -101111948
@@ -8,8 +8,8 @@ Members:
  -> Alex Cameron - 101114698
  -> David Casciano - 101069255
 	
-Setup Instructions (Iteration 3 (With UDP)):
-	To run iteration 3 elevator system there are 3 .java files which must be run in the following order:
+Setup Instructions (Iteration 4 (With UDP)):
+	To run iteration 4 elevator system there are 3 .java files which must be run in the following order:
 		1. Scheduler.java
 		2. ElevatorSubsystem.java
 		3. FloorSubsystem.java
@@ -27,10 +27,9 @@ Setup Instructions (No UDP + All output in one console):
 
 Contributions:
 	Martin 101111948
-		- RPC package setup and configuration
-		- Serialization utils (for sending Events as bytes over UDP)
-		- UDP setup and RpcWorker creation for sending / receiving
-		- Hooked up and configured all ports for running as separate processes
+		- setup Fault events and types
+		- brainstorming for what types of faults there are and how they should be handled
+		- git setup and organization
 		
 	Ammar Tosun 101172948
 		- Optimized business logic for Scheduler - handleFloorButtonPressEvent() method to minimize the waiting time for passengers at floors.
@@ -49,6 +48,7 @@ Contributions:
 		
 		
 Files:
+TODO TO UPDATE LATER
 	UML Diagrams:
 		EventTypes-Class-UML.png
 		EventTypes-Class-UML.ucls

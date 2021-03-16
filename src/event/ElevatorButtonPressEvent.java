@@ -8,6 +8,7 @@ import floor.Floor;
  * @author Martin Dimitrov
  */
 public class ElevatorButtonPressEvent extends Event {
+	private static final long serialVersionUID = 6503681023246788584L;
 	private Integer[] buttons;
 	private int car;
 	private DirectionType direction;

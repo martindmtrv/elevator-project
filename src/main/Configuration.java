@@ -1,7 +1,5 @@
 package main;
 
-import java.net.InetAddress;
-
 /**
  * Configuration class for the system
  * @author Martin Dimitrov

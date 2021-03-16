@@ -3,12 +3,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import elevator.Box;
-import elevator.ElevatorSubsystem;
 import event.*;
 import floor.Floor;
-import floor.FloorSubsystem;
-import floor.InputStream;
 import main.Configuration;
 import rpc.RpcHandler;
 
@@ -75,8 +71,9 @@ public class Scheduler implements Runnable {
 		int min = Configuration.NUM_FLOORS;
 		int diff = 0;
 		for (ElevatorStatus e: elevators) {
-			
-			if (e.getStatus() == ElevatorJobState.PICKING_UP)	// elevator can't pick up if it's already on-route to picking up
+			// elevator can't pick up if it's already on-route to picking up
+			// or if its in a fault state (itr 4)
+			if (e.getStatus() == ElevatorJobState.PICKING_UP || e.getStatus() == ElevatorJobState.FAULT)	
 				continue;
 			
 			else if ((e.getStatus() == ElevatorJobState.IDLE) || 	// if the elevator is idle or
@@ -301,6 +298,11 @@ public class Scheduler implements Runnable {
 				break;
 			case ELEVATOR_APPROACH_SENSOR: //Event sent from elevator informing of approach of a arrival sensor
 				handleElevatorApproachSensorEvent((ElevatorApproachSensorEvent) event);
+				break;
+			case FAULT:
+				// send faults to the elevator (this is unlogged because it should be as if the elevator)
+				// received the fault and then talks to the scheduler about it after (through other event types)
+				elevatorQueue.addLast(event);
 				break;
 			default:
 				System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Unhandled event " + event);

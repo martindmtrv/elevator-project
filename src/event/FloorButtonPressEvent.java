@@ -7,6 +7,7 @@ import floor.Floor;
  * @author Martin Dimitrov
  */
 public class FloorButtonPressEvent extends Event {
+	private static final long serialVersionUID = -333622461205588683L;
 	private int floor;
 	private int destination;
 	private DirectionType direction;

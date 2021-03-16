@@ -8,7 +8,8 @@ import scheduler.ElevatorTripUpdate;
  * Author: Alex Cameron
  */
 public class ElevatorTripUpdateEvent extends Event {
-    private int car;
+	private static final long serialVersionUID = 8596629253620541259L;
+	private int car;
     private int approachingFloor;
     private ElevatorTripUpdate update;
 

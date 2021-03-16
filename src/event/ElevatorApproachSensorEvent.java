@@ -7,7 +7,8 @@ package event;
  * @Author: Alex Cameron
  */
 public class ElevatorApproachSensorEvent extends Event {
-    private int car;
+	private static final long serialVersionUID = 842640914181934746L;
+	private int car;
     private int floor;
     private DirectionType direction;
 

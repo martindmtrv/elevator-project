@@ -90,6 +90,8 @@ public class FloorSubsystem implements Runnable {
 				break;
 			}
 			default:
+				// when I receive an unhandled event ie. a fault, I should simply pass it along to scheduler
+				schedulerEvents.addLast(event);
 				break;
 			}
 	}
@@ -98,7 +100,6 @@ public class FloorSubsystem implements Runnable {
 	public void run() {
 
 		Event event;
-		
 		
 		// run until stopped
 		while(!Thread.interrupted()) {
