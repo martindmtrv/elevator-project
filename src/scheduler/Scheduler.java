@@ -170,9 +170,9 @@ public class Scheduler implements Runnable {
 	private void handleElevatorButtonPressEvent(ElevatorButtonPressEvent elevatorBEv) {
 		
 		//Updating floor states
-				if(!elevatorBEv.getSeen()) {
-					floors[elevatorBEv.getState().getFloorNum() - 1] = elevatorBEv.getState();
-				}
+		if(!elevatorBEv.getSeen()) {
+			floors[elevatorBEv.getState().getFloorNum() - 1] = elevatorBEv.getState();
+		}
 		
 		ElevatorStatus elevator;
 		ElevatorCallToMoveEvent elevatorRequest;
@@ -184,7 +184,7 @@ public class Scheduler implements Runnable {
 		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Adding elevator button presses: " + Arrays.toString(elevatorBEv.getButtons()) + " to elevator " + elevatorBEv.getCar());
 		
 		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
-		elevator.setDirection(elevatorBEv.getDirection());
+		//elevator.setDirection(elevatorBEv.getDirection());
 		
 		if (elevator.getDestinations().size() > 0) {
 			// update states
@@ -263,6 +263,12 @@ public class Scheduler implements Runnable {
 		
 		// remove from destinations
 		elevator.getDestinations().remove(Integer.valueOf(eaEvent.getFloor()));
+		
+		if (elevator.getLocation() == 1) {
+			elevator.setWorkingDirection(DirectionType.UP);
+		} else if (elevator.getLocation() == Configuration.NUM_FLOORS) {
+			elevator.setWorkingDirection(DirectionType.DOWN);
+		}
 		
 		// set proper working direction
 		ElevatorArriveEvent reply = new ElevatorArriveEvent(eaEvent.getCar(), eaEvent.getFloor(), elevator.getWorkingDirection());
