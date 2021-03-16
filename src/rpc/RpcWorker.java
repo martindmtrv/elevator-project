@@ -148,7 +148,7 @@ public class RpcWorker implements Runnable {
 		
 		while (!Thread.interrupted()) {
 			// create a buffer
-			data = new byte[1000];
+			data = new byte[2000];
 			
 			// setup datagram packet
 			incoming = new DatagramPacket(data, data.length);

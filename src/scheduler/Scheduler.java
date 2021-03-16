@@ -80,11 +80,13 @@ public class Scheduler implements Runnable {
 				continue;
 			
 			else if ((e.getStatus() == ElevatorJobState.IDLE) || 	// if the elevator is idle or
-					(e.getStatus() == ElevatorJobState.EN_ROUTE && e.getLocation() > pickup && e.getDirection() == dir) || 	// if the elevator is on route to a destination and 
-					(e.getStatus() == ElevatorJobState.EN_ROUTE && e.getLocation() < pickup && e.getDirection() == dir)) {	// the pickup location is on the way.. 
+					(e.getDirection() == dir && (
+						 (e.getDirection() == DirectionType.UP && e.getLocation() < pickup) || 
+						 (e.getDirection() == DirectionType.DOWN && e.getLocation() > pickup)))
+			){	
 				diff = Math.abs(e.getLocation() - pickup);
 				if (min > diff) {
-					min  = diff;
+					min = diff;
 					closestElevator = e; 
 				}
 			}
