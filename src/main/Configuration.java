@@ -25,7 +25,7 @@ public abstract class Configuration {
 	public static final long TRAVEL_TIME_BETWEEN_FLOOR = 9500; //~9.5s
 	
 	// test file
-	public static final String TEST_FILE = "TestComm.txt";
+	public static final String TEST_FILE = "Test.txt";
 	
 	// ports info
 	public static final int ELEVATOR_PORT = 50;
