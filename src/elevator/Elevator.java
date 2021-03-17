@@ -194,6 +194,41 @@ public class Elevator implements Runnable{
 			box.notifyAll();
 		}
 	}
+	
+	/**
+	 * This method handles when a elevator car receives a fault event instruction triggered from the scheduler. There are 3 types of possible 
+	 * faults, Door is stuck, arrival sensor failure and motor failure. When a elevator receives this fault it goes into a fault state and cannot
+	 * be scheduled by the scheduler. Once the fault is fixed in the Configurable amount of time then the scheduler is updated that the elevator is
+	 * fixed and can be scheduled again.
+	 * Note: All fault sleep configurations can be configured in Configuration.java
+	 * 
+	 * @param faultEvent The fault event received from scheduler to be triggered by certain elevator car
+	 */
+	public void handleFault(Fault faultEvent) {
+		if(faultEvent.getFaultType()==FaultType.DOOR_STUCK) { //Door stuck fault
+			try {
+				System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'DOOR STUCK' ");
+				ElevatorState tempState = this.state; //get curr state
+				this.state= ElevatorState.FAULT; //set state to FAULT state
+				//send scheduler fault update event to notify elevator is in fault state
+				elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+				Thread.sleep(Configuration.DOOR_FAULT); //sleep 10s and wait for fault to be fixed
+				this.state = tempState; //set back to former state
+				//send scheduler update event to notify elevator is no longer in fault state
+				elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));			
+				} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}else if(faultEvent.getFaultType()==FaultType.ARRIVAL_SENSOR_FAIL) { //Arrival Sensor Fail
+			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'ARRIVAL SENSOR FAILURE' ");
+			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+			this.state= ElevatorState.FAULT; //set state to FAULT state forever
+		}else{ //Motor fail
+			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'MOTOR FAILURE' ");
+			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+			this.state= ElevatorState.FAULT; //set state to FAULT state forever
+		}
+	}
 
 	@Override
 	public void run(){
@@ -206,6 +241,10 @@ public class Elevator implements Runnable{
 				
 				case ELEVATOR_TRIP_UPDATE: //Arrival sensor
 					handleElevatorTripUpdateEvent((ElevatorTripUpdateEvent) event);
+					break;
+					
+				case FAULT: //New fault event received from scheduler
+					handleFault((Fault) event);
 					break;
 			}
 			

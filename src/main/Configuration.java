@@ -22,6 +22,10 @@ public abstract class Configuration {
 	public static final long LOAD_TIME = 1000; //9.51323 actual but using 1s for testing
 	public static final long TRAVEL_TIME_BETWEEN_FLOOR = 9500; //~9.5s
 	
+	//Fault sleep times
+	public static final long DOOR_FAULT = 10000; //10s for a DOOR FAULT
+	public static final long ARRIVAL_FAULT = 10000; //10s for a ARRIVAL SENSOR FAULT
+	public static final long MOTOR_FAULT = 10000; //10s for a MOTOR FAILURE FAULT
 	// test file
 	public static final String TEST_FILE = "Test.txt";
 	

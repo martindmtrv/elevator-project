@@ -80,6 +80,12 @@ public class ElevatorSubsystem implements Runnable {
 				case ELEVATOR_ARRIVED:
 					schedulerEvents.addLast((ElevatorArriveEvent) event); //forward elevator arrival event to scheduler from elevator
 				break;
+				case FAULT:
+					Fault faultEvent = (Fault) event;
+					boxArr[faultEvent.getCar()].put(faultEvent);
+				break;
+				case ELEVATOR_FAULT_UPDATE:
+					schedulerEvents.addLast((ElevatorFaultUpdateEvent)event); //notify scheduler that there is an elevator fault update event
 			}
 		}
 	}

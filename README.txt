@@ -38,9 +38,8 @@ Contributions:
 		- Updated test cases and test input
 		
 	Alex Cameron 101114698
-		- UML Class diagram
-		- UML Sequence diagram
-		- Updated State Machine Diagram
+		- Fault handling for elevator subsystem.
+		- Created new events to notify scheduler of elevators in fault states allowing them not to be scheduled.
 		
 	David Casciano 101069255
 		- Added Testing for Serialization utils
