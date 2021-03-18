@@ -69,7 +69,7 @@ public class InputStream implements Runnable {
 		String[] input = s.split(" ");
 
 		//Detect if there is a fault and return a Fault event
-		if (input[1] == "FAULT") {
+		if (input[1].equals("FAULT")) {
 			return new Fault(Integer.parseInt(input[2]), FaultType.valueOf(input[3].toUpperCase()));
 		} else {
 			// do not use input file for time (use current time)
