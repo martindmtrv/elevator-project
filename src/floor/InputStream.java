@@ -11,23 +11,31 @@ import java.util.Scanner;
 
 import event.DirectionType;
 import event.FloorButtonPressEvent;
+import event.Event;
+import event.Fault;
+import event.FaultType;
 import scheduler.BoundedBuffer;
+
 /**
- * This file reads requests from a text file and puts it into the floor subsystems queue
+ * This file reads requests from a text file and puts it into the floor
+ * subsystems queue
+ * 
  * @author David Casciano
  *
  */
-public class InputStream implements Runnable{
+public class InputStream implements Runnable {
 	private long diffInMillies;
 	private String inputFile;
 	private BoundedBuffer events;
+
 	public InputStream(String fp, BoundedBuffer myQueue) {
 		inputFile = fp;
 		events = myQueue;
 	}
-	
+
 	/**
 	 * Read the input file in
+	 * 
 	 * @param fp - the file path of the input file
 	 * @return list of the lines in the file
 	 */
@@ -36,12 +44,12 @@ public class InputStream implements Runnable{
 			ArrayList<String> lines = new ArrayList<>();
 			File input = new File(fp);
 			Scanner scan = new Scanner(input);
-			
+
 			// get all the lines
 			while (scan.hasNextLine()) {
 				lines.add(scan.nextLine());
 			}
-			
+
 			scan.close();
 			return lines;
 		} catch (FileNotFoundException e) {
@@ -49,42 +57,48 @@ public class InputStream implements Runnable{
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Convert one line of input into an Event
+	 * 
 	 * @param s - line from the input file
 	 * @return FloorButtonPressEvent
 	 */
-	public FloorButtonPressEvent parseLine(String s) {
-		
+	public Event parseLine(String s) {
+
 		String[] input = s.split(" ");
-		
-		// do not use input file for time (use current time)
-		return new FloorButtonPressEvent("", Integer.parseInt(input[1]), 
-				Integer.parseInt(input[3]), DirectionType.valueOf(input[2].toUpperCase()));
-		
+
+		//Detect if there is a fault and return a Fault event
+		if (input[1] == "FAULT") {
+			return new Fault(Integer.parseInt(input[2]), FaultType.valueOf(input[3].toUpperCase()));
+		} else {
+			// do not use input file for time (use current time)
+			return new FloorButtonPressEvent("", Integer.parseInt(input[1]), Integer.parseInt(input[3]),
+					DirectionType.valueOf(input[2].toUpperCase()));
+		}
 	}
+
 	@Override
 	public void run() {
-		//parse input
+		// parse input
 		ArrayList<String> file = readInput(inputFile);
-		
+
 		if (file == null) {
 			return;
 		}
-		
+
 		// add inputs to floor buffers
 		for (int i = 0; i < file.size(); i++) {
-			if(i+1 != file.size()) {
+			if (i + 1 != file.size()) {
 				String currString = file.get(i);
-				String nextString = file.get(i+1);
-				
+				String nextString = file.get(i + 1);
+
 				String[] curr;
 				String[] next;
-				
+
 				curr = currString.split(" ");
 				next = nextString.split(" ");
-				
+
 				Date t1, t2;
 				try {
 					t1 = new SimpleDateFormat("HH:mm:ss").parse(curr[0]);
@@ -93,26 +107,23 @@ public class InputStream implements Runnable{
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				
-				
+
 			} else {
 				diffInMillies = 0;
 			}
-			
-			
-			
+
 			// parse data
 			// add to FloorSubsystem event queue
 			events.addLast(parseLine(file.get(i)));
-			
-			//Hard code time between inputs
+
+			// Hard code time between inputs
 			try {
 				Thread.sleep(diffInMillies);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
+
 }

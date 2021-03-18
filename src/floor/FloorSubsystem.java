@@ -5,6 +5,7 @@ import event.ElevatorArriveEvent;
 import event.ElevatorButtonPressEvent;
 import event.Event;
 import event.FloorButtonPressEvent;
+import event.Fault;
 import main.Configuration;
 import rpc.RpcHandler;
 import scheduler.BoundedBuffer;
@@ -76,6 +77,16 @@ public class FloorSubsystem implements Runnable {
 	}
 	
 	/**
+	 * Handling the injection of a fault. This means sending the fault event to the scheduler to then forward it 
+	 * onto the elevator
+	 * @param fEvent - the fault event to handle
+	 */
+	public void handleFaultEvent(Fault fEvent) {
+		//Add fault to scheduler
+		schedulerEvents.addLast(fEvent);
+	}
+	
+	/**
 	 * General method with switch case for all event types handled by this system
 	 * @param event - the event to handle
 	 */
@@ -87,6 +98,10 @@ public class FloorSubsystem implements Runnable {
 			}
 			case ELEVATOR_ARRIVED: {
 				handleElevatorArriveEvent((ElevatorArriveEvent) event);
+				break;
+			}
+			case FAULT: {
+				handleFaultEvent((Fault) event);
 				break;
 			}
 			default:
