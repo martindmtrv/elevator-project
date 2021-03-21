@@ -274,6 +274,35 @@ public class Scheduler implements Runnable {
 	}
 	
 	/**
+	 * Handle fault events
+	 * @param efuEvent - event to handle
+	 */
+	private void handleElevatorFaultEvent(Fault efEvent) {
+		ElevatorStatus elevator = elevators.get(efEvent.getCar());
+		elevator.setDirection(DirectionType.STILL);
+		
+		if (efEvent.getFaultType() == FaultType.DOOR_STUCK) {
+			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: DOOR STUCK, DOOR STUCK " + efEvent);
+			System.out.println("retrying to close door...");
+			ElevatorArriveEvent retry = new ElevatorArriveEvent(efEvent.getCar(), 1, elevator.getWorkingDirection());
+			floorQueue.addLast(retry);
+		}
+		else if (efEvent.getFaultType() == FaultType.ARRIVAL_SENSOR_FAIL) {
+			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: ARRIVAL SENSOR FAIL " + efEvent);
+			System.out.println("shutting down elevator...");
+			
+			ElevatorArriveEvent retry = new ElevatorArriveEvent(efEvent.getCar(), 1, elevator.getWorkingDirection());
+			floorQueue.addLast(retry);
+		}
+		else if (efEvent.getFaultType() == FaultType.MOTOR_FAIL) {
+			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: MOTOR FAIL " + efEvent);
+			System.out.println("shutting down elevator...");
+			
+			elevator.setStatus(ElevatorJobState.OUT_OF_ORDER);
+		}
+	}
+	
+	/**
 	 * General method to handle events on the scheduler, breaks off into specific event types
 	 * @param event - generic event pulled from scheduler bounded buffer queue
 	 */
@@ -303,6 +332,7 @@ public class Scheduler implements Runnable {
 				// send faults to the elevator (this is unlogged because it should be as if the elevator)
 				// received the fault and then talks to the scheduler about it after (through other event types)
 				elevatorQueue.addLast(event);
+				handleElevatorFaultEvent((Fault) event);
 				break;
 			default:
 				System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Unhandled event " + event);
