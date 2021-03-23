@@ -30,20 +30,20 @@ Contributions:
 		- setup Fault events and types
 		- brainstorming for what types of faults there are and how they should be handled
 		- git setup and organization
+		- timers for elevator timeouts (to handle travel timeouts, this is a scheduler generated fault)
 		
 	Ammar Tosun 101172948
-		- Optimized business logic for Scheduler - handleFloorButtonPressEvent() method to minimize the waiting time for passengers at floors.
+		
 		
 	Erdem Yanikomeroglu 101080085
-		- Updated test cases and test input
+		
 		
 	Alex Cameron 101114698
 		- Fault handling for elevator subsystem.
 		- Created new events to notify scheduler of elevators in fault states allowing them not to be scheduled.
 		
 	David Casciano 101069255
-		- Added Testing for Serialization utils
-		- Updated Event classes to create better visibility for floor states. (To be used in later iterations)
+		
 		
 		
 Files:

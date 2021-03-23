@@ -1,7 +1,5 @@
 package main;
-import java.net.InetAddress;
 
-import elevator.Box;
 import elevator.ElevatorSubsystem;
 import floor.FloorSubsystem;
 import floor.InputStream;
