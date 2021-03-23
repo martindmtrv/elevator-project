@@ -106,42 +106,44 @@ public class Elevator implements Runnable{
 	 * @param ectmEvent ElevatorCallToMoveEvent which calls elevator to move
 	 */
 	public void handleElevatorCalledEvent(ElevatorCallToMoveEvent ectmEvent){
-		if(eID == ectmEvent.getCar()){ //check if car is the desired car
-			getStatus();
-			for(Integer i : ectmEvent.getDestinationToLight()){ //check all new destinations
-				pressButton(i); //press elevator buttons when destinations are added to elevator trip
-			}
-			if(eDoor.getIsOpen()){ //close doors if they are open
-				eDoor.setIsOpen(false);
-			}
-			if(ectmEvent.getDirection() == DirectionType.UP){
-				//direction => go up & turn on motor
-				if(Configuration.VERBOSE) {
-					System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_UP");
+		if(state !=ElevatorState.FAULT) {
+			if(eID == ectmEvent.getCar()){ //check if car is the desired car
+				getStatus();
+				for(Integer i : ectmEvent.getDestinationToLight()){ //check all new destinations
+					pressButton(i); //press elevator buttons when destinations are added to elevator trip
 				}
-				state = ElevatorState.MOVING_UP;
-				direction = DirectionType.UP;
-				runMotor(true, state);
-			}else{
-				//direction => go down & turn on motor
-				if(Configuration.VERBOSE) {
-					System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_DOWN");
+				if(eDoor.getIsOpen()){ //close doors if they are open
+					eDoor.setIsOpen(false);
 				}
-				state = ElevatorState.MOVING_DOWN;
-				direction = DirectionType.DOWN;
-				runMotor(true, state);
+				if(ectmEvent.getDirection() == DirectionType.UP){
+					//direction => go up & turn on motor
+					if(Configuration.VERBOSE) {
+						System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_UP");
+					}
+					state = ElevatorState.MOVING_UP;
+					direction = DirectionType.UP;
+					runMotor(true, state);
+				}else{
+					//direction => go down & turn on motor
+					if(Configuration.VERBOSE) {
+						System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_DOWN");
+					}
+					state = ElevatorState.MOVING_DOWN;
+					direction = DirectionType.DOWN;
+					runMotor(true, state);
+				}
+				
+				try {
+					System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": Sleep " +Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2000+"s");
+					Thread.sleep((Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2)); //sleep 5s
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID,direction);
+				elevatorEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+			}else{ //notify other elevators
+				box.notifyAll();
 			}
-			
-			try {
-				System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": Sleep " +Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2000+"s");
-				Thread.sleep((Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2)); //sleep 5s
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID,direction);
-			elevatorEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
-		}else{ //notify other elevators
-			box.notifyAll();
 		}
 	}
 
@@ -151,47 +153,49 @@ public class Elevator implements Runnable{
 	 * @param etuEvent ElevatorTripUpdateEvent Notifies the elevator to continue or stop before reaching next floor
 	 */
 	public void handleElevatorTripUpdateEvent(ElevatorTripUpdateEvent etuEvent){
-		if(eID == etuEvent.getCar()) { //car IDs are same
-			currFloor = etuEvent.getApproachingFloor(); //update curr floor
-			getStatus();
-			if (etuEvent.getUpdate() == ElevatorTripUpdate.STOP) { //Scheduler tells elevator to stop at next floor
-				try {
-					System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": Sleep " +Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2000+ "s Arrival Sensor: STOP");
-					Thread.sleep(Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2); //sleep 5s and stop
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				arrived(etuEvent.getApproachingFloor()); //arrive at next floor
-				ElevatorArriveEvent eaEvent = new ElevatorArriveEvent(eID,etuEvent.getApproachingFloor(), direction);
-				elevatorEvents.addLast(eaEvent);
-				//Elevator must now wait for passengers to get on at the arrived floor before departing
-				try {
-					if(Configuration.VERBOSE) {
-						System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->LOADING_PASSENGER");
+		if(state !=ElevatorState.FAULT) {
+			if(eID == etuEvent.getCar()) { //car IDs are same
+				currFloor = etuEvent.getApproachingFloor(); //update curr floor
+				getStatus();
+				if (etuEvent.getUpdate() == ElevatorTripUpdate.STOP) { //Scheduler tells elevator to stop at next floor
+					try {
+						System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": Sleep " +Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2000+ "s Arrival Sensor: STOP");
+						Thread.sleep(Configuration.TRAVEL_TIME_BETWEEN_FLOOR/2); //sleep 5s and stop
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
-					state = ElevatorState.LOADING_PASSENGER;
-					System.out.println("["+Event.getCurrentTime()+"]\tCAR "+ eID +": Sleeping " + Configuration.LOAD_TIME/1000 + "s for passengers to load.");
-					Thread.sleep(Configuration.LOAD_TIME);
-					if(Configuration.VERBOSE) {
-						System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_UP");
+					arrived(etuEvent.getApproachingFloor()); //arrive at next floor
+					ElevatorArriveEvent eaEvent = new ElevatorArriveEvent(eID,etuEvent.getApproachingFloor(), direction);
+					elevatorEvents.addLast(eaEvent);
+					//Elevator must now wait for passengers to get on at the arrived floor before departing
+					try {
+						if(Configuration.VERBOSE) {
+							System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->LOADING_PASSENGER");
+						}
+						state = ElevatorState.LOADING_PASSENGER;
+						System.out.println("["+Event.getCurrentTime()+"]\tCAR "+ eID +": Sleeping " + Configuration.LOAD_TIME/1000 + "s for passengers to load.");
+						Thread.sleep(Configuration.LOAD_TIME);
+						if(Configuration.VERBOSE) {
+							System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->MOVING_UP");
+						}
+						state = ElevatorState.IDLE;
+					}catch(InterruptedException e){
+						e.printStackTrace();
 					}
-					state = ElevatorState.IDLE;
-				}catch(InterruptedException e){
-					e.printStackTrace();
+				} else {
+					try {
+						System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR CAR "+ eID +": Sleep "+Configuration.TRAVEL_TIME_BETWEEN_FLOOR/1000+ " Arrival Sensor: CONTINUE");
+						Thread.sleep(Configuration.TRAVEL_TIME_BETWEEN_FLOOR); //sleep ~10s and send another Elevator arrival sensor event
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+	
+					ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID, direction);
+					elevatorEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
 				}
-			} else {
-				try {
-					System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR CAR "+ eID +": Sleep "+Configuration.TRAVEL_TIME_BETWEEN_FLOOR/1000+ " Arrival Sensor: CONTINUE");
-					Thread.sleep(Configuration.TRAVEL_TIME_BETWEEN_FLOOR); //sleep ~10s and send another Elevator arrival sensor event
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				ElevatorApproachSensorEvent easEvent = new ElevatorApproachSensorEvent(eID, direction);
-				elevatorEvents.addLast(easEvent); //notify scheduler that arrival sensor triggered
+			}else{
+				box.notifyAll();
 			}
-		}else{
-			box.notifyAll();
 		}
 	}
 	

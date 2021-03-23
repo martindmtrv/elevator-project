@@ -17,6 +17,7 @@ public class Fault extends Event {
 	 */
 	public Fault(int eid, FaultType f) {
 		super("", EventType.FAULT);
+		faultType = f;
 		car = eid;
 	}
 

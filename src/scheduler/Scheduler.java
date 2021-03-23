@@ -342,6 +342,8 @@ public class Scheduler implements Runnable {
 				// send faults to the elevator (this is unlogged because it should be as if the elevator)
 				// received the fault and then talks to the scheduler about it after (through other event types)
 				elevatorQueue.addLast(event);
+				break;
+			case ELEVATOR_FAULT_UPDATE:
 				handleElevatorFaultUpdateEvent((ElevatorFaultUpdateEvent) event);
 				break;
 			default:
