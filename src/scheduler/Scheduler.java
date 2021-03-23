@@ -312,7 +312,7 @@ public class Scheduler implements Runnable {
 	private void handleElevatorFaultUpdateEvent(ElevatorFaultUpdateEvent efuEvent) {
 		ElevatorStatus elevator = elevators.get(efuEvent.getCar());
 		elevator.setDirection(DirectionType.STILL);
-		System.out.println("ELEVATOR STUS IS" + efuEvent.getStatus());
+
 		if (efuEvent.getStatus() == ElevatorState.FAULT) {
 			elevator.setStatus(ElevatorJobState.FAULT);
 		}
