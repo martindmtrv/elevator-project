@@ -290,7 +290,7 @@ public class Scheduler implements Runnable {
 		}
 		
 		ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), 1, elevator.getWorkingDirection());
-		floorQueue.addLast(retry);
+		elevatorQueue.addLast(retry);
 		
 		/*
 		if (efuEvent.getFaultType() == FaultType.DOOR_STUCK) {
