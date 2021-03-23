@@ -22,6 +22,7 @@ public class Scheduler implements Runnable {
 	private State state;
 	
 	private Floor[] floors;
+	private Thread[] timers;
 	private ArrayList<ElevatorStatus> elevators;
 	private ArrayList<FloorButtonPressEvent> unscheduled;
 	
@@ -56,6 +57,9 @@ public class Scheduler implements Runnable {
 		for (int x = 0; x < Configuration.NUM_FLOORS; x++) {
 			floors[x] = new Floor(x+1);
 		}
+		
+		// create empty array of timers
+		timers = new Thread[Configuration.NUM_CARS];
 	}
 	
 	/**
@@ -155,6 +159,10 @@ public class Scheduler implements Runnable {
 				
 				elevatorRequest = new ElevatorCallToMoveEvent(elevator.getId(), toMove);
 				elevatorQueue.addLast(elevatorRequest);
+				
+				// create and start a timer here (in case it doesnt get here)
+				timers[elevator.getId()] = new Thread(new ElevatorEventTimer(elevatorRequest, schedulerQueue, elevator.getId()));
+				timers[elevator.getId()].start();
 			}
 			return;
 		}
@@ -184,7 +192,9 @@ public class Scheduler implements Runnable {
 		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
 		//elevator.setDirection(elevatorBEv.getDirection());
 		
-		if (elevator.getDestinations().size() > 0) {
+		if (elevator.getStatus() == ElevatorJobState.FAULT) {
+			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator " + elevatorBEv.getCar() + " has stuck doors currently (will not tell it to go yet)");
+		} else if (elevator.getDestinations().size() > 0) {
 			// update states
 			elevator.setStatus(ElevatorJobState.EN_ROUTE);
 			elevator.setWorkingDirection(elevatorBEv.getDirection());
@@ -223,6 +233,13 @@ public class Scheduler implements Runnable {
 	 */
 	private void handleElevatorApproachSensorEvent(ElevatorApproachSensorEvent easEvent) {
 		ElevatorStatus elevator = elevators.get(easEvent.getCar());
+		if (elevator.getStatus() == ElevatorJobState.FAULT) {
+			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator %d is approaching but is in FAULT -->> Disregarding this", easEvent.getCar()));
+			return;
+		}
+		// STOP THE TIMER!!
+		timers[easEvent.getCar()].interrupt();
+		
 		ElevatorTripUpdateEvent etuEvent;
 		int floorToReach;
 		if (easEvent.getDirection() == DirectionType.DOWN) {
@@ -247,6 +264,10 @@ public class Scheduler implements Runnable {
 		
 		
 		elevatorQueue.addLast(etuEvent); //add new ElevatorTripUpdateEvent to elevator's queue
+		
+		// create and start a timer here (in case it doesnt get here)
+		timers[elevator.getId()] = new Thread(new ElevatorEventTimer(etuEvent, schedulerQueue, elevator.getId()));
+		timers[elevator.getId()].start();
 	}
 	
 	/**
@@ -254,8 +275,18 @@ public class Scheduler implements Runnable {
 	 * @param eaEvent - event to handle
 	 */
 	private void handleElevatorArriveEvent(ElevatorArriveEvent eaEvent) {
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Sending event " + eaEvent + " to floor");
 		ElevatorStatus elevator = elevators.get(eaEvent.getCar());
+		if (elevator.getStatus() == ElevatorJobState.FAULT) {
+			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator %d is approaching but is in FAULT -->> Disregarding this", eaEvent.getCar()));
+			return;
+		}
+		// STOP THE TIMER!! (may not be one in the case of elevator already on the floor it was called to)
+		Thread timer = timers[eaEvent.getCar()];
+		if (timer != null) {
+			timer.interrupt();
+		}
+		
+		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Sending event " + eaEvent + " to floor");
 		
 		elevator.setDirection(DirectionType.STILL);
 		
@@ -281,35 +312,31 @@ public class Scheduler implements Runnable {
 	private void handleElevatorFaultUpdateEvent(ElevatorFaultUpdateEvent efuEvent) {
 		ElevatorStatus elevator = elevators.get(efuEvent.getCar());
 		elevator.setDirection(DirectionType.STILL);
-		
+		System.out.println("ELEVATOR STUS IS" + efuEvent.getStatus());
 		if (efuEvent.getStatus() == ElevatorState.FAULT) {
 			elevator.setStatus(ElevatorJobState.FAULT);
 		}
 		else {
-			elevator.setStatus(ElevatorJobState.IDLE);
-		}
-		
-		ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), 1, elevator.getWorkingDirection());
-		elevatorQueue.addLast(retry);
-		
-		/*
-		if (efuEvent.getFaultType() == FaultType.DOOR_STUCK) {
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: DOOR STUCK, DOOR STUCK " + efuEvent);
-		}
-		else if (efuEvent.getFaultType() == FaultType.ARRIVAL_SENSOR_FAIL) {
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: ARRIVAL SENSOR FAIL " + efuEvent);
+			elevator.setStatus(ElevatorJobState.PICKING_UP);
 			
-			elevator.setStatus(ElevatorJobState.OUT_OF_ORDER);
+			ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), elevator.getLocation(), elevator.getWorkingDirection());
+			floorQueue.addLast(retry);
 		}
-		else if (efuEvent.getFaultType() == FaultType.MOTOR_FAIL) {
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: MOTOR FAIL " + efuEvent);
-			
-			elevator.setStatus(ElevatorJobState.OUT_OF_ORDER);
-		}
+	}
+	
+	/**
+	 * Handle timer going off (meaning elevator did not reach sensor or update us in reasonable time)
+	 * @param ettEvent - event to handle
+	 */
+	public void handleElevatorTravelTimeout(ElevatorTravelTimeoutEvent ettEvent) {
+		// at this point we must assume it is stuck (MOTOR_FAIL or ARRIVAL_SENSOR_FAIL)
+		// so we send a fault over there
+		ElevatorStatus elevator = elevators.get(ettEvent.getCar());
+		elevator.setStatus(ElevatorJobState.FAULT);
 		
-		ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), 1, elevator.getWorkingDirection());
-		floorQueue.addLast(retry);
-		*/
+		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator " + ettEvent.getCar() + " timed out! Sending fault");
+		Fault fault = new Fault(ettEvent.getCar(), FaultType.ARRIVAL_SENSOR_FAIL);
+		elevatorQueue.addLast(fault);
 	}
 	
 	/**
@@ -345,6 +372,9 @@ public class Scheduler implements Runnable {
 				break;
 			case ELEVATOR_FAULT_UPDATE:
 				handleElevatorFaultUpdateEvent((ElevatorFaultUpdateEvent) event);
+				break;
+			case ELEVATOR_TRAVEL_TIMEOUT:
+				handleElevatorTravelTimeout((ElevatorTravelTimeoutEvent) event);
 				break;
 			default:
 				System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Unhandled event " + event);
