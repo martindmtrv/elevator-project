@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import elevator.ElevatorState;
 import event.*;
 import floor.Floor;
 import main.Configuration;
@@ -277,29 +278,38 @@ public class Scheduler implements Runnable {
 	 * Handle fault events
 	 * @param efuEvent - event to handle
 	 */
-	private void handleElevatorFaultEvent(Fault efEvent) {
-		ElevatorStatus elevator = elevators.get(efEvent.getCar());
+	private void handleElevatorFaultUpdateEvent(ElevatorFaultUpdateEvent efuEvent) {
+		ElevatorStatus elevator = elevators.get(efuEvent.getCar());
 		elevator.setDirection(DirectionType.STILL);
 		
-		if (efEvent.getFaultType() == FaultType.DOOR_STUCK) {
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: DOOR STUCK, DOOR STUCK " + efEvent);
-			System.out.println("retrying to close door...");
-			ElevatorArriveEvent retry = new ElevatorArriveEvent(efEvent.getCar(), 1, elevator.getWorkingDirection());
-			floorQueue.addLast(retry);
+		if (efuEvent.getStatus() == ElevatorState.FAULT) {
+			elevator.setStatus(ElevatorJobState.FAULT);
 		}
-		else if (efEvent.getFaultType() == FaultType.ARRIVAL_SENSOR_FAIL) {
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: ARRIVAL SENSOR FAIL " + efEvent);
-			System.out.println("shutting down elevator...");
-			
-			ElevatorArriveEvent retry = new ElevatorArriveEvent(efEvent.getCar(), 1, elevator.getWorkingDirection());
-			floorQueue.addLast(retry);
+		else {
+			elevator.setStatus(ElevatorJobState.IDLE);
 		}
-		else if (efEvent.getFaultType() == FaultType.MOTOR_FAIL) {
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: MOTOR FAIL " + efEvent);
-			System.out.println("shutting down elevator...");
+		
+		ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), 1, elevator.getWorkingDirection());
+		floorQueue.addLast(retry);
+		
+		/*
+		if (efuEvent.getFaultType() == FaultType.DOOR_STUCK) {
+			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: DOOR STUCK, DOOR STUCK " + efuEvent);
+		}
+		else if (efuEvent.getFaultType() == FaultType.ARRIVAL_SENSOR_FAIL) {
+			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: ARRIVAL SENSOR FAIL " + efuEvent);
 			
 			elevator.setStatus(ElevatorJobState.OUT_OF_ORDER);
 		}
+		else if (efuEvent.getFaultType() == FaultType.MOTOR_FAIL) {
+			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Fault detected: MOTOR FAIL " + efuEvent);
+			
+			elevator.setStatus(ElevatorJobState.OUT_OF_ORDER);
+		}
+		
+		ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), 1, elevator.getWorkingDirection());
+		floorQueue.addLast(retry);
+		*/
 	}
 	
 	/**
@@ -332,7 +342,7 @@ public class Scheduler implements Runnable {
 				// send faults to the elevator (this is unlogged because it should be as if the elevator)
 				// received the fault and then talks to the scheduler about it after (through other event types)
 				elevatorQueue.addLast(event);
-				handleElevatorFaultEvent((Fault) event);
+				handleElevatorFaultUpdateEvent((ElevatorFaultUpdateEvent) event);
 				break;
 			default:
 				System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Unhandled event " + event);
