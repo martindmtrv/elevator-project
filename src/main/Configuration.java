@@ -11,7 +11,7 @@ public abstract class Configuration {
 	
 	// elevator system parameters
 	public static final int NUM_FLOORS = 10;
-	public static final int NUM_CARS = 2;
+	public static final int NUM_CARS = 1;
 	public static final int INIT_CAR_FLOOR = 1;		//initial floor of the elevator when it's created
 
 	// kinematics of the elevator (for position calculations)
@@ -23,7 +23,7 @@ public abstract class Configuration {
 	public static final long TRAVEL_TIME_BETWEEN_FLOOR = 9500; //~9.5s
 	
 	//Fault sleep times
-	public static final long DOOR_FAULT = 10000; //10s for a DOOR FAULT
+	public static final long DOOR_FAULT = 1000; //1s for a DOOR FAULT
 	public static final long ARRIVAL_FAULT = 10000; //10s for a ARRIVAL SENSOR FAULT
 	public static final long MOTOR_FAULT = 10000; //10s for a MOTOR FAILURE FAULT
 	// test file

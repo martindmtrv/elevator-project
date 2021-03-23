@@ -24,6 +24,7 @@ public class Elevator implements Runnable{
 
 	private final Box box;
 	private BoundedBuffer elevatorEvents;
+	private boolean doorFault;
 	
 	/**
 	 * Create a new Elevator 
@@ -43,6 +44,7 @@ public class Elevator implements Runnable{
 		state = ElevatorState.IDLE;
 		this.box = box;
 		this.elevatorEvents = elevatorQueue;
+		this.doorFault = false;
 		
 		if(Configuration.VERBOSE) {
 			System.out.println("\t\tELEVATOR: Car " + eID + " Initialized to IDLE");
@@ -85,20 +87,43 @@ public class Elevator implements Runnable{
 	 * @param n - number of the floor the elevator has arrived
 	 */
 	public void arrived(int n) {
-		//upon arrival: stop motor, open door, un-lit lamp, un-press button
-		System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " has arrived floor " + n);
-		
-		if(Configuration.VERBOSE) {
-			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->IDLE");
+		if(!doorFault) {
+			//upon arrival: stop motor, open door, un-lit lamp, un-press button
+			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " has arrived floor " + n);
+			
+			if(Configuration.VERBOSE) {
+				System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " " + this.state + "->IDLE");
+			}
+			
+			state = ElevatorState.IDLE;
+			direction = DirectionType.STILL;
+			this.runMotor(false, state);
+			this.eDoor.setIsOpen(true);
+			eLamp[n].setIsLit(false);
+			eButton[n].setIsPressed(false);
+		}else { //there is a door fault
+			doorFault = false;
+			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " has arrived floor " + n);
+			
+			this.state= ElevatorState.FAULT; //set state to FAULT state
+			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+			
+			state = ElevatorState.IDLE;
+			direction = DirectionType.STILL;
+			this.runMotor(false, state);
+			this.eDoor.setIsOpen(false);
+			eLamp[n].setIsLit(false);
+			eButton[n].setIsPressed(false);
+			try {
+				System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " is out of service for " + Configuration.DOOR_FAULT/1000 + "s before becoming operational.");
+				Thread.sleep(Configuration.DOOR_FAULT); //sleep 10s and wait for fault to be fixed
+				this.eDoor.setIsOpen(true);
+				//send scheduler update event to notify elevator is no longer in fault state
+				elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));			
+			} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		
-		state = ElevatorState.IDLE;
-		direction = DirectionType.STILL;
-		this.runMotor(false, state);
-		this.eDoor.setIsOpen(true);
-		eLamp[n].setIsLit(false);
-		eButton[n].setIsPressed(false);
-		
+		}
 	}
 
 	/**
@@ -210,27 +235,20 @@ public class Elevator implements Runnable{
 	 */
 	public void handleFault(Fault faultEvent) {
 		if(faultEvent.getFaultType()==FaultType.DOOR_STUCK) { //Door stuck fault
-			try {
 				System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'DOOR STUCK' ");
-				ElevatorState tempState = this.state; //get curr state
-				this.state= ElevatorState.FAULT; //set state to FAULT state
-				//send scheduler fault update event to notify elevator is in fault state
-				elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
-				Thread.sleep(Configuration.DOOR_FAULT); //sleep 10s and wait for fault to be fixed
-				this.state = tempState; //set back to former state
-				//send scheduler update event to notify elevator is no longer in fault state
-				elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));			
-				} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+				//Next time the elevator reaches a floor the door stuck event is made. (It wouldn't make sense to have a door fault activated in between floors)
+				doorFault = true;
 		}else if(faultEvent.getFaultType()==FaultType.ARRIVAL_SENSOR_FAIL) { //Arrival Sensor Fail
 			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'ARRIVAL SENSOR FAILURE' ");
-			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
 			this.state= ElevatorState.FAULT; //set state to FAULT state forever
+			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+			this.direction = DirectionType.STILL;
 		}else{ //Motor fail
 			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'MOTOR FAILURE' ");
-			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
 			this.state= ElevatorState.FAULT; //set state to FAULT state forever
+			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+			this.direction = DirectionType.STILL;
+			runMotor(false, state);
 		}
 	}
 
