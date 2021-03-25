@@ -33,7 +33,7 @@ Contributions:
 		- timers for elevator timeouts (to handle travel timeouts, this is a scheduler generated fault)
 		
 	Ammar Tosun 101172948
-		
+		- Timing diagram and updated state diagram with fault events
 		
 	Erdem Yanikomeroglu 101080085
 		
