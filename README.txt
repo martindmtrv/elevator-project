@@ -27,6 +27,10 @@ Setup Instructions (No UDP + All output in one console):
 	Diagrams for UML are available in UML Diagrams folder; state machines are located in state_machine_diagrams
 	Timing diagrams in timing_diagrams
 	
+Fault format:
+	14:05:35.6 FAULT 1 MOTOR_FAIL
+	time FAULT car FAULT_TYPE(from enum)
+	
 
 Contributions:
 	Martin 101111948
