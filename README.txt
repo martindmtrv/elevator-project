@@ -36,7 +36,8 @@ Contributions:
 		- Timing diagram and updated state diagram with fault events
 		
 	Erdem Yanikomeroglu 101080085
-		
+		- Configured scheduler to inject and receive elevator faults
+		- Experimented with new elevator states for faults
 		
 	Alex Cameron 101114698
 		- Fault handling for elevator subsystem.
