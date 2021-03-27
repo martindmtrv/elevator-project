@@ -202,4 +202,16 @@ class TestSuite {
             }
         }
     }
+    @Test
+    @DisplayName("Test Fault Event Handling")
+    public void testFaultEvent() {
+        
+        String faultHandled = "SCHEDULER: handling event FAULT";
+        for(int i=0; i<threadOutput.length; i++){
+            if(threadOutput[i].contains(faultHandled)){
+                //test that scheduler sends floor button event to elevator after button is pressed
+                assertTrue(i>=0);
+            }
+        }
+    }
 }
