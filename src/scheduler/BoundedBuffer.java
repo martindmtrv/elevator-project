@@ -67,4 +67,8 @@ public class BoundedBuffer
 
         return item;
     }
+    
+    public int size() {
+    	return count;
+    }
 }

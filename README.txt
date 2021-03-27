@@ -30,13 +30,13 @@ Contributions:
 		- setup Fault events and types
 		- brainstorming for what types of faults there are and how they should be handled
 		- git setup and organization
-		- timers for elevator timeouts (to handle travel timeouts, this is a scheduler generated fault)
+		- timers / tests for elevator timeouts (to handle travel timeouts, this is a scheduler generated fault)
 		
 	Ammar Tosun 101172948
 		- Timing diagram and updated state diagram with fault events
 		
 	Erdem Yanikomeroglu 101080085
-		
+		- scheduler fault handling
 		
 	Alex Cameron 101114698
 		- Fault handling for elevator subsystem.
