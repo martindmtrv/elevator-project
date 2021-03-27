@@ -204,6 +204,12 @@ public class Scheduler implements Runnable {
 			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection(), elevatorBEv.getButtons());
 			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: Sending event " + elevatorRequest + " to elevator");
 			elevatorQueue.addLast(elevatorRequest);
+			
+			// create and start a timer here (in case it doesnt get here)
+			timers[elevator.getId()] = new Thread(new ElevatorEventTimer(elevatorRequest, schedulerQueue, elevator.getId()));
+			timers[elevator.getId()].start();
+			
+			
 		} else {
 			elevator.setStatus(ElevatorJobState.IDLE);
 			elevator.setDirection(DirectionType.STILL);
@@ -234,7 +240,7 @@ public class Scheduler implements Runnable {
 	private void handleElevatorApproachSensorEvent(ElevatorApproachSensorEvent easEvent) {
 		ElevatorStatus elevator = elevators.get(easEvent.getCar());
 		if (elevator.getStatus() == ElevatorJobState.FAULT) {
-			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator %d is approaching but is in FAULT -->> Disregarding this", easEvent.getCar()));
+			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator %d is approach sensor but is in FAULT and STOPPED -->> Disregarding this", easEvent.getCar()));
 			return;
 		}
 		// STOP THE TIMER!!
@@ -277,7 +283,7 @@ public class Scheduler implements Runnable {
 	private void handleElevatorArriveEvent(ElevatorArriveEvent eaEvent) {
 		ElevatorStatus elevator = elevators.get(eaEvent.getCar());
 		if (elevator.getStatus() == ElevatorJobState.FAULT) {
-			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator %d is approaching but is in FAULT -->> Disregarding this", eaEvent.getCar()));
+			System.out.println(String.format("["+Event.getCurrentTime()+"]\tSCHEDULER: elevator %d is arriving but is in FAULT -->> Disregarding this", eaEvent.getCar()));
 			return;
 		}
 		// STOP THE TIMER!! (may not be one in the case of elevator already on the floor it was called to)

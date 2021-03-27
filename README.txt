@@ -34,6 +34,7 @@ Contributions:
 		- brainstorming for what types of faults there are and how they should be handled
 		- git setup and organization
 		- timers / tests for elevator timeouts (to handle travel timeouts, this is a scheduler generated fault)
+		- Optimized / fixed old tests
 		
 	Ammar Tosun 101172948
 		- Timing diagram and updated state diagram with fault events
