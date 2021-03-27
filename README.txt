@@ -43,6 +43,8 @@ Contributions:
 		- Created new events to notify scheduler of elevators in fault states allowing them not to be scheduled.
 		
 	David Casciano 101069255
+		- Fault injection from the input stream
+		- Created Test cases for the fault event
 		
 		
 		
