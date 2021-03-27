@@ -1,5 +1,6 @@
 package test;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import floor.Floor;
 import floor.FloorSubsystem;
@@ -17,15 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @Author: Alex Cameron, Erdem Yanikomeroglu
  */
+@TestInstance(Lifecycle.PER_CLASS)
 public class FloorSubsystemTest {
 
     private FloorSubsystem floorSubsystem;
     private Floor floor;
-    //Test data in input Test.txt file
-    private final String[] inputData = {"14:05:15.0 2 Up 4","14:15:30.0 3 Down 1","15:30:10.5 1 Up 2","14:15:30.0 5 Down 1","15:30:10.5 7 Down 2","14:15:30.0 9 Down 1","15:30:10.5 6 Down 2","14:15:30.0 5 Down 4","15:30:10.5 6 Up 7","14:15:30.0 4 Down 2","15:30:10.5 3 Up 6"} ;
-    private final String testFile = "Test.txt";
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() {
         floorSubsystem = new FloorSubsystem(Configuration.NUM_FLOORS, new BoundedBuffer(), new BoundedBuffer());
     }

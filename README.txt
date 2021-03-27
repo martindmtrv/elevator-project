@@ -20,9 +20,12 @@ Setup Instructions (No UDP + All output in one console):
 	Run Project.java input is fed in from the file specified in Configuration.java (there is alternative running 
 	options in there as well).
 	
-	Testing can be done with TestSuite.java or all the individual files in the test package.
+	Testing can be done with the individual files in the test package, or by right clicking the test package
+		Run as -> Junit Test
+	to run all the tests at once
 	
 	Diagrams for UML are available in UML Diagrams folder; state machines are located in state_machine_diagrams
+	Timing diagrams in timing_diagrams
 	
 
 Contributions:
@@ -49,53 +52,57 @@ Contributions:
 		
 		
 		
-Files:
-TODO TO UPDATE LATER
-	UML Diagrams:
-		EventTypes-Class-UML.png
-		EventTypes-Class-UML.ucls
-		UML_Object_Diagram.png
-		UML_Sequence_Diagram.png
-	
-	state_machine_diagrams:
-		ElevatorStateMachineDiagram.png
-		iteration2_scheduler_state_diagram.drawio
-		scheduler_state_diagram.png
-	
+Files:	
 	src/elevator:
-		Box.java		ElevatorDoor.java	ElevatorState.java
-		Elevator.java		ElevatorLamp.java	ElevatorSubsystem.java
-		ElevatorButton.java	ElevatorMotor.java
+	Box.java		ElevatorButton.java	ElevatorLamp.java	ElevatorState.java
+	Elevator.java		ElevatorDoor.java	ElevatorMotor.java	ElevatorSubsystem.java
 	
 	src/event:
-		DirectionType.java			ElevatorTripUpdateEvent.java
-		ElevatorApproachSensorEvent.java	Event.java
-		ElevatorArriveEvent.java		EventType.java
-		ElevatorButtonPressEvent.java		FloorButtonPressEvent.java
-		ElevatorCallToMoveEvent.java
+	DirectionType.java			ElevatorTripUpdateEvent.java
+	ElevatorApproachSensorEvent.java	Event.java
+	ElevatorArriveEvent.java		EventType.java
+	ElevatorButtonPressEvent.java		Fault.java
+	ElevatorCallToMoveEvent.java		FaultType.java
+	ElevatorFaultUpdateEvent.java		FloorButtonPressEvent.java
+	ElevatorTravelTimeoutEvent.java
 	
 	src/floor:
-		Floor.java		FloorLamp.java		InputStream.java
-		FloorButton.java	FloorSubsystem.java
+	Floor.java		FloorLamp.java		InputStream.java
+	FloorButton.java	FloorSubsystem.java
 	
 	src/main:
-		Configuration.java	Project.java
+	Configuration.java	Project.java
+	
+	src/rpc:
+	RpcHandler.java		RpcWorker.java		RpcWorkerType.java	SerializationUtils.java
 	
 	src/scheduler:
-		BoundedBuffer.java	ElevatorStatus.java	
-		ElevatorJobState.java	ElevatorTripUpdate.java	
-		State.java			Scheduler.java
+	BoundedBuffer.java	ElevatorJobState.java	ElevatorTripUpdate.java	State.java
+	ElevatorEventTimer.java	ElevatorStatus.java	Scheduler.java
 	
 	src/test:
-		ElevatorSubsystemTest.java	StateMachineTest.java
-		FloorSubsystemTest.java		TestSuite.java
-		SerializationTest.java
-		
-	src/rpc:
-		RpcHandler.java 	RpcWorker.java
-		RpcWorkerType.java	SerializationUtils.java
+	ElevatorSubsystemTest.java	FloorSubsystemTest.java		TestSuite.java
+	ElevatorTimerTest.java		SerializationTest.java
+	FaultEventTest.java		StateMachineTest.java
+	
+	UML Diagrams:
+	EventTypes-Class-UML.png	UML_Object_Diagram.png		UML_Sequence_Diagram_I3.png
+	EventTypes-Class-UML.ucls	UML_Sequence_Diagram.drawio
+	
+	state_machine_diagrams:
+	ElevatorStateMachineDiagram.drawio		iteration2_scheduler_state_diagram.drawio
+	ElevatorStateMachineDiagram.png			scheduler_state_diagram.png
+	ElevatorStateMachineDiagram_ITER4.png
+	
+	timing_diagrams:
+	ARRIVAL_SENSOR_FAIL_TimingDiagram.pdf	MOTOR_FAIL_TimingDiagram.png
+	ARRIVAL_SENSOR_FAIL_TimingDiagram.png	NormalWorkingTimingDiagram.pdf
+	DOOR_STUCK_TimingDiagram.pdf		NormalWorkingTimingDiagram.png
+	DOOR_STUCK_TimingDiagram.png		TimingDiagrams.xlsx
+	MOTOR_FAIL_TimingDiagram.pdf
+	
 
-	Test.txt
+	README.txt	
+	Test.txt	
 	TestComm.txt
-	README.txt
 

@@ -144,7 +144,7 @@ public class FloorSubsystem implements Runnable {
     	Thread floor = new Thread(new FloorSubsystem(Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
     	
     	// InputStream gets the floors queue
-        Thread inputstream = new Thread(new InputStream(Configuration.TEST_FILE, floorQueue));
+        Thread inputstream = new Thread(new InputStream(Configuration.INPUT_FILE, floorQueue));
         
         // get the rpc thread running
         Thread rpcHandler = new Thread(new RpcHandler(floorQueue, outQueues, portsToSend, portsToReceive));

@@ -11,7 +11,7 @@ public abstract class Configuration {
 	
 	// elevator system parameters
 	public static final int NUM_FLOORS = 22;
-	public static final int NUM_CARS = 4;
+	public static int NUM_CARS = 4;
 	public static final int INIT_CAR_FLOOR = 1;		//initial floor of the elevator when it's created
 
 	// kinematics of the elevator (for position calculations)
@@ -29,8 +29,10 @@ public abstract class Configuration {
 	public static final long DOOR_FAULT = 1000; //1s for a DOOR FAULT
 	public static final long ARRIVAL_FAULT = 10000; //10s for a ARRIVAL SENSOR FAULT
 	public static final long MOTOR_FAULT = 10000; //10s for a MOTOR FAILURE FAULT
-	// test file
+	
+	// test files
 	public static final String TEST_FILE = "TestComm.txt";
+	public static final String INPUT_FILE = "Test.txt";
 	
 	// ports info
 	public static final int ELEVATOR_PORT = 50;
@@ -39,7 +41,6 @@ public abstract class Configuration {
 	public static final int SCHEDULER_LISTEN_FLOOR_PORT = 61;
 	
 	// address info
-	// TODO: configure this for multiple machines running leave as "" for localhost
 	public static final boolean USE_LOCALHOST = true;
 	
 	public static final String ELEVATOR_SYSTEM_ADDRESS = "";

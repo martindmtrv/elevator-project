@@ -2,6 +2,7 @@ package test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import elevator.ElevatorSubsystem;
 import floor.FloorSubsystem;
@@ -22,8 +23,7 @@ import java.io.PrintStream;
  *
  * @Author: Alex Cameron
  */
-
-import elevator.Box;
+@TestInstance(Lifecycle.PER_CLASS)
 class StateMachineTest {
 
     private final static String testFile = "TestComm.txt";
@@ -37,7 +37,7 @@ class StateMachineTest {
         BoundedBuffer elevatorQueue = new BoundedBuffer();
         
         Configuration.VERBOSE = true;
-
+        
         // floor get scheduler and floor queues
         floor = new Thread(new FloorSubsystem(Configuration.NUM_FLOORS, floorQueue, schedulerQueue), "floor");
 
@@ -56,7 +56,7 @@ class StateMachineTest {
         scheduler.start();
     }
 
-    @BeforeEach
+    @BeforeAll
     public void getCommunicationData()throws Exception{
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
@@ -64,7 +64,7 @@ class StateMachineTest {
         setUpThreads();
 
         //stop execution of threads
-        Thread.sleep(30000);
+        Thread.sleep(70000);
         elevator.interrupt();
         floor.interrupt();
         scheduler.interrupt();
@@ -164,10 +164,10 @@ class StateMachineTest {
     @Test
     @DisplayName("Test Elevator State Machine While The Elevator Traversing Downwards")
     public void ElevatorStateTest_DOWN() {
-    	String initMsg = "ELEVATOR: Car 0 Initialized to IDLE";
-    	String embarkMsg = "ELEVATOR: Car 0 IDLE->MOVING_DOWN";
-    	String arriveMsg = "ELEVATOR: Car 0 MOVING_DOWN->IDLE";
-    	String loadMsg = "ELEVATOR: Car 0 IDLE->LOADING_PASSENGER";
+    	String initMsg = "Initialized to IDLE";
+    	String embarkMsg = "IDLE->MOVING_DOWN";
+    	String arriveMsg = "MOVING_DOWN->IDLE";
+    	String loadMsg = "IDLE->LOADING_PASSENGER";
     	
     	int initLine = -1;
     	int embarkLine = -1;
@@ -197,7 +197,7 @@ class StateMachineTest {
                 break;
             }
         }
-    	for(int i=arriveLine; i<threadOutput.length; i++){
+    	for(int i=0; i<threadOutput.length; i++){
             if(threadOutput[i].contains(loadMsg) && (i > arriveLine)){
             	//if the state machine has transitioned through the states assert that it happened in the correct order
             	loadLine = i;

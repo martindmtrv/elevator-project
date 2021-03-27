@@ -2,6 +2,7 @@ package test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import elevator.ElevatorSubsystem;
 import floor.FloorSubsystem;
@@ -23,10 +24,8 @@ import java.io.PrintStream;
  * @Author: Alex Cameron
  */
 
-import elevator.Box;
+@TestInstance(Lifecycle.PER_CLASS)
 class TestSuite {
-
-    private final static String testFile = "TestComm.txt";
     private Thread floor, elevator, scheduler;
     private String[] threadOutput;
 
@@ -48,7 +47,7 @@ class TestSuite {
         
         //inputstream
         
-        Thread inputstream = new Thread(new InputStream(testFile, floorQueue));
+        Thread inputstream = new Thread(new InputStream(Configuration.TEST_FILE, floorQueue));
 
         elevator.start();
         floor.start();
@@ -56,7 +55,7 @@ class TestSuite {
         scheduler.start();
     }
 
-    @BeforeEach
+    @BeforeAll
     public void getCommunicationData()throws Exception{
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
@@ -70,7 +69,7 @@ class TestSuite {
         scheduler.interrupt();
 
         //reset to system out (changes system.setout => system.out)
-        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+        //System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
         threadOutput = (outContent.toString().split("\\r?\\n"));
     }
 

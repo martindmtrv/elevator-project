@@ -1,6 +1,5 @@
 package test;
 
-import java.util.Arrays;
 
 import event.DirectionType;
 import event.Event;
@@ -8,16 +7,20 @@ import event.FloorButtonPressEvent;
 import rpc.SerializationUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+
 import floor.Floor;
 
+@TestInstance(Lifecycle.PER_CLASS)
 public class SerializationTest {
 	Event deserialized;
 	
 	
-	@BeforeEach
+	
 	/**
 	 * Serialize data and deserialize it to test if the class works
 	 */
+	@BeforeAll
 	public void SerializeAndDeserialize() {
 		Floor state = new Floor(0);
 		FloorButtonPressEvent event = new FloorButtonPressEvent("", 0, 5, DirectionType.UP);

@@ -23,7 +23,7 @@ public class Project {
         Thread scheduler = new Thread(new Scheduler(schedulerQueue, elevatorQueue, floorQueue));
         
         // InputStream gets the floors queue
-        Thread inputstream = new Thread(new InputStream(Configuration.TEST_FILE, floorQueue));
+        Thread inputstream = new Thread(new InputStream(Configuration.INPUT_FILE, floorQueue));
         
 
         elevator.start();

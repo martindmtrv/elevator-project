@@ -4,19 +4,21 @@ import event.Event;
 import rpc.SerializationUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+
 import event.Fault;
 import event.FaultType;
 
+@TestInstance(Lifecycle.PER_CLASS)
 public class FaultEventTest {
 	Fault fault;
 	Event deserialized;
 	
-	
-	@BeforeEach
 	/**
 	 * Create a fault event
 	 * Serialize data and deserialize it to test if the class works
 	 */
+	@BeforeAll
 	public void createFault() {
 		this.fault = new Fault(1, FaultType.DOOR_STUCK);
 		byte[] data = SerializationUtils.convertToBytes(this.fault);
