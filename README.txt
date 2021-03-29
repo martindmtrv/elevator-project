@@ -8,6 +8,12 @@ Members:
  -> Alex Cameron - 101114698
  -> David Casciano - 101069255
 	
+Setup Instructions (UDP, single class):
+	To run the full elevator system from a single class, run ProjectUDP.java.
+	
+	This class will create separate processes for each of our components as described in the second setup instruction,
+	without all the extra work of starting 3 classes seperately
+	
 Setup Instructions (Iteration 4 (With UDP)):
 	To run iteration 4 elevator system there are 3 .java files which must be run in the following order:
 		1. Scheduler.java
