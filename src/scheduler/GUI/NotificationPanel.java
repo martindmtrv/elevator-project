@@ -16,15 +16,16 @@ public class NotificationPanel extends JPanel {
         this.notificationView = notificationView;
         this.notification = notification;
         this.setLayout(new BorderLayout());
+        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         JLabel systemTypeLabel;
         if(notification.getNotificationType() == NotificationType.SCHEDULER){
-            systemTypeLabel = new JLabel("<html>SCHEDULER<br/>" + notification.getNotificationTime() +"  </html>");
+            systemTypeLabel = new JLabel(notification.getNotificationTime()+ " ");
         }else if(notification.getNotificationType() == NotificationType.ELEVATORSUBSYSTEM){
             systemTypeLabel = new JLabel("<html>ELEVATOR<br/>" + notification.getNotificationTime() +"  </html>");
         }else{
             systemTypeLabel = new JLabel("<html>FLOOR<br/>" + notification.getNotificationTime() +"  </html>");
         }
-        systemTypeLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        systemTypeLabel.setFont(new Font("Serif", Font.BOLD, 14));
         this.add(systemTypeLabel, BorderLayout.LINE_START);
 
         //change below
@@ -35,9 +36,8 @@ public class NotificationPanel extends JPanel {
         notificationTextArea.setOpaque(false);
         notificationTextArea.setEditable(false);
         notificationTextArea.setFocusable(false);
-        notificationTextArea.setBackground(UIManager.getColor("Label.background"));
-        notificationTextArea.setFont(UIManager.getFont("Label.font"));
-        notificationTextArea.setBorder(UIManager.getBorder("Label.border"));
+        notificationTextArea.setFont(new Font("Serif", Font.PLAIN, 14));
+        notificationTextArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.add(notificationTextArea, BorderLayout.CENTER);
 //     (TEST) DOES NOT WORK YET: Cant figure out how to close the notifications individually
 //        JButton closeNotificationButton = new JButton("X");
@@ -50,7 +50,6 @@ public class NotificationPanel extends JPanel {
 //            }
 //        });
 //        this.add(closeNotificationButton, BorderLayout.LINE_END);
-        this.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
     }
 
     public Notification getNotification(){

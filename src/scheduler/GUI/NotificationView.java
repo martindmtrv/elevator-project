@@ -25,10 +25,12 @@ public class NotificationView extends JPanel implements NotificationViewListener
         nc = new NotificationController(notificationModel);
 
         //Scheduler Notification Panel
-       this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
         schedulerListPanel = new JPanel();
         schedulerListPanel.setLayout(new GridBagLayout());
-        JLabel schedulerLabel = new JLabel("Scheduler Events");
+        JLabel schedulerLabel = new JLabel("Scheduler Event Log");
+        schedulerLabel.setFont(new Font("Serif", Font.BOLD, 20));
+
         JButton closeAllScheduler = new JButton("Close All");
         closeAllScheduler.setFocusPainted(false);
         closeAllScheduler.setActionCommand(CLOSE_ALL_NOTIFICATION_SCHEDULER);

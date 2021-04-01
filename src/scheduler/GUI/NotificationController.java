@@ -17,7 +17,6 @@ public class NotificationController implements ActionListener {
                 notificationModel.removeAllNotifications();
             }
         } else if(e.getSource() instanceof NotificationPanel){
-            System.out.println("TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest");
             Notification notification = ((NotificationPanel) e.getSource()).getNotification();
             notificationModel.removeNotification(notification);
         }

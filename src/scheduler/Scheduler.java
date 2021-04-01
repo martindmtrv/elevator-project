@@ -26,7 +26,7 @@ public class Scheduler implements Runnable {
 	private Thread[] timers;
 	private ArrayList<ElevatorStatus> elevators;
 	private ArrayList<FloorButtonPressEvent> unscheduled;
-	private List<SchedulerViewListener> schedulerViewListeners;
+	private List<SchedulerViewListener> schedulerViewListenersList;
 	private SchedulerView schedulerView;
 
 	/**
@@ -64,8 +64,8 @@ public class Scheduler implements Runnable {
 		// create empty array of timers
 		timers = new Thread[Configuration.NUM_CARS];
 
-		//init riskViewListeners
-		schedulerViewListeners = new ArrayList<>();
+		//init listener lists
+		schedulerViewListenersList = new ArrayList<>();
 
 		schedulerView = new SchedulerView(this);
 	}
@@ -116,7 +116,12 @@ public class Scheduler implements Runnable {
 		if(!buttonEv.getSeen()) {
 			floors[buttonEv.getFloor() - 1] = buttonEv.getState();
 		}
-		
+
+		//handle FloorButtonPressEvent (GUI)
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			schedulerViewListener.handleFloorButtonPressUpdate(buttonEv);
+		}
+
 		ElevatorStatus elevator;
 		ElevatorCallToMoveEvent elevatorRequest;
 		DirectionType toMove;
@@ -166,7 +171,12 @@ public class Scheduler implements Runnable {
 				elevator.setDirection(DirectionType.STILL);
 				elevator.setStatus(ElevatorJobState.EN_ROUTE);
 				elevator.setWorkingDirection(buttonEv.getDirection());
-				
+
+				//handle elevator car state update for car info view (GUI)
+				for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+					schedulerViewListener.handleElevatorStateUpdate(elevator);
+				}
+
 				floorQueue.addLast(new ElevatorArriveEvent(elevator.getId(), elevator.getLocation(), buttonEv.getDirection()));
 			} else {
 				elevator.getDestinations().add(buttonEv.getFloor());
@@ -180,7 +190,12 @@ public class Scheduler implements Runnable {
 				elevator.setStatus(ElevatorJobState.PICKING_UP);
 				elevator.setDirection(toMove);
 				elevator.setWorkingDirection(buttonEv.getDirection());
-				
+
+				//handle elevator car state update for car info view (GUI)
+				for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+					schedulerViewListener.handleElevatorStateUpdate(elevator);
+				}
+
 				elevatorRequest = new ElevatorCallToMoveEvent(elevator.getId(), toMove);
 				elevatorQueue.addLast(elevatorRequest);
 				
@@ -202,6 +217,11 @@ public class Scheduler implements Runnable {
 		//Updating floor states
 		if(!elevatorBEv.getSeen()) {
 			floors[elevatorBEv.getState().getFloorNum() - 1] = elevatorBEv.getState();
+		}
+
+		//handle ElevatorButtonPressEvent (GUI)
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			schedulerViewListener.handleElevatorButtonPressUpdate(elevatorBEv);
 		}
 		
 		ElevatorStatus elevator;
@@ -228,7 +248,12 @@ public class Scheduler implements Runnable {
 			elevator.setStatus(ElevatorJobState.EN_ROUTE);
 			elevator.setWorkingDirection(elevatorBEv.getDirection());
 			elevator.setDirection(elevatorBEv.getDirection());
-			
+
+			//handle elevator car state update for car info view (GUI)
+			for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+				schedulerViewListener.handleElevatorStateUpdate(elevator);
+			}
+
 			// get the elevator moving
 			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection(), elevatorBEv.getButtons());
 			msg = "Sending event " + elevatorRequest + " to elevator";
@@ -246,6 +271,10 @@ public class Scheduler implements Runnable {
 			elevator.setStatus(ElevatorJobState.IDLE);
 			elevator.setDirection(DirectionType.STILL);
 			elevator.setWorkingDirection(DirectionType.STILL);
+			//handle elevator car state update for car info view (GUI)
+			for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+				schedulerViewListener.handleElevatorStateUpdate(elevator);
+			}
 			msg = String.format("Elevator %d is now IDLE", elevator.getId());
 			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: "+msg);
 			//Update Notification Events
@@ -300,7 +329,12 @@ public class Scheduler implements Runnable {
 
 		// update the state
 		elevator.setLocation(floorToReach);
-		
+
+		//handle elevator car state update for car info view (GUI)
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			schedulerViewListener.handleElevatorStateUpdate(elevator);
+		}
+
 		// check if this floor in the destinations OR is one of the limits (avoid crashing out)
 		if (floorToReach == 1 || floorToReach == Configuration.NUM_FLOORS || elevator.getDestinations().contains(floorToReach)) {
 			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), floorToReach, ElevatorTripUpdate.STOP);
@@ -313,7 +347,7 @@ public class Scheduler implements Runnable {
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
 		//handle elevatortripupdateevent NOTE: CHANGE LATER
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListeners){
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
 			schedulerViewListener.handleElevatorStatusUpdate(etuEvent);
 		}
 		
@@ -349,16 +383,24 @@ public class Scheduler implements Runnable {
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
 		elevator.setDirection(DirectionType.STILL);
-		
+
+		//handle elevator car state update for car info view (GUI)
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			schedulerViewListener.handleElevatorStateUpdate(elevator);
+		}
+
 		// remove from destinations
 		elevator.getDestinations().remove(Integer.valueOf(eaEvent.getFloor()));
-		
+
 		if (elevator.getLocation() == 1) {
 			elevator.setWorkingDirection(DirectionType.UP);
 		} else if (elevator.getLocation() == Configuration.NUM_FLOORS) {
 			elevator.setWorkingDirection(DirectionType.DOWN);
 		}
-		
+		//handle elevator car state update for car info view (GUI)
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			schedulerViewListener.handleElevatorStateUpdate(elevator);
+		}
 		// set proper working direction
 		ElevatorArriveEvent reply = new ElevatorArriveEvent(eaEvent.getCar(), eaEvent.getFloor(), elevator.getWorkingDirection());
 		
@@ -382,6 +424,10 @@ public class Scheduler implements Runnable {
 			ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), elevator.getLocation(), elevator.getWorkingDirection());
 			floorQueue.addLast(retry);
 		}
+		//handle elevator car state update for car info view (GUI)
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			schedulerViewListener.handleElevatorStateUpdate(elevator);
+		}
 	}
 	
 	/**
@@ -399,6 +445,11 @@ public class Scheduler implements Runnable {
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 		Fault fault = new Fault(ettEvent.getCar(), FaultType.ARRIVAL_SENSOR_FAIL);
 		elevatorQueue.addLast(fault);
+
+		//handle elevator car state update for car info view (GUI)
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			schedulerViewListener.handleElevatorStateUpdate(elevator);
+		}
 	}
 	
 	/**
@@ -490,14 +541,22 @@ public class Scheduler implements Runnable {
 		return s;
 	}
 
+	public ElevatorStatus getElevatorStatus(int carID){
+		return elevators.get(carID);
+	}
+
 	/**
 	 * Add a scheduler listener to a list of listeners
 	 * @param schedulerViewListener
 	 */
 	public void addSchedulerViewListeners(SchedulerViewListener schedulerViewListener){
-		schedulerViewListeners.add(schedulerViewListener);
+		schedulerViewListenersList.add(schedulerViewListener);
 	}
 
+	/**
+	 * Returns the scheduler view for GUI.
+	 * @return
+	 */
 	public SchedulerView getSchedulerView(){
 		return schedulerView;
 	}

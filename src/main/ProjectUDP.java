@@ -2,7 +2,7 @@ package main;
 
 import java.io.IOException;
 
-// unused imports here to make sure the classes we are running will get compiled
+//unused imports here to make sure the classes we are running will get compiled
 import elevator.ElevatorSubsystem;
 import scheduler.Scheduler;
 import floor.FloorSubsystem;
@@ -33,7 +33,9 @@ public class ProjectUDP {
 		// start them all
 		try {
 			processes[2] = elevator.start();
+			Thread.yield();
 			processes[1] = scheduler.start();
+			Thread.yield();
 			processes[0] = floor.start();
 		} catch (IOException e) {
 			System.out.println(e);

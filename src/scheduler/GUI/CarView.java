@@ -7,54 +7,47 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * This class is the column that represents a car in the elevator system and
+ * displays the floors and is updated when the elevator travels and performs events.
+ *
+ * @Author: Alex Cameron
+ */
 public class CarView {
 
     private JPanel[] floors;
     private int carID;
-    private JLabel directionLabel;
     private Image down, up, stopped;
 
     public CarView(int carID){
         this.carID = carID;
-        floors = new JPanel[Configuration.NUM_FLOORS+1];
-        directionLabel = new JLabel(); //broken!
+        floors = new JPanel[Configuration.NUM_FLOORS+2];
     }
 
     public void createFloors(JPanel carPanel){
         //setting the grid for the cars
-        floors = new JPanel[Configuration.NUM_FLOORS+1];
-        for(int j=0; j< Configuration.NUM_FLOORS+1;j++){
+        floors = new JPanel[Configuration.NUM_FLOORS+2];
+        for(int j=1; j<= Configuration.NUM_FLOORS;j++){
             floors[j] = new JPanel();
+            JLabel floorLabel = new JLabel("" + j);
+            floorLabel.setFont(new Font("Serif", Font.BOLD, 14));
+            floors[j].add(floorLabel);
             floors[j].setBackground(Color.WHITE);
             floors[j].setBorder(BorderFactory.createLineBorder(Color.black));
+            floors[j].setSize(100,50);
             carPanel.add(floors[j]);
         }
     }
 
     public void resetFloorColor(){
-        for(int j=0; j< Configuration.NUM_FLOORS;j++){
+        for(int j=1; j<= Configuration.NUM_FLOORS;j++){
             floors[j].setBackground(Color.WHITE);
         }
     }
 
-    public void setDirectionLabel(DirectionType directionType){
-        if(directionType == DirectionType.DOWN){
-            ImageIcon downIcon = new ImageIcon("resources/down-arrow.png");
-            directionLabel.setIcon(downIcon);
-        }else if(directionType == DirectionType.UP){
-            ImageIcon upIcon = new ImageIcon("resources/up-arrow.png");
-            directionLabel.setIcon(upIcon);
-        }else{
-            ImageIcon stopIcon = new ImageIcon("resources/stop.png");
-            directionLabel = new JLabel(stopIcon);
-        }
-    }
-
-    public void setFloor(int floorID, Color color, DirectionType directionType){
+    public void setFloor(int floorID, Color color){
         resetFloorColor();
-        floors[floorID-1].setBackground(color);
-        setDirectionLabel(directionType);
-        floors[Configuration.NUM_FLOORS].add(directionLabel);
+        floors[floorID].setBackground(color);
     }
 }
 
