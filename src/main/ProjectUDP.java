@@ -33,9 +33,13 @@ public class ProjectUDP {
 		// start them all
 		try {
 			processes[2] = elevator.start();
-			Thread.yield();
 			processes[1] = scheduler.start();
-			Thread.yield();
+			// sleep so the gui can get setup (loading...)
+			try {
+				Thread.sleep(5000);
+			} catch(InterruptedException e) {
+				return;
+			}
 			processes[0] = floor.start();
 		} catch (IOException e) {
 			System.out.println(e);
@@ -43,7 +47,7 @@ public class ProjectUDP {
 		
 		// make sure the processes get killed after (otherwise they will be stuck on the OS)
 		try {
-			processes[0].waitFor();
+			processes[1].waitFor();
 		} catch (InterruptedException e) {
 			System.out.println("Making sure all processes are killed");
 			for (Process p: processes) {
