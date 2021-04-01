@@ -46,5 +46,4 @@ public abstract class Configuration {
 	public static final String ELEVATOR_SYSTEM_ADDRESS = "";
 	public static final String FLOOR_SYSTEM_ADDRESS = "";
 	public static final String SCHEDULER_SYSTEM_ADDRESS = "";
-	
 }

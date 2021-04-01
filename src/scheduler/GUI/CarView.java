@@ -27,7 +27,7 @@ public class CarView {
     public void createFloors(JPanel carPanel){
         //setting the grid for the cars
         floors = new JPanel[Configuration.NUM_FLOORS+2];
-        for(int j=1; j<= Configuration.NUM_FLOORS;j++){
+        for(int j=Configuration.NUM_FLOORS; j>= 1;j--){
             floors[j] = new JPanel();
             JLabel floorLabel = new JLabel("" + j);
             floorLabel.setFont(new Font("Serif", Font.BOLD, 14));

@@ -128,7 +128,7 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         floorPanel.add(floorHeader);
 
         //Initializing all panels for each floor
-        for(int i=1; i<= Configuration.NUM_FLOORS;i++){
+        for(int i=Configuration.NUM_FLOORS; i>=1 ;i--){
             floors[i] = new JPanel();
             floors[i].setBorder(BorderFactory.createLineBorder(Color.black));
             floorLabels[i] = new JLabel("Floor " + i);
@@ -266,6 +266,10 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
     @Override
     public void handleElevatorStateUpdate(ElevatorStatus elevatorStatus){
         elevatorInfoViews[elevatorStatus.getId()].setCarInfo(elevatorStatus);
+
+        if(elevatorStatus.getStatus() == ElevatorJobState.IDLE){
+            carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.RED);
+        }
 
         if(elevatorStatus.getStatus() == ElevatorJobState.FAULT){
             carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.ORANGE);
