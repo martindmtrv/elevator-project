@@ -48,7 +48,7 @@ Contributions:
 		
 		
 	Ammar Tosun 101172948
-
+	- Helped preparing the final report by compiling the diagrams
 		
 	Erdem Yanikomeroglu 101080085
 
