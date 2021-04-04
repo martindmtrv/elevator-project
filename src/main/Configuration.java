@@ -23,10 +23,10 @@ public abstract class Configuration {
 	public static final long TRAVEL_TIME_BETWEEN_FLOOR = 9500; //~9.5s
 	
 	// timeout delay for timeouts (too long to hear from elevator)
-	public static long TIMEOUT_DELAY = 3000;
+	public static long TIMEOUT_DELAY = 10000;
 	
 	//Fault sleep times
-	public static final long DOOR_FAULT = 1000; //1s for a DOOR FAULT
+	public static final long DOOR_FAULT = 3000; //3s for a DOOR FAULT
 	public static final long ARRIVAL_FAULT = 10000; //10s for a ARRIVAL SENSOR FAULT
 	public static final long MOTOR_FAULT = 10000; //10s for a MOTOR FAILURE FAULT
 	

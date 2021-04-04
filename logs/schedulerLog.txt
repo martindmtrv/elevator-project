@@ -1,191 +1,313 @@
-[21:07:40]	SCHEDULER:Handling event FAULT
-[21:07:45]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:07:45]	SCHEDULER: Handling floor button event pickup 2 direction UP
-[21:07:45]	SCHEDULER: Elevator 0 is IDLE sending request to move for pickup
-[21:07:50]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:07:50]	SCHEDULER: Elevator 0 is approaching floor 2 going UP
-[21:07:50]	SCHEDULER: Sending trip update STOP to elevator 0
-[21:07:50]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:07:50]	SCHEDULER: Handling floor button event pickup 3 direction DOWN
-[21:07:50]	SCHEDULER: Elevator 1 is IDLE sending request to move for pickup
-[21:07:53]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:07:53]	SCHEDULER: Handling floor button event pickup 1 direction UP
-[21:07:53]	SCHEDULER: Elevator 2 is IDLE sending request to move for pickup
-[21:07:53]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:07:53]	SCHEDULER: Adding elevator button presses: [2] to elevator 2
-[21:07:53]	SCHEDULER: Sending event ELEVATOR_CALLED 21:07:53 to elevator
-[21:07:55]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
-[21:07:55]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:07:55]	SCHEDULER: Elevator 1 is approaching floor 2 going UP
-[21:07:55]	SCHEDULER: Sending trip update CONTINUE to elevator 1
-[21:07:56]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
-[21:07:56]	SCHEDULER:Handling event ELEVATOR_ARRIVED
-[21:07:56]	SCHEDULER: Sending event ELEVATOR_ARRIVED 21:07:56 to floor
-[21:07:56]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:07:56]	SCHEDULER: Adding elevator button presses: [4] to elevator 0
-[21:07:56]	SCHEDULER: Sending event ELEVATOR_CALLED 21:07:56 to elevator
-[21:07:56]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:07:56]	SCHEDULER: Adding elevator button presses: [] to elevator 0
-[21:07:56]	SCHEDULER: Sending event ELEVATOR_CALLED 21:07:56 to elevator
-[21:07:56]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:07:56]	SCHEDULER: Handling floor button event pickup 5 direction DOWN
-[21:07:56]	SCHEDULER: Elevator 3 is IDLE sending request to move for pickup
-[21:07:58]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:07:58]	SCHEDULER: Elevator 2 is approaching floor 2 going UP
-[21:07:58]	SCHEDULER: Sending trip update STOP to elevator 2
-[21:08:00]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:00]	SCHEDULER: Handling floor button event pickup 7 direction DOWN
-[21:08:00]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:08:01]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:01]	SCHEDULER: Handling floor button event pickup 9 direction DOWN
-[21:08:01]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:08:01]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:01]	SCHEDULER: Handling floor button event pickup 6 direction DOWN
-[21:08:01]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:08:02]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:02]	SCHEDULER: Elevator 0 is approaching floor 3 going UP
-[21:08:02]	SCHEDULER: Sending trip update CONTINUE to elevator 0
-[21:08:02]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:02]	SCHEDULER: Elevator 3 is approaching floor 2 going UP
-[21:08:02]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:08:03]	SCHEDULER:Handling event ELEVATOR_TRAVEL_TIMEOUT
-[21:08:03]	SCHEDULER: Elevator 0 timed out! Sending fault
-[21:08:03]	SCHEDULER:Handling event ELEVATOR_ARRIVED
-[21:08:03]	SCHEDULER: Sending event ELEVATOR_ARRIVED 21:08:03 to floor
-[21:08:03]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:08:03]	SCHEDULER: Adding elevator button presses: [] to elevator 2
-[21:08:03]	SCHEDULER: Elevator 2 is now IDLE
-[21:08:03]	SCHEDULER: Free elevator detected, trying to schedule 3 unassigned events
-[21:08:03]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:03]	SCHEDULER: Handling floor button event pickup 7 direction DOWN
-[21:08:03]	SCHEDULER: Elevator 2 is IDLE sending request to move for pickup
-[21:08:03]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:03]	SCHEDULER: Handling floor button event pickup 9 direction DOWN
-[21:08:03]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:08:03]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:03]	SCHEDULER: Handling floor button event pickup 6 direction DOWN
-[21:08:03]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:08:04]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:04]	SCHEDULER: Elevator 1 is approaching floor 3 going UP
-[21:08:04]	SCHEDULER: Sending trip update STOP to elevator 1
-[21:08:05]	SCHEDULER:Handling event FAULT
-[21:08:06]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:06]	SCHEDULER: Elevator 0 is approaching but is in FAULT -->> Disregarding this
-[21:08:10]	SCHEDULER:Handling event ELEVATOR_TRAVEL_TIMEOUT
-[21:08:10]	SCHEDULER: Elevator 2 timed out! Sending fault
-[21:08:11]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:11]	SCHEDULER: Elevator 2 is approaching but is in FAULT -->> Disregarding this
-[21:08:11]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
-[21:08:11]	SCHEDULER:Handling event ELEVATOR_ARRIVED
-[21:08:11]	SCHEDULER: Sending event ELEVATOR_ARRIVED 21:08:11 to floor
-[21:08:11]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:08:11]	SCHEDULER: Adding elevator button presses: [1] to elevator 1
-[21:08:11]	SCHEDULER: Sending event ELEVATOR_CALLED 21:08:11 to elevator
-[21:08:11]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:11]	SCHEDULER: Elevator 3 is approaching floor 3 going UP
-[21:08:11]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:08:12]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
-[21:08:13]	SCHEDULER:Handling event ELEVATOR_TRAVEL_TIMEOUT
-[21:08:13]	SCHEDULER: Elevator 0 timed out! Sending fault
-[21:08:16]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:16]	SCHEDULER: Elevator 0 is approaching but is in FAULT -->> Disregarding this
-[21:08:16]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
-[21:08:16]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
-[21:08:18]	SCHEDULER:Handling event ELEVATOR_TRAVEL_TIMEOUT
-[21:08:18]	SCHEDULER: Elevator 1 timed out! Sending fault
-[21:08:18]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
-[21:08:20]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:20]	SCHEDULER: Handling floor button event pickup 6 direction UP
-[21:08:20]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:08:22]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:22]	SCHEDULER: Elevator 3 is approaching floor 4 going UP
-[21:08:22]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:08:23]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:23]	SCHEDULER: Handling floor button event pickup 4 direction DOWN
-[21:08:23]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:08:25]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:08:25]	SCHEDULER: Handling floor button event pickup 3 direction UP
-[21:08:25]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:08:31]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:31]	SCHEDULER: Elevator 3 is approaching floor 5 going UP
-[21:08:31]	SCHEDULER: Sending trip update STOP to elevator 3
-[21:08:36]	SCHEDULER:Handling event ELEVATOR_ARRIVED
-[21:08:36]	SCHEDULER: Sending event ELEVATOR_ARRIVED 21:08:36 to floor
-[21:08:36]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:08:36]	SCHEDULER: Adding elevator button presses: [1, 4] to elevator 3
-[21:08:36]	SCHEDULER: Sending event ELEVATOR_CALLED 21:08:36 to elevator
-[21:08:42]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:42]	SCHEDULER: Elevator 3 is approaching floor 4 going DOWN
-[21:08:42]	SCHEDULER: Sending trip update STOP to elevator 3
-[21:08:46]	SCHEDULER:Handling event ELEVATOR_ARRIVED
-[21:08:46]	SCHEDULER: Sending event ELEVATOR_ARRIVED 21:08:46 to floor
-[21:08:47]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:08:47]	SCHEDULER: Adding elevator button presses: [2] to elevator 3
-[21:08:47]	SCHEDULER: Sending event ELEVATOR_CALLED 21:08:47 to elevator
-[21:08:52]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:08:52]	SCHEDULER: Elevator 3 is approaching floor 3 going DOWN
-[21:08:52]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:09:02]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:09:02]	SCHEDULER: Elevator 3 is approaching floor 2 going DOWN
-[21:09:02]	SCHEDULER: Sending trip update STOP to elevator 3
-[21:09:07]	SCHEDULER:Handling event ELEVATOR_ARRIVED
-[21:09:07]	SCHEDULER: Sending event ELEVATOR_ARRIVED 21:09:07 to floor
-[21:09:07]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:09:07]	SCHEDULER: Adding elevator button presses: [] to elevator 3
-[21:09:07]	SCHEDULER: Sending event ELEVATOR_CALLED 21:09:07 to elevator
-[21:09:12]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:09:12]	SCHEDULER: Elevator 3 is approaching floor 1 going DOWN
-[21:09:12]	SCHEDULER: Sending trip update STOP to elevator 3
-[21:09:17]	SCHEDULER:Handling event ELEVATOR_ARRIVED
-[21:09:17]	SCHEDULER: Sending event ELEVATOR_ARRIVED 21:09:17 to floor
-[21:09:17]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:09:17]	SCHEDULER: Adding elevator button presses: [] to elevator 3
-[21:09:17]	SCHEDULER: Elevator 3 is now IDLE
-[21:09:17]	SCHEDULER: Free elevator detected, trying to schedule 5 unassigned events
-[21:09:17]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:09:17]	SCHEDULER: Handling floor button event pickup 9 direction DOWN
-[21:09:17]	SCHEDULER: Elevator 3 is IDLE sending request to move for pickup
-[21:09:17]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:09:17]	SCHEDULER: Handling floor button event pickup 6 direction DOWN
-[21:09:17]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:09:17]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:09:17]	SCHEDULER: Handling floor button event pickup 6 direction UP
-[21:09:17]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:09:17]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:09:17]	SCHEDULER: Handling floor button event pickup 4 direction DOWN
-[21:09:17]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:09:17]	SCHEDULER:Handling event FLOOR_BUTTON
-[21:09:17]	SCHEDULER: Handling floor button event pickup 3 direction UP
-[21:09:17]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
-[21:09:23]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:09:23]	SCHEDULER: Elevator 3 is approaching floor 2 going UP
-[21:09:23]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:09:32]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:09:32]	SCHEDULER: Elevator 3 is approaching floor 3 going UP
-[21:09:32]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:09:42]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:09:42]	SCHEDULER: Elevator 3 is approaching floor 4 going UP
-[21:09:42]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:09:51]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:09:51]	SCHEDULER: Elevator 3 is approaching floor 5 going UP
-[21:09:51]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:10:01]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:10:01]	SCHEDULER: Elevator 3 is approaching floor 6 going UP
-[21:10:01]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:10:10]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:10:10]	SCHEDULER: Elevator 3 is approaching floor 7 going UP
-[21:10:10]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:10:20]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:10:20]	SCHEDULER: Elevator 3 is approaching floor 8 going UP
-[21:10:20]	SCHEDULER: Sending trip update CONTINUE to elevator 3
-[21:10:30]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:10:30]	SCHEDULER: Elevator 3 is approaching floor 9 going UP
-[21:10:30]	SCHEDULER: Sending trip update STOP to elevator 3
-[21:10:34]	SCHEDULER:Handling event ELEVATOR_ARRIVED
-[21:10:34]	SCHEDULER: Sending event ELEVATOR_ARRIVED 21:10:34 to floor
-[21:10:34]	SCHEDULER:Handling event ELEVATOR_BUTTONS
-[21:10:34]	SCHEDULER: Adding elevator button presses: [1] to elevator 3
-[21:10:34]	SCHEDULER: Sending event ELEVATOR_CALLED 21:10:34 to elevator
-[21:10:40]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
-[21:10:40]	SCHEDULER: Elevator 3 is approaching floor 8 going DOWN
-[21:10:40]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:55:37]	SCHEDULER:Handling event FAULT
+[22:55:42]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:55:42]	SCHEDULER: Handling floor button event pickup 2 direction UP
+[22:55:42]	SCHEDULER: Elevator 0 is IDLE sending request to move for pickup
+[22:55:47]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:55:47]	SCHEDULER: Elevator 0 is approaching floor 2 going UP
+[22:55:47]	SCHEDULER: Sending trip update STOP to elevator 0
+[22:55:47]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:55:47]	SCHEDULER: Handling floor button event pickup 3 direction DOWN
+[22:55:47]	SCHEDULER: Elevator 1 is IDLE sending request to move for pickup
+[22:55:50]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:55:50]	SCHEDULER: Handling floor button event pickup 1 direction UP
+[22:55:50]	SCHEDULER: Elevator 2 is IDLE sending request to move for pickup
+[22:55:50]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:55:50]	SCHEDULER: Adding elevator button presses: [2] to elevator 2
+[22:55:50]	SCHEDULER: Sending event ELEVATOR_CALLED 22:55:50 to elevator
+[22:55:52]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
+[22:55:52]	SCHEDULER: Elevator 0 is in DOOR_STUCK
+[22:55:52]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:55:52]	SCHEDULER: Elevator 1 is approaching floor 2 going UP
+[22:55:52]	SCHEDULER: Sending trip update CONTINUE to elevator 1
+[22:55:53]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:55:53]	SCHEDULER: Handling floor button event pickup 5 direction DOWN
+[22:55:53]	SCHEDULER: Elevator 3 is IDLE sending request to move for pickup
+[22:55:55]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
+[22:55:55]	SCHEDULER: Elevator 0 is in IDLE
+[22:55:55]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:55:55]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:55:55 to floor
+[22:55:55]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:55:55]	SCHEDULER: Adding elevator button presses: [4] to elevator 0
+[22:55:55]	SCHEDULER: Sending event ELEVATOR_CALLED 22:55:55 to elevator
+[22:55:55]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:55:55]	SCHEDULER: Elevator 2 is approaching floor 2 going UP
+[22:55:55]	SCHEDULER: Sending trip update STOP to elevator 2
+[22:55:57]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:55:57]	SCHEDULER: Handling floor button event pickup 7 direction DOWN
+[22:55:57]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:55:58]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:55:58]	SCHEDULER: Elevator 3 is approaching floor 2 going UP
+[22:55:58]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:55:58]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:55:58]	SCHEDULER: Handling floor button event pickup 9 direction DOWN
+[22:55:58]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:55:58]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:55:58]	SCHEDULER: Handling floor button event pickup 6 direction DOWN
+[22:55:58]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:55:59]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:55:59]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:55:59 to floor
+[22:55:59]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:55:59]	SCHEDULER: Adding elevator button presses: [] to elevator 2
+[22:55:59]	SCHEDULER: Elevator 2 is now IDLE
+[22:56:00]	SCHEDULER: Free elevator detected, trying to schedule 3 unassigned events
+[22:56:00]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:56:00]	SCHEDULER: Handling floor button event pickup 7 direction DOWN
+[22:56:00]	SCHEDULER: Elevator 2 is IDLE sending request to move for pickup
+[22:56:00]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:56:00]	SCHEDULER: Handling floor button event pickup 9 direction DOWN
+[22:56:00]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:56:00]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:56:00]	SCHEDULER: Handling floor button event pickup 6 direction DOWN
+[22:56:00]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:56:00]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:00]	SCHEDULER: Elevator 0 is approaching floor 3 going UP
+[22:56:00]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:56:01]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:01]	SCHEDULER: Elevator 1 is approaching floor 3 going UP
+[22:56:01]	SCHEDULER: Sending trip update STOP to elevator 1
+[22:56:02]	SCHEDULER:Handling event FAULT
+[22:56:05]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:05]	SCHEDULER: Elevator 2 is approaching floor 3 going UP
+[22:56:05]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:56:06]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:56:06]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:56:06 to floor
+[22:56:06]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:56:06]	SCHEDULER: Adding elevator button presses: [1] to elevator 1
+[22:56:06]	SCHEDULER: Sending event ELEVATOR_CALLED 22:56:06 to elevator
+[22:56:07]	SCHEDULER:Handling event ELEVATOR_FAULT_UPDATE
+[22:56:07]	SCHEDULER: Elevator 1 is in MOTOR_FAIL
+[22:56:07]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:07]	SCHEDULER: Elevator 3 is approaching floor 3 going UP
+[22:56:07]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:56:10]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:10]	SCHEDULER: Elevator 0 is approaching floor 4 going UP
+[22:56:10]	SCHEDULER: Sending trip update STOP to elevator 0
+[22:56:15]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:56:15]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:56:15 to floor
+[22:56:15]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:56:15]	SCHEDULER: Adding elevator button presses: [] to elevator 0
+[22:56:15]	SCHEDULER: Elevator 0 is now IDLE
+[22:56:15]	SCHEDULER: Free elevator detected, trying to schedule 2 unassigned events
+[22:56:15]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:56:15]	SCHEDULER: Handling floor button event pickup 9 direction DOWN
+[22:56:15]	SCHEDULER: Elevator 0 is IDLE sending request to move for pickup
+[22:56:15]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:56:15]	SCHEDULER: Handling floor button event pickup 6 direction DOWN
+[22:56:15]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:56:15]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:15]	SCHEDULER: Elevator 2 is approaching floor 4 going UP
+[22:56:15]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:56:17]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:17]	SCHEDULER: Elevator 3 is approaching floor 4 going UP
+[22:56:17]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:56:17]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:56:17]	SCHEDULER: Handling floor button event pickup 6 direction UP
+[22:56:17]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:56:20]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:56:20]	SCHEDULER: Handling floor button event pickup 4 direction DOWN
+[22:56:20]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:56:20]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:20]	SCHEDULER: Elevator 0 is approaching floor 5 going UP
+[22:56:20]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:56:22]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:56:22]	SCHEDULER: Handling floor button event pickup 3 direction UP
+[22:56:22]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:56:24]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:24]	SCHEDULER: Elevator 2 is approaching floor 5 going UP
+[22:56:24]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:56:26]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:26]	SCHEDULER: Elevator 3 is approaching floor 5 going UP
+[22:56:26]	SCHEDULER: Sending trip update STOP to elevator 3
+[22:56:30]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:30]	SCHEDULER: Elevator 0 is approaching floor 6 going UP
+[22:56:30]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:56:31]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:56:31]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:56:31 to floor
+[22:56:31]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:56:31]	SCHEDULER: Adding elevator button presses: [1, 4] to elevator 3
+[22:56:31]	SCHEDULER: Sending event ELEVATOR_CALLED 22:56:31 to elevator
+[22:56:34]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:34]	SCHEDULER: Elevator 2 is approaching floor 6 going UP
+[22:56:34]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:56:37]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:37]	SCHEDULER: Elevator 3 is approaching floor 4 going DOWN
+[22:56:37]	SCHEDULER: Sending trip update STOP to elevator 3
+[22:56:39]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:39]	SCHEDULER: Elevator 0 is approaching floor 7 going UP
+[22:56:39]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:56:41]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:56:41]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:56:41 to floor
+[22:56:42]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:56:42]	SCHEDULER: Adding elevator button presses: [2] to elevator 3
+[22:56:42]	SCHEDULER: Sending event ELEVATOR_CALLED 22:56:42 to elevator
+[22:56:43]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:43]	SCHEDULER: Elevator 2 is approaching floor 7 going UP
+[22:56:43]	SCHEDULER: Sending trip update STOP to elevator 2
+[22:56:47]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:47]	SCHEDULER: Elevator 3 is approaching floor 3 going DOWN
+[22:56:47]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:56:48]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:56:48]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:56:48 to floor
+[22:56:48]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:56:48]	SCHEDULER: Adding elevator button presses: [2] to elevator 2
+[22:56:48]	SCHEDULER: Sending event ELEVATOR_CALLED 22:56:48 to elevator
+[22:56:49]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:49]	SCHEDULER: Elevator 0 is approaching floor 8 going UP
+[22:56:49]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:56:54]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:54]	SCHEDULER: Elevator 2 is approaching floor 6 going DOWN
+[22:56:54]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:56:57]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:57]	SCHEDULER: Elevator 3 is approaching floor 2 going DOWN
+[22:56:57]	SCHEDULER: Sending trip update STOP to elevator 3
+[22:56:59]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:56:59]	SCHEDULER: Elevator 0 is approaching floor 9 going UP
+[22:56:59]	SCHEDULER: Sending trip update STOP to elevator 0
+[22:57:02]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:57:02]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:57:02 to floor
+[22:57:02]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:57:02]	SCHEDULER: Adding elevator button presses: [] to elevator 3
+[22:57:02]	SCHEDULER: Sending event ELEVATOR_CALLED 22:57:02 to elevator
+[22:57:03]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:57:03]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:57:03 to floor
+[22:57:03]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:57:03]	SCHEDULER: Adding elevator button presses: [1] to elevator 0
+[22:57:03]	SCHEDULER: Sending event ELEVATOR_CALLED 22:57:03 to elevator
+[22:57:03]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:03]	SCHEDULER: Elevator 2 is approaching floor 5 going DOWN
+[22:57:03]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:57:07]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:07]	SCHEDULER: Elevator 3 is approaching floor 1 going DOWN
+[22:57:07]	SCHEDULER: Sending trip update STOP to elevator 3
+[22:57:09]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:09]	SCHEDULER: Elevator 0 is approaching floor 8 going DOWN
+[22:57:09]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:57:12]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:57:12]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:57:12 to floor
+[22:57:12]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:57:12]	SCHEDULER: Adding elevator button presses: [] to elevator 3
+[22:57:12]	SCHEDULER: Elevator 3 is now IDLE
+[22:57:12]	SCHEDULER: Free elevator detected, trying to schedule 4 unassigned events
+[22:57:12]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:57:12]	SCHEDULER: Handling floor button event pickup 6 direction DOWN
+[22:57:12]	SCHEDULER: Found enroute elevator 0 going DOWN adding new stop 6 to its destinations
+[22:57:12]	SCHEDULER: Assigned pickup at 6 DOWN to elevator 0 ENROUTE
+[22:57:12]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:57:12]	SCHEDULER: Handling floor button event pickup 6 direction UP
+[22:57:12]	SCHEDULER: Elevator 3 is IDLE sending request to move for pickup
+[22:57:12]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:57:12]	SCHEDULER: Handling floor button event pickup 4 direction DOWN
+[22:57:12]	SCHEDULER: Found enroute elevator 2 going DOWN adding new stop 4 to its destinations
+[22:57:12]	SCHEDULER: Assigned pickup at 4 DOWN to elevator 2 ENROUTE
+[22:57:12]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:57:12]	SCHEDULER: Handling floor button event pickup 3 direction UP
+[22:57:12]	SCHEDULER: Placed in unassigned queue, going to wait for a free elevator
+[22:57:13]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:13]	SCHEDULER: Elevator 2 is approaching floor 4 going DOWN
+[22:57:13]	SCHEDULER: Sending trip update STOP to elevator 2
+[22:57:18]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:57:18]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:57:18 to floor
+[22:57:18]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:57:18]	SCHEDULER: Adding elevator button presses: [] to elevator 2
+[22:57:18]	SCHEDULER: Sending event ELEVATOR_CALLED 22:57:18 to elevator
+[22:57:18]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:18]	SCHEDULER: Elevator 3 is approaching floor 2 going UP
+[22:57:18]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:57:19]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:19]	SCHEDULER: Elevator 0 is approaching floor 7 going DOWN
+[22:57:19]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:57:23]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:23]	SCHEDULER: Elevator 2 is approaching floor 3 going DOWN
+[22:57:23]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:57:27]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:27]	SCHEDULER: Elevator 3 is approaching floor 3 going UP
+[22:57:27]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:57:28]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:28]	SCHEDULER: Elevator 0 is approaching floor 6 going DOWN
+[22:57:28]	SCHEDULER: Sending trip update STOP to elevator 0
+[22:57:33]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:57:33]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:57:33 to floor
+[22:57:33]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:57:33]	SCHEDULER: Adding elevator button presses: [2] to elevator 0
+[22:57:33]	SCHEDULER: Sending event ELEVATOR_CALLED 22:57:33 to elevator
+[22:57:33]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:33]	SCHEDULER: Elevator 2 is approaching floor 2 going DOWN
+[22:57:33]	SCHEDULER: Sending trip update STOP to elevator 2
+[22:57:37]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:37]	SCHEDULER: Elevator 3 is approaching floor 4 going UP
+[22:57:37]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:57:38]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:57:38]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:57:38 to floor
+[22:57:38]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:57:38]	SCHEDULER: Adding elevator button presses: [] to elevator 2
+[22:57:38]	SCHEDULER: Elevator 2 is now IDLE
+[22:57:38]	SCHEDULER: Free elevator detected, trying to schedule 1 unassigned events
+[22:57:38]	SCHEDULER:Handling event FLOOR_BUTTON
+[22:57:38]	SCHEDULER: Handling floor button event pickup 3 direction UP
+[22:57:38]	SCHEDULER: Elevator 2 is IDLE sending request to move for pickup
+[22:57:39]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:39]	SCHEDULER: Elevator 0 is approaching floor 5 going DOWN
+[22:57:39]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:57:44]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:44]	SCHEDULER: Elevator 2 is approaching floor 3 going UP
+[22:57:44]	SCHEDULER: Sending trip update STOP to elevator 2
+[22:57:46]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:46]	SCHEDULER: Elevator 3 is approaching floor 5 going UP
+[22:57:46]	SCHEDULER: Sending trip update CONTINUE to elevator 3
+[22:57:48]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:48]	SCHEDULER: Elevator 0 is approaching floor 4 going DOWN
+[22:57:48]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:57:48]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:57:48]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:57:48 to floor
+[22:57:48]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:57:48]	SCHEDULER: Adding elevator button presses: [6] to elevator 2
+[22:57:48]	SCHEDULER: Sending event ELEVATOR_CALLED 22:57:48 to elevator
+[22:57:54]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:54]	SCHEDULER: Elevator 2 is approaching floor 4 going UP
+[22:57:54]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:57:56]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:56]	SCHEDULER: Elevator 3 is approaching floor 6 going UP
+[22:57:56]	SCHEDULER: Sending trip update STOP to elevator 3
+[22:57:58]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:57:58]	SCHEDULER: Elevator 0 is approaching floor 3 going DOWN
+[22:57:58]	SCHEDULER: Sending trip update CONTINUE to elevator 0
+[22:58:01]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:58:01]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:58:01 to floor
+[22:58:01]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:58:01]	SCHEDULER: Adding elevator button presses: [7] to elevator 3
+[22:58:01]	SCHEDULER: Sending event ELEVATOR_CALLED 22:58:01 to elevator
+[22:58:04]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:58:04]	SCHEDULER: Elevator 2 is approaching floor 5 going UP
+[22:58:04]	SCHEDULER: Sending trip update CONTINUE to elevator 2
+[22:58:06]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:58:06]	SCHEDULER: Elevator 3 is approaching floor 7 going UP
+[22:58:06]	SCHEDULER: Sending trip update STOP to elevator 3
+[22:58:07]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:58:07]	SCHEDULER: Elevator 0 is approaching floor 2 going DOWN
+[22:58:07]	SCHEDULER: Sending trip update STOP to elevator 0
+[22:58:11]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:58:11]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:58:11 to floor
+[22:58:11]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:58:11]	SCHEDULER: Adding elevator button presses: [] to elevator 3
+[22:58:11]	SCHEDULER: Elevator 3 is now IDLE
+[22:58:12]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:58:12]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:58:12 to floor
+[22:58:12]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:58:12]	SCHEDULER: Adding elevator button presses: [] to elevator 0
+[22:58:12]	SCHEDULER: Sending event ELEVATOR_CALLED 22:58:12 to elevator
+[22:58:13]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:58:13]	SCHEDULER: Elevator 2 is approaching floor 6 going UP
+[22:58:13]	SCHEDULER: Sending trip update STOP to elevator 2
+[22:58:18]	SCHEDULER:Handling event ELEVATOR_APPROACH_SENSOR
+[22:58:18]	SCHEDULER: Elevator 0 is approaching floor 1 going DOWN
+[22:58:18]	SCHEDULER: Sending trip update STOP to elevator 0
+[22:58:18]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:58:18]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:58:18 to floor
+[22:58:18]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:58:18]	SCHEDULER: Adding elevator button presses: [] to elevator 2
+[22:58:18]	SCHEDULER: Elevator 2 is now IDLE
+[22:58:23]	SCHEDULER:Handling event ELEVATOR_ARRIVED
+[22:58:23]	SCHEDULER: Sending event ELEVATOR_ARRIVED 22:58:23 to floor
+[22:58:23]	SCHEDULER:Handling event ELEVATOR_BUTTONS
+[22:58:23]	SCHEDULER: Adding elevator button presses: [] to elevator 0
+[22:58:23]	SCHEDULER: Elevator 0 is now IDLE

@@ -48,6 +48,7 @@ public class ElevatorEventTimer implements Runnable {
 		try {
 			// after the specified delay notify the scheduler
 			Thread.sleep(timeDelay);
+			
 			schedulerQueue.addLast(new ElevatorTravelTimeoutEvent(id));
 		} catch(InterruptedException e) {
 			// if the scheduler interrupts me that means stop the timer (this is done)

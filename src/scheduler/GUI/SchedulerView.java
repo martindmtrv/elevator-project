@@ -271,7 +271,7 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
             carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.RED);
         }
 
-        if(elevatorStatus.getStatus() == ElevatorJobState.FAULT){
+        if(elevatorStatus.isFaulty()){
             carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.ORANGE);
         }
 

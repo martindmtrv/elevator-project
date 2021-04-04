@@ -225,11 +225,22 @@ public class Scheduler implements Runnable {
 		}
 		
 		ElevatorStatus elevator;
+		elevator = elevators.get(elevatorBEv.getCar());
+//		if (elevator.getStatus() == ElevatorJobState.EN_ROUTE) {
+//			// we have already left .. ignore this
+//			return;
+//		}
+		
+		// cancell timer if there is one for some reason
+		Thread timer = timers[elevatorBEv.getCar()];
+		if (timer != null) {
+			timer.interrupt();
+		}
+		
+		
 		ElevatorCallToMoveEvent elevatorRequest;
 		Object[] unscheduledEvents;
 		
-		// update elevator state
-		elevator = elevators.get(elevatorBEv.getCar());
 		String msg = "Adding elevator button presses: " + Arrays.toString(elevatorBEv.getButtons()) + " to elevator " + elevatorBEv.getCar();
 		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " + msg);
 		//Update Notification Events
@@ -414,6 +425,17 @@ public class Scheduler implements Runnable {
 	private void handleElevatorFaultUpdateEvent(ElevatorFaultUpdateEvent efuEvent) {
 		ElevatorStatus elevator = elevators.get(efuEvent.getCar());
 		elevator.setDirection(DirectionType.STILL);
+		
+		String msg = String.format("Elevator %d is in %s", efuEvent.getCar(), efuEvent.getStatus());
+		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
+		
+		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
+		
+		// STOP THE TIMER!! (may not be one in the case of elevator already on the floor it was called to)
+		Thread timer = timers[efuEvent.getCar()];
+		if (timer != null) {
+			timer.interrupt();
+		}
 
 		if (efuEvent.getStatus() == ElevatorState.ARRIVAL_SENSOR_FAULT) {
 			elevator.setStatus(ElevatorJobState.ARRIVAL_SENSOR_FAIL);
@@ -423,9 +445,6 @@ public class Scheduler implements Runnable {
 			elevator.setStatus(ElevatorJobState.MOTOR_FAIL);
 		} else {
 			elevator.setStatus(ElevatorJobState.PICKING_UP);
-			
-			ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), elevator.getLocation(), elevator.getWorkingDirection());
-			floorQueue.addLast(retry);
 		}
 		//handle elevator car state update for car info view (GUI)
 		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){

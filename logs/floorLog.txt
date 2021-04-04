@@ -1,42 +1,62 @@
-[21:07:45]	FLOOR 2: UP Button Pressed
-[21:07:45]	FLOOR 2: 4 Added to floor destinations UP
-[21:07:50]	FLOOR 3: DOWN Button Pressed
-[21:07:50]	FLOOR 3: 1 Added to floor destinations DOWN
-[21:07:53]	FLOOR 1: UP Button Pressed
-[21:07:53]	FLOOR 1: 2 Added to floor destinations UP
-[21:07:53]	FLOOR 1: Elevator arrived, going UP
-[21:07:53]	FLOORSUBSYSTEM: sending destinations [2]
-[21:07:56]	FLOOR 2: Elevator arrived, going UP
-[21:07:56]	FLOORSUBSYSTEM: sending destinations [4]
-[21:07:56]	FLOOR 2: Elevator arrived, going UP
-[21:07:56]	FLOORSUBSYSTEM: sending destinations []
-[21:07:56]	FLOOR 5: DOWN Button Pressed
-[21:07:56]	FLOOR 5: 1 Added to floor destinations DOWN
-[21:08:00]	FLOOR 7: DOWN Button Pressed
-[21:08:00]	FLOOR 7: 2 Added to floor destinations DOWN
-[21:08:01]	FLOOR 9: DOWN Button Pressed
-[21:08:01]	FLOOR 9: 1 Added to floor destinations DOWN
-[21:08:01]	FLOOR 6: DOWN Button Pressed
-[21:08:01]	FLOOR 6: 2 Added to floor destinations DOWN
-[21:08:03]	FLOOR 2: Elevator arrived, going UP
-[21:08:03]	FLOORSUBSYSTEM: sending destinations []
-[21:08:10]	FLOOR 5: DOWN Button Pressed
-[21:08:10]	FLOOR 5: 4 Added to floor destinations DOWN
-[21:08:11]	FLOOR 3: Elevator arrived, going DOWN
-[21:08:11]	FLOORSUBSYSTEM: sending destinations [1]
-[21:08:20]	FLOOR 6: UP Button Pressed
-[21:08:20]	FLOOR 6: 7 Added to floor destinations UP
-[21:08:23]	FLOOR 4: DOWN Button Pressed
-[21:08:23]	FLOOR 4: 2 Added to floor destinations DOWN
-[21:08:25]	FLOOR 3: UP Button Pressed
-[21:08:25]	FLOOR 3: 6 Added to floor destinations UP
-[21:08:36]	FLOOR 5: Elevator arrived, going DOWN
-[21:08:36]	FLOORSUBSYSTEM: sending destinations [1, 4]
-[21:08:47]	FLOOR 4: Elevator arrived, going DOWN
-[21:08:47]	FLOORSUBSYSTEM: sending destinations [2]
-[21:09:07]	FLOOR 2: Elevator arrived, going DOWN
-[21:09:07]	FLOORSUBSYSTEM: sending destinations []
-[21:09:17]	FLOOR 1: Elevator arrived, going UP
-[21:09:17]	FLOORSUBSYSTEM: sending destinations []
-[21:10:34]	FLOOR 9: Elevator arrived, going DOWN
-[21:10:34]	FLOORSUBSYSTEM: sending destinations [1]
+[22:55:42]	FLOOR 2: UP Button Pressed
+[22:55:42]	FLOOR 2: 4 Added to floor destinations UP
+[22:55:47]	FLOOR 3: DOWN Button Pressed
+[22:55:47]	FLOOR 3: 1 Added to floor destinations DOWN
+[22:55:50]	FLOOR 1: UP Button Pressed
+[22:55:50]	FLOOR 1: 2 Added to floor destinations UP
+[22:55:50]	FLOOR 1: Elevator arrived, going UP
+[22:55:50]	FLOORSUBSYSTEM: sending destinations [2]
+[22:55:53]	FLOOR 5: DOWN Button Pressed
+[22:55:53]	FLOOR 5: 1 Added to floor destinations DOWN
+[22:55:55]	FLOOR 2: Elevator arrived, going UP
+[22:55:55]	FLOORSUBSYSTEM: sending destinations [4]
+[22:55:57]	FLOOR 7: DOWN Button Pressed
+[22:55:57]	FLOOR 7: 2 Added to floor destinations DOWN
+[22:55:58]	FLOOR 9: DOWN Button Pressed
+[22:55:58]	FLOOR 9: 1 Added to floor destinations DOWN
+[22:55:58]	FLOOR 6: DOWN Button Pressed
+[22:55:58]	FLOOR 6: 2 Added to floor destinations DOWN
+[22:55:59]	FLOOR 2: Elevator arrived, going UP
+[22:55:59]	FLOORSUBSYSTEM: sending destinations []
+[22:56:06]	FLOOR 3: Elevator arrived, going DOWN
+[22:56:06]	FLOORSUBSYSTEM: sending destinations [1]
+[22:56:07]	FLOOR 5: DOWN Button Pressed
+[22:56:07]	FLOOR 5: 4 Added to floor destinations DOWN
+[22:56:15]	FLOOR 4: Elevator arrived, going UP
+[22:56:15]	FLOORSUBSYSTEM: sending destinations []
+[22:56:17]	FLOOR 6: UP Button Pressed
+[22:56:17]	FLOOR 6: 7 Added to floor destinations UP
+[22:56:20]	FLOOR 4: DOWN Button Pressed
+[22:56:20]	FLOOR 4: 2 Added to floor destinations DOWN
+[22:56:22]	FLOOR 3: UP Button Pressed
+[22:56:22]	FLOOR 3: 6 Added to floor destinations UP
+[22:56:31]	FLOOR 5: Elevator arrived, going DOWN
+[22:56:31]	FLOORSUBSYSTEM: sending destinations [1, 4]
+[22:56:41]	FLOOR 4: Elevator arrived, going DOWN
+[22:56:41]	FLOORSUBSYSTEM: sending destinations [2]
+[22:56:48]	FLOOR 7: Elevator arrived, going DOWN
+[22:56:48]	FLOORSUBSYSTEM: sending destinations [2]
+[22:57:02]	FLOOR 2: Elevator arrived, going DOWN
+[22:57:02]	FLOORSUBSYSTEM: sending destinations []
+[22:57:03]	FLOOR 9: Elevator arrived, going DOWN
+[22:57:03]	FLOORSUBSYSTEM: sending destinations [1]
+[22:57:12]	FLOOR 1: Elevator arrived, going UP
+[22:57:12]	FLOORSUBSYSTEM: sending destinations []
+[22:57:18]	FLOOR 4: Elevator arrived, going DOWN
+[22:57:18]	FLOORSUBSYSTEM: sending destinations []
+[22:57:33]	FLOOR 6: Elevator arrived, going DOWN
+[22:57:33]	FLOORSUBSYSTEM: sending destinations [2]
+[22:57:38]	FLOOR 2: Elevator arrived, going DOWN
+[22:57:38]	FLOORSUBSYSTEM: sending destinations []
+[22:57:48]	FLOOR 3: Elevator arrived, going UP
+[22:57:48]	FLOORSUBSYSTEM: sending destinations [6]
+[22:58:01]	FLOOR 6: Elevator arrived, going UP
+[22:58:01]	FLOORSUBSYSTEM: sending destinations [7]
+[22:58:11]	FLOOR 7: Elevator arrived, going UP
+[22:58:11]	FLOORSUBSYSTEM: sending destinations []
+[22:58:12]	FLOOR 2: Elevator arrived, going DOWN
+[22:58:12]	FLOORSUBSYSTEM: sending destinations []
+[22:58:18]	FLOOR 6: Elevator arrived, going UP
+[22:58:18]	FLOORSUBSYSTEM: sending destinations []
+[22:58:23]	FLOOR 1: Elevator arrived, going UP
+[22:58:23]	FLOORSUBSYSTEM: sending destinations []

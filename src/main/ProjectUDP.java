@@ -64,7 +64,7 @@ public class ProjectUDP {
 			processes[1] = scheduler.start();
 			// sleep so the gui can get setup (loading...)
 			try {
-				Thread.sleep(9000);
+				Thread.sleep(5000);
 			} catch(InterruptedException e) {
 				return;
 			}
