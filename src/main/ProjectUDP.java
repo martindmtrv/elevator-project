@@ -23,8 +23,7 @@ public class ProjectUDP {
 		ProcessBuilder scheduler = new ProcessBuilder("java", "-cp", "bin", "scheduler.Scheduler");
 		
 		// set their stdin, stderr, stdout to the same as this process
-		// TODO: perhaps add some config to get this output in some txt files in /logs?
-		// TODO: can also set the stdout to be a object in this class for tests (so we can read input internally)
+		// or to be a logfile
 		if (Configuration.outputLogFiles) {
 			File elOutput = new File("logs/elevatorLog.txt");
 			File flOutput = new File("logs/floorLog.txt");

@@ -1,5 +1,5 @@
 SYSC 3303 Elevator Assignment: Group 7
-Iteration: 4
+Iteration: 5
 
 Members:
  -> Martin Dimitrov -101111948
@@ -39,27 +39,19 @@ Fault format:
 	
 
 Contributions:
-	Martin 101111948
-		- setup Fault events and types
-		- brainstorming for what types of faults there are and how they should be handled
-		- git setup and organization
-		- timers / tests for elevator timeouts (to handle travel timeouts, this is a scheduler generated fault)
-		- Optimized / fixed old tests
+	Martin Dimitrov 101111948
+		
 		
 	Ammar Tosun 101172948
-		- Timing diagram and updated state diagram with fault events
+
 		
 	Erdem Yanikomeroglu 101080085
-		- Configured scheduler to inject and receive elevator faults
-		- Experimented with new elevator states for faults
+
 		
 	Alex Cameron 101114698
-		- Fault handling for elevator subsystem.
-		- Created new events to notify scheduler of elevators in fault states allowing them not to be scheduled.
+
 		
 	David Casciano 101069255
-		- Fault injection from the input stream
-		- Created Test cases for the fault event
 		
 		
 		
