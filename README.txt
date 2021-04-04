@@ -40,6 +40,11 @@ Fault format:
 
 Contributions:
 	Martin Dimitrov 101111948
+	- created new class for launching all processes at once
+		(using processbuilders it creates 3 seperate processes from one class)	
+	- bug fixes, making sure all the elevators behave properly after Faults
+	- compiling final report documentation (contributions, setup instructions, layout)
+	- added logfile output option in config
 		
 		
 	Ammar Tosun 101172948
@@ -56,6 +61,7 @@ Contributions:
 		
 		
 Files:	
+TODO UPDATE THIS
 	src/elevator:
 	Box.java		ElevatorButton.java	ElevatorLamp.java	ElevatorState.java
 	Elevator.java		ElevatorDoor.java	ElevatorMotor.java	ElevatorSubsystem.java

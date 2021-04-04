@@ -72,7 +72,7 @@ public class InputFileView extends JPanel {
         configNumLabel.setFont(new Font("Serif", Font.BOLD, 20));
         JPanel settingsPanel = new JPanel();
         settingsPanel.setLayout(new BoxLayout(settingsPanel,BoxLayout.PAGE_AXIS));
-        JLabel configFileLabel = new JLabel("Input File: " + Configuration.TEST_FILE);
+        JLabel configFileLabel = new JLabel("Input File: " + Configuration.INPUT_FILE);
         JLabel numFloorsLabel = new JLabel("Number of Floors: " + Configuration.NUM_FLOORS);
         JLabel numCarsLabel = new JLabel("Number of Cars: " + Configuration.NUM_CARS);
 
