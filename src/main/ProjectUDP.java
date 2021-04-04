@@ -1,8 +1,9 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
 
-// unused imports here to make sure the classes we are running will get compiled
+//unused imports here to make sure the classes we are running will get compiled
 import elevator.ElevatorSubsystem;
 import scheduler.Scheduler;
 import floor.FloorSubsystem;
@@ -22,11 +23,38 @@ public class ProjectUDP {
 		ProcessBuilder scheduler = new ProcessBuilder("java", "-cp", "bin", "scheduler.Scheduler");
 		
 		// set their stdin, stderr, stdout to the same as this process
-		// TODO: perhaps add some config to get this output in some txt files in /logs?
-		// TODO: can also set the stdout to be a object in this class for tests (so we can read input internally)
-		elevator.inheritIO();
-		floor.inheritIO();
-		scheduler.inheritIO();
+		// or to be a logfile
+		if (Configuration.outputLogFiles) {
+			File elOutput = new File("logs/elevatorLog.txt");
+			File flOutput = new File("logs/floorLog.txt");
+			File scOutput = new File("logs/schedulerLog.txt");
+			
+			// clear old logs
+			elOutput.delete();
+			flOutput.delete();
+			scOutput.delete();
+			
+			// create the new logfiles
+			try {
+				elOutput.createNewFile();
+				flOutput.createNewFile();
+				scOutput.createNewFile();
+			} catch(IOException e) {
+				System.out.println("Unable to create logs" + e);
+				return;
+			}
+			
+			
+			elevator.redirectOutput(elOutput).redirectError(elOutput);
+			floor.redirectOutput(flOutput).redirectError(flOutput);
+			scheduler.redirectOutput(scOutput).redirectError(scOutput);
+			
+		} else {
+			elevator.inheritIO();
+			floor.inheritIO();
+			scheduler.inheritIO();
+		}
+		
 		
 		Process[] processes = new Process[3];
 		
@@ -34,6 +62,12 @@ public class ProjectUDP {
 		try {
 			processes[2] = elevator.start();
 			processes[1] = scheduler.start();
+			// sleep so the gui can get setup (loading...)
+			try {
+				Thread.sleep(5000);
+			} catch(InterruptedException e) {
+				return;
+			}
 			processes[0] = floor.start();
 		} catch (IOException e) {
 			System.out.println(e);
@@ -41,7 +75,7 @@ public class ProjectUDP {
 		
 		// make sure the processes get killed after (otherwise they will be stuck on the OS)
 		try {
-			processes[0].waitFor();
+			processes[1].waitFor();
 		} catch (InterruptedException e) {
 			System.out.println("Making sure all processes are killed");
 			for (Process p: processes) {

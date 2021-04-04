@@ -23,15 +23,17 @@ public abstract class Configuration {
 	public static final long TRAVEL_TIME_BETWEEN_FLOOR = 9500; //~9.5s
 	
 	// timeout delay for timeouts (too long to hear from elevator)
-	public static long TIMEOUT_DELAY = 2000;
+	public static long TIMEOUT_DELAY = 10000;
 	
 	//Fault sleep times
-	public static final long DOOR_FAULT = 1000; //1s for a DOOR FAULT
+	public static final long DOOR_FAULT = 3000; //3s for a DOOR FAULT
 	public static final long ARRIVAL_FAULT = 10000; //10s for a ARRIVAL SENSOR FAULT
 	public static final long MOTOR_FAULT = 10000; //10s for a MOTOR FAILURE FAULT
 	
-	// test files
+	// test file used by tests
 	public static final String TEST_FILE = "TestComm.txt";
+	
+	// input file used by the running project
 	public static final String INPUT_FILE = "Test.txt";
 	
 	// ports info
@@ -47,4 +49,6 @@ public abstract class Configuration {
 	public static final String FLOOR_SYSTEM_ADDRESS = "";
 	public static final String SCHEDULER_SYSTEM_ADDRESS = "";
 	
+	// logging (move terminal output to a file in /logs)
+	public static final boolean outputLogFiles = true;
 }

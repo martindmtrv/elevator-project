@@ -11,6 +11,9 @@ public enum ElevatorState {
 	LOADING_PASSENGER,
 	UNLOADING_PASENGER,
 	FAULT,
+	DOOR_STUCK,
+	ARRIVAL_SENSOR_FAULT,
+	MOTOR_FAIL
 	//Add state transitions:
 	//1. Door opening
 	//2. Door closing

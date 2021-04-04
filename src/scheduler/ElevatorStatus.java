@@ -30,8 +30,8 @@ public class ElevatorStatus {
 		workingDirection = DirectionType.STILL;
 		status = ElevatorJobState.IDLE;
 		destinations = new HashSet<>();
-		
-		if(Configuration.VERBOSE) {
+
+		if (Configuration.VERBOSE) {
 			System.out.println("\t\tELEVATOR: Car " + this.id + " Job State Initialized to IDLE");
 		}
 	}
@@ -101,5 +101,10 @@ public class ElevatorStatus {
 
 	public void setWorkingDirection(DirectionType workingDirection) {
 		this.workingDirection = workingDirection;
+	}
+	
+	public boolean isFaulty() {
+		return status != ElevatorJobState.PICKING_UP && 
+				status != ElevatorJobState.EN_ROUTE && status != ElevatorJobState.IDLE;
 	}
 }

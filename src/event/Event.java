@@ -55,6 +55,17 @@ public class Event implements Serializable {
 		
 		return dateFormat.format(date);
 	}
+
+	/**
+	 * Gets and formats the current time
+	 * @return string representing current time
+	 */
+	public static Date getCurrTime() {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		Date date = new Date();
+
+		return date;
+	}
 	
 	public void setSeen() {
 		this.eventSeen = true;

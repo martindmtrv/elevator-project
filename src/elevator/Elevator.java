@@ -106,7 +106,7 @@ public class Elevator implements Runnable{
 			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: Car " + eID + " has arrived floor " + n);
 			
 			this.state= ElevatorState.FAULT; //set state to FAULT state
-			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,ElevatorState.DOOR_STUCK));
 			
 			state = ElevatorState.IDLE;
 			direction = DirectionType.STILL;
@@ -235,18 +235,18 @@ public class Elevator implements Runnable{
 	 */
 	public void handleFault(Fault faultEvent) {
 		if(faultEvent.getFaultType()==FaultType.DOOR_STUCK) { //Door stuck fault
-				System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'DOOR STUCK' ");
+				//System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'DOOR STUCK' ");
 				//Next time the elevator reaches a floor the door stuck event is made. (It wouldn't make sense to have a door fault activated in between floors)
 				doorFault = true;
 		}else if(faultEvent.getFaultType()==FaultType.ARRIVAL_SENSOR_FAIL) { //Arrival Sensor Fail
 			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'ARRIVAL SENSOR FAILURE' ");
 			this.state= ElevatorState.FAULT; //set state to FAULT state forever
-			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,ElevatorState.ARRIVAL_SENSOR_FAULT));
 			this.direction = DirectionType.STILL;
-		}else{ //Motor fail
+		}else if (faultEvent.getFaultType() == FaultType.MOTOR_FAIL){ //Motor fail
 			System.out.println("["+Event.getCurrentTime()+"]\tELEVATOR: CAR "+ eID +": FAULT TYPE: 'MOTOR FAILURE' ");
 			this.state= ElevatorState.FAULT; //set state to FAULT state forever
-			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,state));
+			elevatorEvents.addLast(new ElevatorFaultUpdateEvent(eID,ElevatorState.MOTOR_FAIL));
 			this.direction = DirectionType.STILL;
 			runMotor(false, state);
 		}

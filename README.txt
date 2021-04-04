@@ -1,5 +1,5 @@
 SYSC 3303 Elevator Assignment: Group 7
-Iteration: 4
+Iteration: 5
 
 Members:
  -> Martin Dimitrov -101111948
@@ -39,31 +39,30 @@ Fault format:
 	
 
 Contributions:
-	Martin 101111948
-		- setup Fault events and types
-		- brainstorming for what types of faults there are and how they should be handled
-		- git setup and organization
-		- timers / tests for elevator timeouts (to handle travel timeouts, this is a scheduler generated fault)
-		- Optimized / fixed old tests
+	Martin Dimitrov 101111948
+	- created new class for launching all processes at once
+		(using processbuilders it creates 3 seperate processes from one class)	
+	- bug fixes, making sure all the elevators behave properly after Faults
+	- compiling final report documentation (contributions, setup instructions, layout)
+	- added logfile output option in config
+		
 		
 	Ammar Tosun 101172948
-		- Timing diagram and updated state diagram with fault events
+	- Helped preparing the final report by compiling the diagrams
 		
 	Erdem Yanikomeroglu 101080085
-		- Configured scheduler to inject and receive elevator faults
-		- Experimented with new elevator states for faults
+
 		
 	Alex Cameron 101114698
-		- Fault handling for elevator subsystem.
-		- Created new events to notify scheduler of elevators in fault states allowing them not to be scheduled.
+	- Created GUI to represent the elevator system visually using the swing framework.
+	- Implemented Model, Controller, View software engineering strategy to display model data on a user interface.
 		
 	David Casciano 101069255
-		- Fault injection from the input stream
-		- Created Test cases for the fault event
 		
 		
 		
 Files:	
+TODO UPDATE THIS
 	src/elevator:
 	Box.java		ElevatorButton.java	ElevatorLamp.java	ElevatorState.java
 	Elevator.java		ElevatorDoor.java	ElevatorMotor.java	ElevatorSubsystem.java
@@ -82,7 +81,7 @@ Files:
 	FloorButton.java	FloorSubsystem.java
 	
 	src/main:
-	Configuration.java	Project.java
+	Configuration.java	ProjectUDP.java
 	
 	src/rpc:
 	RpcHandler.java		RpcWorker.java		RpcWorkerType.java	SerializationUtils.java
@@ -90,6 +89,13 @@ Files:
 	src/scheduler:
 	BoundedBuffer.java	ElevatorJobState.java	ElevatorTripUpdate.java	State.java
 	ElevatorEventTimer.java	ElevatorStatus.java	Scheduler.java
+	
+	src/scheduler/GUI:
+	CarView.java	ElevatorInfoView.java	inputFileView.java
+	Notification.java	NotificationController.java	NotificationModel.java
+	NotificationPanel.java	NotificationType.java	NotifciationView.java
+	NotificationViewListener.java	SchedulerController.java	SchedulerView.java
+	SchedulerViewListener.java
 	
 	src/test:
 	ElevatorSubsystemTest.java	FloorSubsystemTest.java		TestSuite.java
