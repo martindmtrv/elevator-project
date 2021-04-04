@@ -5,30 +5,39 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+/**
+ * The class which creates each individual notification panel view that is added to the list of notifications.
+ * @author: Alex Cameron
+ *
+ */
 public class NotificationPanel extends JPanel {
 
     private NotificationView notificationView;
     private Notification notification;
     public final String CLOSE_NOTIFICATION_COMMAND = "close";
-
+    /**
+     * Constructor which creates the notification panel view
+     * @param notification
+     * @param notificationView
+     */
     public NotificationPanel(Notification notification, NotificationView notificationView){
-        this.notificationView = notificationView;
-        this.notification = notification;
+        this.notificationView = notificationView; //the notification view
+        this.notification = notification; //notification data being created into a view
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //Specify the type of notification 
         JLabel systemTypeLabel;
         if(notification.getNotificationType() == NotificationType.SCHEDULER){
             systemTypeLabel = new JLabel(notification.getNotificationTime()+ " ");
         }else if(notification.getNotificationType() == NotificationType.ELEVATORSUBSYSTEM){
-            systemTypeLabel = new JLabel("<html>ELEVATOR<br/>" + notification.getNotificationTime() +"  </html>");
+            systemTypeLabel = new JLabel("<html>ELEVATOR<br/>" + notification.getNotificationTime() +"  </html>"); //Omitted 
         }else{
-            systemTypeLabel = new JLabel("<html>FLOOR<br/>" + notification.getNotificationTime() +"  </html>");
+            systemTypeLabel = new JLabel("<html>FLOOR<br/>" + notification.getNotificationTime() +"  </html>"); //Omitted 
         }
         systemTypeLabel.setFont(new Font("Serif", Font.BOLD, 14));
         this.add(systemTypeLabel, BorderLayout.LINE_START);
 
-        //change below
+        //Visual details for notification message displayed in panel
         JTextArea notificationTextArea = new JTextArea(2, 20);
         notificationTextArea.setText(notification.getMessage());
         notificationTextArea.setWrapStyleWord(true);
@@ -39,19 +48,11 @@ public class NotificationPanel extends JPanel {
         notificationTextArea.setFont(new Font("Serif", Font.PLAIN, 14));
         notificationTextArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.add(notificationTextArea, BorderLayout.CENTER);
-//     (TEST) DOES NOT WORK YET: Cant figure out how to close the notifications individually
-//        JButton closeNotificationButton = new JButton("X");
-//        closeNotificationButton.setFocusPainted(false);
-//        closeNotificationButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                notificationView.getNotificationController().actionPerformed(
-//                        new ActionEvent(this, ActionEvent.ACTION_PERFORMED, CLOSE_NOTIFICATION_COMMAND));
-//            }
-//        });
-//        this.add(closeNotificationButton, BorderLayout.LINE_END);
-    }
-
+    }	
+    /**
+     * Gets the notification
+     * @return The notifcation
+     */
     public Notification getNotification(){
         return notification;
     }

@@ -15,7 +15,11 @@ import scheduler.Scheduler;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * The View that displays all the scheduler data in a JFrame.
+ * @author: Alex Cameron
+ *
+ */
 public class SchedulerView extends JFrame implements SchedulerViewListener {
 
     private SchedulerController sc;
@@ -30,7 +34,10 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
     private JLabel directionLabel;
     private JSplitPane splitPane;
 
-
+    /**
+     * Initializes all the view components within the SchedulerView Frame
+     * @param schedulerModel - The model associated with the SchedulerView
+     */
     public SchedulerView(Scheduler schedulerModel){
         super("ElevatorSubsystem");
         this.setLayout(new BorderLayout());
@@ -56,7 +63,7 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         //initialize the floors and cars
         initFloors();
         initCars();
-        directionLabel = new JLabel();
+        directionLabel = new JLabel(); //init direction label
         //initialize car info view
         initElevatorInfoViews();
         //initialize input file view
@@ -69,15 +76,19 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         this.notificationView = new NotificationView();
         this.add(notificationView, BorderLayout.LINE_END);
     }
-
+    /**
+     * This method initializes the title bar with the Title and Legend which describes the different colours'
+     * associated to each panel colour in the elevator system view.
+     */
     public void initTitleBar(){
+    	//init title bar
         JPanel titleBar = new JPanel();
         titleBar.setBackground(Color.darkGray);
         JLabel titleLabel = new JLabel("SYSC3303 Final Project - Group 7: Elevator System.      Legend:");
         titleLabel.setFont(new Font("Serif", Font.BOLD, 40));
         titleLabel.setForeground(Color.white);
         titleLabel.setBackground(Color.WHITE);
-
+        //init legend panels & labels
         JPanel legendPanel = new JPanel();
         legendPanel.setBackground(Color.lightGray);
         JLabel redLabel = new JLabel("Car Stopped");
@@ -88,31 +99,41 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         yellowLabel.setFont(new Font("Serif", Font.BOLD, 14));
         JLabel orangeLabel = new JLabel("Critical Error");
         orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
-
+        JLabel purpleLabel = new JLabel("Transcient Error");
+        orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        
+        //init the legend content panels
         JPanel redPanel = new JPanel();
         JPanel greenPanel = new JPanel();
         JPanel yellowPanel = new JPanel();
         JPanel orangePanel = new JPanel();
+        JPanel purplePanel = new JPanel();
+        
         redPanel.setBackground(Color.red);
         greenPanel.setBackground(Color.GREEN);
         yellowPanel.setBackground(Color.YELLOW);
         orangePanel.setBackground(Color.ORANGE);
+        purplePanel.setBackground(Color.magenta);
 
         redPanel.add(redLabel);
         greenPanel.add(greenLabel);
         yellowPanel.add(yellowLabel);
         orangePanel.add(orangeLabel);
-
+        purplePanel.add(purpleLabel);
+        
         legendPanel.add(redPanel);
         legendPanel.add(greenPanel);
         legendPanel.add(yellowPanel);
         legendPanel.add(orangePanel);
-
+        legendPanel.add(purplePanel);
+        
         titleBar.add(titleLabel);
         titleBar.add(legendPanel);
         this.add(titleBar, BorderLayout.PAGE_START);
     }
-
+    /**
+     * Initializes the floors to be displayed in the elevator system component.
+     */
     public void initFloors(){
         JPanel floorPanel = new JPanel(); //floor panel
         floorPanel.setLayout(new BoxLayout(floorPanel, BoxLayout.PAGE_AXIS));
@@ -151,7 +172,9 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         carPanel.setLayout(new FlowLayout());
         carPanel.add(floorPanel);
     }
-
+    /**
+     * Initializes the car panels with the number of cars and floors for each elevator car.
+     */
     public void initCars(){
         JPanel[] cars = new JPanel[Configuration.NUM_CARS]; //panel for each car
         carViews = new CarView[Configuration.NUM_CARS]; //car views for each car which contain the floors
@@ -201,7 +224,10 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
 
         this.add(carPanel,BorderLayout.LINE_START);
     }
-
+    
+    /**
+     * Initializes the information views for each elevator car.
+     */
     public void initElevatorInfoViews(){
         elevatorInfoPanel = new JPanel();
         elevatorInfoPanel.setLayout(new FlowLayout());
@@ -215,19 +241,33 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
             }
         }
     }
-
+    /**
+     * Initialize the Input File and Configuration File View.  
+     */
     public void initInputFileView(){
         inputFilePanel = new InputFileView();
     }
-
+    /**
+     * Getter method for the NotificationView
+     * @return The NotificationView
+     */
     public NotificationView getNotificationView(){
         return notificationView;
     }
-
+    /**
+     * Getter method to retrieve the ElevatorInfoView with a specified car ID.
+     * @param carID - The elevator car ID
+     * @return The ElevatorInfoView for the specified car ID
+     */
     public ElevatorInfoView getElevatorInfoView(int carID) {
         return elevatorInfoViews[carID];
     }
-
+    
+    /**
+     * Sets the direction label for the specified elevator car.
+     * @param directionType - The Directiontype in the JPanel elevator car
+     * @param panel - The panel which the Directiontype is inputed in.
+     */
     public void setDirectionLabel(DirectionType directionType, JPanel panel){
         if(directionType==DirectionType.DOWN){
             directionLabel = new JLabel("DOWN");
@@ -238,21 +278,24 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         }
         directionLabel.setFont(new Font("Serif", Font.BOLD, 14));
         panel.removeAll();
+        panel.revalidate();
+        panel.repaint();
         panel.add(directionLabel);
+        panel.repaint();
     }
 
     @Override
     public void handleElevatorStatusUpdate(ElevatorTripUpdateEvent e) {
-        if(e.getUpdate() == ElevatorTripUpdate.CONTINUE){
+        if(e.getUpdate() == ElevatorTripUpdate.CONTINUE){ //updates the elevator car ID panel with green for continuing
             carViews[e.getCar()].setFloor(e.getApproachingFloor(),Color.GREEN);
-        }else{
-            carViews[e.getCar()].setFloor(e.getApproachingFloor(),Color.RED);
+        }else{ //update the elevator car ID panel with red for stopping
+            carViews[e.getCar()].setFloor(e.getApproachingFloor(),Color.RED); 
         }
     }
 
     @Override
     public void handleFloorButtonPressUpdate(FloorButtonPressEvent e){
-        floors[e.getFloor()].setBackground(Color.YELLOW);
+        floors[e.getFloor()].setBackground(Color.YELLOW); //if there is a floor request then the floor panel is yellow
         this.revalidate();
         this.repaint();
     }
@@ -264,15 +307,19 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
     }
 
     @Override
-    public void handleElevatorStateUpdate(ElevatorStatus elevatorStatus){
+    public void handleElevatorStateUpdate(ElevatorStatus elevatorStatus){ //update the CarInfoView with the data from elevatorStatus of the specified car
         elevatorInfoViews[elevatorStatus.getId()].setCarInfo(elevatorStatus);
 
-        if(elevatorStatus.getStatus() == ElevatorJobState.IDLE){
+        if(elevatorStatus.getStatus() == ElevatorJobState.IDLE){ //if elevator state is idle then set the carview to red
             carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.RED);
         }
 
-        if(elevatorStatus.isFaulty()){
-            carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.ORANGE);
+        if(elevatorStatus.isFaulty()){ //if the elevator is in fault state 
+        	if(elevatorStatus.getStatus() == ElevatorJobState.DOOR_STUCK) { //door is stuck set to magenta /purple
+                carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.MAGENTA);
+        	}else { //any critical fault (arrival sensor or motor fail) then set orange (Out of service)
+                carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.ORANGE);	
+        	}
         }
 
         //set Elevator car direction

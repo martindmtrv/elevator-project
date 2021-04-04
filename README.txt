@@ -54,7 +54,8 @@ Contributions:
 
 		
 	Alex Cameron 101114698
-
+	- Created GUI to represent the elevator system visually using the swing framework.
+	- Implemented Model, Controller, View software engineering strategy to display model data on a user interface.
 		
 	David Casciano 101069255
 		
@@ -80,7 +81,7 @@ TODO UPDATE THIS
 	FloorButton.java	FloorSubsystem.java
 	
 	src/main:
-	Configuration.java	Project.java
+	Configuration.java	ProjectUDP.java
 	
 	src/rpc:
 	RpcHandler.java		RpcWorker.java		RpcWorkerType.java	SerializationUtils.java
@@ -88,6 +89,13 @@ TODO UPDATE THIS
 	src/scheduler:
 	BoundedBuffer.java	ElevatorJobState.java	ElevatorTripUpdate.java	State.java
 	ElevatorEventTimer.java	ElevatorStatus.java	Scheduler.java
+	
+	src/scheduler/GUI:
+	CarView.java	ElevatorInfoView.java	inputFileView.java
+	Notification.java	NotificationController.java	NotificationModel.java
+	NotificationPanel.java	NotificationType.java	NotifciationView.java
+	NotificationViewListener.java	SchedulerController.java	SchedulerView.java
+	SchedulerViewListener.java
 	
 	src/test:
 	ElevatorSubsystemTest.java	FloorSubsystemTest.java		TestSuite.java

@@ -4,7 +4,12 @@ import event.*;
 
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * The NotificationModel class is able to add and remove notifications to an arraylist of all the notifications to
+ * be displayed on the GUI using MCV template.
+ * @author Alex
+ *
+ */
 public class NotificationModel {
     ArrayList<Notification> notificationArrayList;
     ArrayList<NotificationViewListener> notificationViewListeners;

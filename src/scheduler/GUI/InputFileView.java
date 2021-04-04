@@ -18,7 +18,7 @@ import java.util.concurrent.Flow;
 public class InputFileView extends JPanel {
 
     private static final int COLUMNS = 20;
-
+    
     public InputFileView(){
         super();
         this.setLayout(new FlowLayout());
@@ -28,7 +28,7 @@ public class InputFileView extends JPanel {
     }
 
     /**
-     * The view for the input file
+     * The view for the input file 
      */
     public void initInputFile(){
         JPanel inputFilePanel = new JPanel();
@@ -39,7 +39,7 @@ public class InputFileView extends JPanel {
         inputLabel.setFont(new Font("Serif", Font.BOLD, 20));
 
         StringBuilder data = new StringBuilder();
-        int counter = 0;
+        int counter = 0; //how many lines to add to JTextare
         try {
             File myObj = new File("Test.txt");
             Scanner myReader = new Scanner(myObj);
@@ -51,6 +51,7 @@ public class InputFileView extends JPanel {
         } catch (FileNotFoundException e) {
             return;
         }
+        //Jtextarea with input file data
         JTextArea inputText = new JTextArea(data.toString(),counter-1,COLUMNS);
         inputText.setEditable(false);
         inputFilePanel.add(inputLabel);
@@ -60,11 +61,10 @@ public class InputFileView extends JPanel {
     }
 
     /**
-     * The view for the config settings
+     * The view for the configuration settings
      */
     public void initConfigView(){
         JPanel configView = new JPanel();
-        //configView.setBackground(Color.lightGray);
         configView.setBorder(BorderFactory.createLineBorder(Color.black));
         configView.setLayout(new BorderLayout());
         JLabel configNumLabel = new JLabel("Configuration Data");

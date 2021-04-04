@@ -68,6 +68,13 @@ public class Scheduler implements Runnable {
 		schedulerViewListenersList = new ArrayList<>();
 
 		schedulerView = new SchedulerView(this);
+		
+		//initialize IDLE elevators on GUI
+				for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+					for(int i=0;i<Configuration.NUM_CARS;i++) {
+						schedulerViewListener.handleElevatorStateUpdate(elevators.get(i));
+					}
+				}
 	}
 	
 	/**
@@ -425,7 +432,10 @@ public class Scheduler implements Runnable {
 	private void handleElevatorFaultUpdateEvent(ElevatorFaultUpdateEvent efuEvent) {
 		ElevatorStatus elevator = elevators.get(efuEvent.getCar());
 		elevator.setDirection(DirectionType.STILL);
-		
+		//handle elevator car state update for car info view (GUI)
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			schedulerViewListener.handleElevatorStateUpdate(elevator);
+		}
 		String msg = String.format("Elevator %d is in %s", efuEvent.getCar(), efuEvent.getStatus());
 		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
 		
