@@ -102,4 +102,9 @@ public class ElevatorStatus {
 	public void setWorkingDirection(DirectionType workingDirection) {
 		this.workingDirection = workingDirection;
 	}
+	
+	public boolean isFaulty() {
+		return status != ElevatorJobState.PICKING_UP && 
+				status != ElevatorJobState.EN_ROUTE && status != ElevatorJobState.IDLE;
+	}
 }

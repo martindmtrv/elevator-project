@@ -86,7 +86,7 @@ public class Scheduler implements Runnable {
 		for (ElevatorStatus e: elevators) {
 			// elevator can't pick up if it's already on-route to picking up
 			// or if its in a fault state (itr 4)
-			if (e.getStatus() == ElevatorJobState.PICKING_UP || e.getStatus() == ElevatorJobState.FAULT)	
+			if (e.getStatus() == ElevatorJobState.PICKING_UP || e.isFaulty())	
 				continue;
 			
 			else if ((e.getStatus() == ElevatorJobState.IDLE) || 	// if the elevator is idle or
@@ -238,7 +238,7 @@ public class Scheduler implements Runnable {
 		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
 		//elevator.setDirection(elevatorBEv.getDirection());
 		
-		if (elevator.getStatus() == ElevatorJobState.FAULT) {
+		if (elevator.isFaulty()) {
 			msg = "Elevator " + elevatorBEv.getCar() + " has stuck doors currently (will not tell it to go yet)";
 			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " + msg);
 			//Update Notification Events
@@ -305,7 +305,7 @@ public class Scheduler implements Runnable {
 	private void handleElevatorApproachSensorEvent(ElevatorApproachSensorEvent easEvent) {
 		ElevatorStatus elevator = elevators.get(easEvent.getCar());
 		String msg;
-		if (elevator.getStatus() == ElevatorJobState.FAULT) {
+		if (elevator.isFaulty()) {
 			msg = String.format("Elevator %d is approaching but is in FAULT -->> Disregarding this", easEvent.getCar());
 			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
 			//Update Notification Events
@@ -365,7 +365,7 @@ public class Scheduler implements Runnable {
 	private void handleElevatorArriveEvent(ElevatorArriveEvent eaEvent) {
 		ElevatorStatus elevator = elevators.get(eaEvent.getCar());
 		String msg;
-		if (elevator.getStatus() == ElevatorJobState.FAULT) {
+		if (elevator.isFaulty()) {
 			msg = String.format("Elevator %d is approaching but is in FAULT -->> Disregarding this", eaEvent.getCar());
 			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
 			//Update Notification Events
@@ -415,10 +415,13 @@ public class Scheduler implements Runnable {
 		ElevatorStatus elevator = elevators.get(efuEvent.getCar());
 		elevator.setDirection(DirectionType.STILL);
 
-		if (efuEvent.getStatus() == ElevatorState.FAULT) {
-			elevator.setStatus(ElevatorJobState.FAULT);
-		}
-		else {
+		if (efuEvent.getStatus() == ElevatorState.ARRIVAL_SENSOR_FAULT) {
+			elevator.setStatus(ElevatorJobState.ARRIVAL_SENSOR_FAIL);
+		} else if (efuEvent.getStatus() == ElevatorState.DOOR_STUCK) {
+			elevator.setStatus(ElevatorJobState.DOOR_STUCK);
+		} else if (efuEvent.getStatus() == ElevatorState.MOTOR_FAIL) {
+			elevator.setStatus(ElevatorJobState.MOTOR_FAIL);
+		} else {
 			elevator.setStatus(ElevatorJobState.PICKING_UP);
 			
 			ElevatorArriveEvent retry = new ElevatorArriveEvent(efuEvent.getCar(), elevator.getLocation(), elevator.getWorkingDirection());
