@@ -30,8 +30,10 @@ public abstract class Configuration {
 	public static final long ARRIVAL_FAULT = 10000; //10s for a ARRIVAL SENSOR FAULT
 	public static final long MOTOR_FAULT = 10000; //10s for a MOTOR FAILURE FAULT
 	
-	// test files
+	// test file used by tests
 	public static final String TEST_FILE = "TestComm.txt";
+	
+	// input file used by the running project
 	public static final String INPUT_FILE = "Test.txt";
 	
 	// ports info
@@ -46,4 +48,7 @@ public abstract class Configuration {
 	public static final String ELEVATOR_SYSTEM_ADDRESS = "";
 	public static final String FLOOR_SYSTEM_ADDRESS = "";
 	public static final String SCHEDULER_SYSTEM_ADDRESS = "";
+	
+	// logging (move terminal output to a file in /logs)
+	public static final boolean outputLogFiles = true;
 }

@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.io.IOException;
 
 //unused imports here to make sure the classes we are running will get compiled
@@ -24,9 +25,37 @@ public class ProjectUDP {
 		// set their stdin, stderr, stdout to the same as this process
 		// TODO: perhaps add some config to get this output in some txt files in /logs?
 		// TODO: can also set the stdout to be a object in this class for tests (so we can read input internally)
-		elevator.inheritIO();
-		floor.inheritIO();
-		scheduler.inheritIO();
+		if (Configuration.outputLogFiles) {
+			File elOutput = new File("logs/elevatorLog.txt");
+			File flOutput = new File("logs/floorLog.txt");
+			File scOutput = new File("logs/schedulerLog.txt");
+			
+			// clear old logs
+			elOutput.delete();
+			flOutput.delete();
+			scOutput.delete();
+			
+			// create the new logfiles
+			try {
+				elOutput.createNewFile();
+				flOutput.createNewFile();
+				scOutput.createNewFile();
+			} catch(IOException e) {
+				System.out.println("Unable to create logs" + e);
+				return;
+			}
+			
+			
+			elevator.redirectOutput(elOutput).redirectError(elOutput);
+			floor.redirectOutput(flOutput).redirectError(flOutput);
+			scheduler.redirectOutput(scOutput).redirectError(scOutput);
+			
+		} else {
+			elevator.inheritIO();
+			floor.inheritIO();
+			scheduler.inheritIO();
+		}
+		
 		
 		Process[] processes = new Process[3];
 		
