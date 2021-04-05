@@ -1,5 +1,5 @@
 SYSC 3303 Elevator Assignment: Group 7
-Iteration: 5
+Final Submission
 
 Members:
  -> Martin Dimitrov -101111948
@@ -7,14 +7,16 @@ Members:
  -> Erdem Yanikomeroglu - 101080085
  -> Alex Cameron - 101114698
  -> David Casciano - 101069255
-	
-Setup Instructions (UDP, single class):
+
+(final report has been submitted as a pdf alongside this iteration)
+
+Setup Instructions (processes created automatically):
 	To run the full elevator system from a single class, run ProjectUDP.java.
 	
 	This class will create separate processes for each of our components as described in the second setup instruction,
-	without all the extra work of starting 3 classes seperately
+	without all the extra work of starting 3 classes separately
 	
-Setup Instructions (Iteration 4 (With UDP)):
+Setup Instructions (processes created manually):
 	To run iteration 4 elevator system there are 3 .java files which must be run in the following order:
 		1. Scheduler.java
 		2. ElevatorSubsystem.java
@@ -22,16 +24,13 @@ Setup Instructions (Iteration 4 (With UDP)):
 		
 	The 3 classes will communicate via UDP and print their respected outputs in their individual consoles.
 	
-Setup Instructions (No UDP + All output in one console):
-	Run Project.java input is fed in from the file specified in Configuration.java (there is alternative running 
-	options in there as well).
 	
-	Testing can be done with the individual files in the test package, or by right clicking the test package
+Testing can be done with the individual files in the test package, or by right clicking the test package
 		Run as -> Junit Test
 	to run all the tests at once
 	
-	Diagrams for UML are available in UML Diagrams folder; state machines are located in state_machine_diagrams
-	Timing diagrams in timing_diagrams
+Diagrams for UML are available in UML Diagrams folder; state machines are located in state_machine_diagrams
+Timing diagrams in timing_diagrams
 	
 Fault format:
 	14:05:35.6 FAULT 1 MOTOR_FAIL
