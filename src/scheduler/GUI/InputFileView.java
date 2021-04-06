@@ -19,14 +19,21 @@ public class InputFileView extends JPanel {
 
     private static final int COLUMNS = 20;
     private static final int ROWS = 20;
+    private Color RED = new Color(249,65,68);
+    private Color ORANGE = new Color(248,132,74);
+    private Color YELLOW = new Color(249,199,79);
+    private Color BLUE = new Color(15,141,176);
+    private Color GREEN = new Color(82,230,109);
+    private Color PURPLE = new Color(134,117,214);
+
     
     public InputFileView(){
         super();
         this.setLayout(new FlowLayout());
         initTitleBar();
-        this.add(Box.createRigidArea(new Dimension(150,0))); //adding white space between views
+        this.add(Box.createRigidArea(new Dimension(100,0))); //adding white space between views
         initInputFile();
-        this.add(Box.createRigidArea(new Dimension(150,0))); //adding white space between views
+        this.add(Box.createRigidArea(new Dimension(100,0))); //adding white space between views
         initConfigView();
     }
     
@@ -48,29 +55,40 @@ public class InputFileView extends JPanel {
         redLabel.setFont(new Font("Serif", Font.BOLD, 14));
         JLabel greenLabel = new JLabel("Car Continuing");
         greenLabel.setFont(new Font("Serif", Font.BOLD, 14));
-        JLabel yellowLabel = new JLabel("Floor Pickup Request");
-        yellowLabel.setFont(new Font("Serif", Font.BOLD, 14));
         JLabel orangeLabel = new JLabel("Critical Error");
         orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
         JLabel purpleLabel = new JLabel("Transient Error");
         orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        //direction labels
+        JLabel yellowLabel = new JLabel("Floor Pickup Request DOWN");
+        yellowLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel blueLabel = new JLabel("Floor Pickup Request UP");
+        blueLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel cyanLabel = new JLabel("Floor Pickup Request UP and DOWN");
+        cyanLabel.setFont(new Font("Serif", Font.BOLD, 14));
         
         //init the legend content panels
         JPanel redPanel = new JPanel();
         JPanel greenPanel = new JPanel();
         JPanel yellowPanel = new JPanel();
+        JPanel bluePanel = new JPanel();
         JPanel orangePanel = new JPanel();
         JPanel purplePanel = new JPanel();
+        JPanel cyanPanel = new JPanel();
         
-        redPanel.setBackground(Color.red);
-        greenPanel.setBackground(Color.GREEN);
-        yellowPanel.setBackground(Color.YELLOW);
-        orangePanel.setBackground(Color.ORANGE);
-        purplePanel.setBackground(Color.magenta);
-
+        redPanel.setBackground(RED);
+        greenPanel.setBackground(GREEN);
+        yellowPanel.setBackground(YELLOW);
+        orangePanel.setBackground(ORANGE);
+        purplePanel.setBackground(PURPLE);
+        bluePanel.setBackground(BLUE);
+        cyanPanel.setBackground(Color.cyan);
+        
         redPanel.add(redLabel);
         greenPanel.add(greenLabel);
         yellowPanel.add(yellowLabel);
+        bluePanel.add(blueLabel);
+        cyanPanel.add(cyanLabel);
         orangePanel.add(orangeLabel);
         purplePanel.add(purpleLabel);
         
@@ -80,6 +98,10 @@ public class InputFileView extends JPanel {
         legendPanel.add(greenPanel);
         legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
         legendPanel.add(yellowPanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(bluePanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(cyanPanel);
         legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
         legendPanel.add(orangePanel);
         legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
@@ -97,7 +119,7 @@ public class InputFileView extends JPanel {
         inputFilePanel.setBorder(BorderFactory.createLineBorder(Color.black));
         JLabel inputLabel = new JLabel("Input File Events");
         inputLabel.setAlignmentX(CENTER_ALIGNMENT);
-        inputLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        inputLabel.setFont(new Font("Serif", Font.BOLD, 30));
 
         StringBuilder data = new StringBuilder();
         try {
@@ -131,7 +153,7 @@ public class InputFileView extends JPanel {
         configView.setLayout(new BorderLayout());
         JLabel configNumLabel = new JLabel("Configuration Data");
         configNumLabel.setAlignmentX(CENTER_ALIGNMENT);
-        configNumLabel.setFont(new Font("Serif", Font.BOLD, 20));
+        configNumLabel.setFont(new Font("Serif", Font.BOLD, 30));
         JPanel settingsPanel = new JPanel();
         settingsPanel.setLayout(new BoxLayout(settingsPanel,BoxLayout.PAGE_AXIS));
         JLabel configFileLabel = new JLabel("Input File: " + Configuration.INPUT_FILE);
@@ -140,14 +162,14 @@ public class InputFileView extends JPanel {
 
         JLabel initCarFloorLabel = new JLabel("Initial Car Floor: " + Configuration.INIT_CAR_FLOOR);
         JLabel loadTimeLabel = new JLabel("Load Time: " + Configuration.LOAD_TIME/1000 +"s");
-        JLabel timeBetweenFloorsLabel = new JLabel("Load Time: " + Configuration.TRAVEL_TIME_BETWEEN_FLOOR/1000 +"s");
+        JLabel timeBetweenFloorsLabel = new JLabel("Time Between Floors: " + Configuration.TRAVEL_TIME_BETWEEN_FLOOR/1000 +"s");
 
         JLabel elevatorPortLabel = new JLabel("Elevator Port: "+ Configuration.ELEVATOR_PORT );
         JLabel floorPortLabel = new JLabel("Floor Port: " + Configuration.FLOOR_PORT);
         JLabel schedulerListenPortLabel = new JLabel("Scheduler Port: " + Configuration.FLOOR_PORT);
 
         //Filler label
-        JLabel fillerLabel = new JLabel("________________________");
+        JLabel fillerLabel = new JLabel("____________________________________");
 
 
         //setting backgrounds

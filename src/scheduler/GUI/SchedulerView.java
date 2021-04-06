@@ -33,6 +33,12 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
     private JPanel[] floors, carDirections;
     private JLabel directionLabel;
     private JSplitPane splitPane;
+    private Color RED = new Color(249,65,68);
+    private Color ORANGE = new Color(248,132,74);
+    private Color YELLOW = new Color(249,199,79);
+    private Color BLUE = new Color(15,141,176);
+    private Color GREEN = new Color(82,230,109);
+    private Color PURPLE = new Color(134,117,214);
 
     /**
      * Initializes all the view components within the SchedulerView Frame
@@ -251,23 +257,39 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
     @Override
     public void handleElevatorStatusUpdate(ElevatorTripUpdateEvent e) {
         if(e.getUpdate() == ElevatorTripUpdate.CONTINUE){ //updates the elevator car ID panel with green for continuing
-            carViews[e.getCar()].setFloor(e.getApproachingFloor(),Color.GREEN);
+            carViews[e.getCar()].setFloor(e.getApproachingFloor(),GREEN);
         }else{ //update the elevator car ID panel with red for stopping
-            carViews[e.getCar()].setFloor(e.getApproachingFloor(),Color.RED); 
+            carViews[e.getCar()].setFloor(e.getApproachingFloor(),RED); 
         }
     }
 
     @Override
     public void handleFloorButtonPressUpdate(FloorButtonPressEvent e){
-        floors[e.getFloor()].setBackground(Color.YELLOW); //if there is a floor request then the floor panel is yellow
+    	Color color = floors[e.getFloor()].getBackground();
+    	
+    	if(color == Color.BLUE && (e.getDirection() == DirectionType.DOWN)) {
+    		floors[e.getFloor()].setBackground(Color.CYAN); //if there is an existing UP or DOWN request change floor panel to cyan
+    	}else if(color == Color.yellow && (e.getDirection() == DirectionType.UP)) {
+    		floors[e.getFloor()].setBackground(Color.CYAN); //if there is an existing UP or DOWN request change floor panel to cyan
+    	}else if(e.getDirection() == DirectionType.DOWN) {
+    		floors[e.getFloor()].setBackground(YELLOW); //if there is a floor request then the floor panel is yellow
+    	}else {
+            floors[e.getFloor()].setBackground(BLUE); //if there is a floor request UP then the floor panel is blue
+    	}
         this.revalidate();
         this.repaint();
     }
 
     @Override
     public void handleElevatorButtonPressUpdate(ElevatorButtonPressEvent e){
-        floors[e.getState().getFloorNum()].setBackground(Color.WHITE); //reset floor panel that previously requested a pickup
-        //NOTE: UP vs DOWN Pickups
+    	Color color = floors[e.getState().getFloorNum()].getBackground();
+    	if(color == Color.CYAN && (e.getDirection() == DirectionType.DOWN)) {
+    		floors[e.getState().getFloorNum()].setBackground(BLUE); //There were UP and DOWN requests and now there is now only an UP request
+    	}else if(color == Color.CYAN && (e.getDirection() == DirectionType.UP)){
+    		floors[e.getState().getFloorNum()].setBackground(YELLOW); //There were UP and DOWN requests and now there is now only a down request
+    	}else{
+    		floors[e.getState().getFloorNum()].setBackground(Color.WHITE); //reset floor panel that previously requested a pickup
+    	}
     }
 
     @Override
@@ -275,14 +297,14 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         elevatorInfoViews[elevatorStatus.getId()].setCarInfo(elevatorStatus);
 
         if(elevatorStatus.getStatus() == ElevatorJobState.IDLE){ //if elevator state is idle then set the carview to red
-            carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.RED);
+            carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),RED);
         }
 
         if(elevatorStatus.isFaulty()){ //if the elevator is in fault state 
-        	if(elevatorStatus.getStatus() == ElevatorJobState.DOOR_STUCK) { //door is stuck set to magenta /purple
-                carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.MAGENTA);
+        	if(elevatorStatus.getStatus() == ElevatorJobState.DOOR_STUCK) { //door is stuck set to purple
+                carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),PURPLE);
         	}else { //any critical fault (arrival sensor or motor fail) then set orange (Out of service)
-                carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),Color.ORANGE);	
+                carViews[elevatorStatus.getId()].setFloor(elevatorStatus.getLocation(),ORANGE);	
         	}
         }
 
