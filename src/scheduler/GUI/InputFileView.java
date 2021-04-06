@@ -18,6 +18,7 @@ import java.util.concurrent.Flow;
 public class InputFileView extends JPanel {
 
     private static final int COLUMNS = 20;
+    private static final int ROWS = 20;
     
     public InputFileView(){
         super();
@@ -39,12 +40,10 @@ public class InputFileView extends JPanel {
         inputLabel.setFont(new Font("Serif", Font.BOLD, 20));
 
         StringBuilder data = new StringBuilder();
-        int counter = 0; //how many lines to add to JTextare
         try {
             File myObj = new File("Test.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
-                counter++;
                 data.append(myReader.nextLine() + "\n");
             }
             myReader.close();
@@ -52,12 +51,15 @@ public class InputFileView extends JPanel {
             return;
         }
         //Jtextarea with input file data
-        JTextArea inputText = new JTextArea(data.toString(),counter-1,COLUMNS);
+        //JTextArea inputText = new JTextArea(data.toString(),ROWS,COLUMNS);
+        JTextArea inputText = new JTextArea(data.toString());
         inputText.setEditable(false);
         inputFilePanel.add(inputLabel);
         inputFilePanel.add(inputText);
-
-        this.add(inputFilePanel);
+    	JScrollPane scrollPane = new JScrollPane(inputFilePanel);
+    	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    	scrollPane.setPreferredSize(new Dimension(300,300));
+        this.add(scrollPane);
     }
 
     /**
