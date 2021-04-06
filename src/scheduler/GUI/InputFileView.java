@@ -23,9 +23,69 @@ public class InputFileView extends JPanel {
     public InputFileView(){
         super();
         this.setLayout(new FlowLayout());
+        initTitleBar();
+        this.add(Box.createRigidArea(new Dimension(150,0))); //adding white space between views
         initInputFile();
-        this.add(Box.createRigidArea(new Dimension(300,0))); //adding white space between views
+        this.add(Box.createRigidArea(new Dimension(150,0))); //adding white space between views
         initConfigView();
+    }
+    
+    /**
+     * Initialize The legend view.
+     */
+    public void initTitleBar(){
+    		
+        JLabel titleLabel = new JLabel("Elevator Legend:");
+        titleLabel.setAlignmentX(CENTER_ALIGNMENT);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 30));
+        titleLabel.setForeground(Color.BLACK);
+        
+        //init legend panels & labels
+        JPanel legendPanel = new JPanel();
+        legendPanel.setLayout(new BoxLayout(legendPanel, BoxLayout.PAGE_AXIS));
+        legendPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        JLabel redLabel = new JLabel("Car Stopped");
+        redLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel greenLabel = new JLabel("Car Continuing");
+        greenLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel yellowLabel = new JLabel("Floor Pickup Request");
+        yellowLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel orangeLabel = new JLabel("Critical Error");
+        orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel purpleLabel = new JLabel("Transient Error");
+        orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        
+        //init the legend content panels
+        JPanel redPanel = new JPanel();
+        JPanel greenPanel = new JPanel();
+        JPanel yellowPanel = new JPanel();
+        JPanel orangePanel = new JPanel();
+        JPanel purplePanel = new JPanel();
+        
+        redPanel.setBackground(Color.red);
+        greenPanel.setBackground(Color.GREEN);
+        yellowPanel.setBackground(Color.YELLOW);
+        orangePanel.setBackground(Color.ORANGE);
+        purplePanel.setBackground(Color.magenta);
+
+        redPanel.add(redLabel);
+        greenPanel.add(greenLabel);
+        yellowPanel.add(yellowLabel);
+        orangePanel.add(orangeLabel);
+        purplePanel.add(purpleLabel);
+        
+        legendPanel.add(titleLabel);
+        legendPanel.add(redPanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(greenPanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(yellowPanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(orangePanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(purplePanel);
+        
+        this.add(legendPanel);
     }
 
     /**

@@ -47,9 +47,9 @@ public class ElevatorInfoView extends JPanel {
             destinationsLabel = new JLabel("Destinations: None");
         }else {
         	destinationsLabel = new JLabel("Destinations: " + printDirections(elevatorStatus.getDestinations()));
-            destinationsLabel.setFont(new Font("Serif", Font.PLAIN, 20));
-            destinationsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         }
+        destinationsLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+        destinationsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         //init the direction label
         JLabel directionLabel = new JLabel("Direction: " + elevatorStatus.getDirection());
         directionLabel.setFont(new Font("Serif", Font.PLAIN, 20));

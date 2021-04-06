@@ -76,6 +76,7 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         this.notificationView = new NotificationView();
         this.add(notificationView, BorderLayout.LINE_END);
     }
+    
     /**
      * This method initializes the title bar with the Title and Legend which describes the different colours'
      * associated to each panel colour in the elevator system view.
@@ -84,53 +85,16 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
     	//init title bar
         JPanel titleBar = new JPanel();
         titleBar.setBackground(Color.darkGray);
-        JLabel titleLabel = new JLabel("SYSC3303 Final Project - Group 7: Elevator System.      Legend:");
+        titleBar.setLayout(new BoxLayout(titleBar, BoxLayout.PAGE_AXIS));
+        JLabel titleLabel = new JLabel("SYSC3303 Final Project - Group 7: Elevator System.");
+        titleLabel.setAlignmentX(CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Serif", Font.BOLD, 40));
         titleLabel.setForeground(Color.white);
         titleLabel.setBackground(Color.WHITE);
-        //init legend panels & labels
-        JPanel legendPanel = new JPanel();
-        legendPanel.setBackground(Color.lightGray);
-        JLabel redLabel = new JLabel("Car Stopped");
-        redLabel.setFont(new Font("Serif", Font.BOLD, 14));
-        JLabel greenLabel = new JLabel("Car Continuing");
-        greenLabel.setFont(new Font("Serif", Font.BOLD, 14));
-        JLabel yellowLabel = new JLabel("Floor Pickup Request");
-        yellowLabel.setFont(new Font("Serif", Font.BOLD, 14));
-        JLabel orangeLabel = new JLabel("Critical Error");
-        orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
-        JLabel purpleLabel = new JLabel("Transient Error");
-        orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
-        
-        //init the legend content panels
-        JPanel redPanel = new JPanel();
-        JPanel greenPanel = new JPanel();
-        JPanel yellowPanel = new JPanel();
-        JPanel orangePanel = new JPanel();
-        JPanel purplePanel = new JPanel();
-        
-        redPanel.setBackground(Color.red);
-        greenPanel.setBackground(Color.GREEN);
-        yellowPanel.setBackground(Color.YELLOW);
-        orangePanel.setBackground(Color.ORANGE);
-        purplePanel.setBackground(Color.magenta);
-
-        redPanel.add(redLabel);
-        greenPanel.add(greenLabel);
-        yellowPanel.add(yellowLabel);
-        orangePanel.add(orangeLabel);
-        purplePanel.add(purpleLabel);
-        
-        legendPanel.add(redPanel);
-        legendPanel.add(greenPanel);
-        legendPanel.add(yellowPanel);
-        legendPanel.add(orangePanel);
-        legendPanel.add(purplePanel);
-        
         titleBar.add(titleLabel);
-        titleBar.add(legendPanel);
         this.add(titleBar, BorderLayout.PAGE_START);
     }
+
     /**
      * Initializes the floors to be displayed in the elevator system component.
      */
