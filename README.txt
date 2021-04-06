@@ -32,6 +32,10 @@ Testing can be done with the individual files in the test package, or by right c
 Diagrams for UML are available in UML Diagrams folder; state machines are located in state_machine_diagrams
 Timing diagrams in timing_diagrams
 	
+Troubleshooting:
+	If parts of the UI are getting cut off in the display window, make sure that the window is maximized and your OS's
+	UI is not scaled above 100%
+
 Fault format:
 	14:05:35.6 FAULT 1 MOTOR_FAIL
 	time FAULT car FAULT_TYPE(from enum)
@@ -50,7 +54,9 @@ Contributions:
 	- Helped preparing the final report by compiling the diagrams
 		
 	Erdem Yanikomeroglu 101080085
-
+	- Modified Test.txt to test edge cases of system
+	- Stress tested various aspects of the system such as large quantities of faults and requests
+	- Added troubleshooting section to Readme
 		
 	Alex Cameron 101114698
 	- Created GUI to represent the elevator system visually using the swing framework.
