@@ -1,6 +1,9 @@
 package scheduler;
-import java.util.*;
 
+import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import elevator.ElevatorState;
 import event.*;
 import floor.Floor;
@@ -11,17 +14,20 @@ import scheduler.GUI.SchedulerView;
 import scheduler.GUI.SchedulerViewListener;
 
 /**
- * Scheduler thread that handles the communication between the elevator thread and the floor thread.
- * Currently, it passes requests from the elevator thread to the floor thread and vice versa on a first-in,
- * first-out basis. The scheduler's logic will be upgraded in upcoming iterations.
- * @author Erdem Yanikomeroglu (itr 1, 2), Martin Dimitrov (itr 1, 2), Ammar Tosun (itr 3)
+ * Scheduler thread that handles the communication between the elevator thread
+ * and the floor thread. Currently, it passes requests from the elevator thread
+ * to the floor thread and vice versa on a first-in, first-out basis. The
+ * scheduler's logic will be upgraded in upcoming iterations.
+ * 
+ * @author Erdem Yanikomeroglu (itr 1, 2), Martin Dimitrov (itr 1, 2), Ammar
+ *         Tosun (itr 3)
  */
 public class Scheduler implements Runnable {
 	public BoundedBuffer schedulerQueue;
 	private BoundedBuffer elevatorQueue;
 	private BoundedBuffer floorQueue;
 	private State state;
-	
+
 	private Floor[] floors;
 	private Thread[] timers;
 	private ArrayList<ElevatorStatus> elevators;
@@ -29,8 +35,13 @@ public class Scheduler implements Runnable {
 	private List<SchedulerViewListener> schedulerViewListenersList;
 	private SchedulerView schedulerView;
 
+	private int requestCount;
+	private ArrayList<Long> samples = new ArrayList<>();
+	Long start, stop, elapsedTime;
+
 	/**
 	 * Create a new scheduler object
+	 * 
 	 * @param schedulerQueue
 	 * @param elevatorQueue
 	 * @param floorQueue
@@ -39,138 +50,143 @@ public class Scheduler implements Runnable {
 		this.schedulerQueue = schedulerQueue;
 		this.elevatorQueue = elevatorQueue;
 		this.floorQueue = floorQueue;
-		
+
 		unscheduled = new ArrayList<>();
 		elevators = new ArrayList<>(Configuration.NUM_CARS);
 		this.state = State.WAITING;
-		
-		//Added output for Unit testing purposes
-		if(Configuration.VERBOSE) {
+
+		// Added for measurement reporting
+		this.requestCount = 0;
+
+		// Added output for Unit testing purposes
+		if (Configuration.VERBOSE) {
 			System.out.println("\t\tSCHEDULER: Initialize state to WAITING");
 		}
-		
+
 		// create all the arraylists for elevator destinations
-		for (int i=0; i < Configuration.NUM_CARS; i++) {
+		for (int i = 0; i < Configuration.NUM_CARS; i++) {
 			elevators.add(new ElevatorStatus(i));
 		}
-		
+
 		floors = new Floor[Configuration.NUM_FLOORS];
-		
+
 		// create all the floors and buffers
 		for (int x = 0; x < Configuration.NUM_FLOORS; x++) {
-			floors[x] = new Floor(x+1);
+			floors[x] = new Floor(x + 1);
 		}
-		
+
 		// create empty array of timers
 		timers = new Thread[Configuration.NUM_CARS];
 
-		//init listener lists
+		// init listener lists
 		schedulerViewListenersList = new ArrayList<>();
 
 		schedulerView = new SchedulerView(this);
-		
-		//initialize IDLE elevators on GUI
-				for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
-					for(int i=0;i<Configuration.NUM_CARS;i++) {
-						schedulerViewListener.handleElevatorStateUpdate(elevators.get(i));
-					}
-				}
+
+		// initialize IDLE elevators on GUI
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
+			for (int i = 0; i < Configuration.NUM_CARS; i++) {
+				schedulerViewListener.handleElevatorStateUpdate(elevators.get(i));
+			}
+		}
 	}
-	
+
 	/**
-	 * Business logic for the passenger pick up:
-	 * Find the closest available elevator to pick up, 
-	 * so that the waiting time for passengers at floors is minimized
+	 * Business logic for the passenger pick up: Find the closest available elevator
+	 * to pick up, so that the waiting time for passengers at floors is minimized
 	 * 
-	 * @param dir - direction the elevator should be going
+	 * @param dir    - direction the elevator should be going
 	 * @param pickup - the floor number to pickup from
 	 * @return closestElevator - closest elevator or null if no available
-	 */ 
+	 */
 	private ElevatorStatus findClosestElevator(DirectionType dir, int pickup) {
 		ElevatorStatus closestElevator = null;
 		int min = Configuration.NUM_FLOORS;
 		int diff = 0;
-		for (ElevatorStatus e: elevators) {
+		for (ElevatorStatus e : elevators) {
 			// elevator can't pick up if it's already on-route to picking up
 			// or if its in a fault state (itr 4)
-			if (e.getStatus() == ElevatorJobState.PICKING_UP || e.isFaulty())	
+			if (e.getStatus() == ElevatorJobState.PICKING_UP || e.isFaulty())
 				continue;
-			
-			else if ((e.getStatus() == ElevatorJobState.IDLE) || 	// if the elevator is idle or
-					(e.getDirection() == dir && (
-						 (e.getDirection() == DirectionType.UP && e.getLocation() < pickup) || 
-						 (e.getDirection() == DirectionType.DOWN && e.getLocation() > pickup)))
-			){	
+
+			else if ((e.getStatus() == ElevatorJobState.IDLE) || // if the elevator is idle or
+					(e.getDirection() == dir && ((e.getDirection() == DirectionType.UP && e.getLocation() < pickup)
+							|| (e.getDirection() == DirectionType.DOWN && e.getLocation() > pickup)))) {
 				diff = Math.abs(e.getLocation() - pickup);
 				if (min > diff) {
 					min = diff;
-					closestElevator = e; 
+					closestElevator = e;
 				}
 			}
 		}
-		
+
 		return closestElevator;
 	}
-	
+
 	/**
-	 * Logic for handling floor button presses, this method goes through the options for scheduling,
-	 * updating scheduler elevator states, and passing the event appropriately to the elevator subsystem
+	 * Logic for handling floor button presses, this method goes through the options
+	 * for scheduling, updating scheduler elevator states, and passing the event
+	 * appropriately to the elevator subsystem
+	 * 
 	 * @param buttonEv - the event to handle
 	 */
 	private void handleFloorButtonPressEvent(FloorButtonPressEvent buttonEv) {
-		
-		//Updating floor states
-		if(!buttonEv.getSeen()) {
+
+		// Updating floor states
+		if (!buttonEv.getSeen()) {
 			floors[buttonEv.getFloor() - 1] = buttonEv.getState();
 		}
 
-		//handle FloorButtonPressEvent (GUI)
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle FloorButtonPressEvent (GUI)
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleFloorButtonPressUpdate(buttonEv);
 		}
 
 		ElevatorStatus elevator;
 		ElevatorCallToMoveEvent elevatorRequest;
 		DirectionType toMove;
-		
-		// output some info
-		String msg = String.format("Handling floor button event pickup %d direction %s", buttonEv.getFloor(), buttonEv.getDirection());
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " + msg);
 
-		//Update Notification Events
+		// output some info
+		String msg = String.format("Handling floor button event pickup %d direction %s", buttonEv.getFloor(),
+				buttonEv.getDirection());
+		System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+
+		// Update Notification Events
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
-		
+
 		elevator = findClosestElevator(buttonEv.getDirection(), buttonEv.getFloor());
-		
-		if (elevator == null) {		// no available elevator
+
+		if (elevator == null) { // no available elevator
 			msg = "Placed in unassigned queue, going to wait for a free elevator";
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: "+ msg);
-			//Update Notification Events
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
-			unscheduled.add(buttonEv);	
+			unscheduled.add(buttonEv);
 			return;
 		}
-		
-		if (elevator.getStatus() == ElevatorJobState.EN_ROUTE ) {
+
+		if (elevator.getStatus() == ElevatorJobState.EN_ROUTE) {
 			HashSet<Integer> destinations;
 			destinations = elevator.getDestinations();
-			msg = String.format("Found enroute elevator %d going %s adding new stop %d to its destinations", elevator.getId(), buttonEv.getDirection(), buttonEv.getFloor());
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " + msg);
-			//Update Notification Events
+			msg = String.format("Found enroute elevator %d going %s adding new stop %d to its destinations",
+					elevator.getId(), buttonEv.getDirection(), buttonEv.getFloor());
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 			destinations.add(buttonEv.getFloor());
 			// successfully assigned to enroute elevator
-			msg =String.format("Assigned pickup at %d %s to elevator %d ENROUTE", buttonEv.getFloor(), buttonEv.getDirection(), elevator.getId());
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " + msg);
-			//Update Notification Events
+			msg = String.format("Assigned pickup at %d %s to elevator %d ENROUTE", buttonEv.getFloor(),
+					buttonEv.getDirection(), elevator.getId());
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 			return;
 		}
-		
+
 		if (elevator.getStatus() == ElevatorJobState.IDLE) {
-			msg =String.format("Elevator %d is IDLE sending request to move for pickup", elevator.getId());
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
+			msg = String.format("Elevator %d is IDLE sending request to move for pickup", elevator.getId());
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
 			// Handle case where the elevator is already here
@@ -179,18 +195,19 @@ public class Scheduler implements Runnable {
 				elevator.setStatus(ElevatorJobState.EN_ROUTE);
 				elevator.setWorkingDirection(buttonEv.getDirection());
 
-				//handle elevator car state update for car info view (GUI)
-				for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+				// handle elevator car state update for car info view (GUI)
+				for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 					schedulerViewListener.handleElevatorStateUpdate(elevator);
 				}
 
-				floorQueue.addLast(new ElevatorArriveEvent(elevator.getId(), elevator.getLocation(), buttonEv.getDirection()));
+				floorQueue.addLast(
+						new ElevatorArriveEvent(elevator.getId(), elevator.getLocation(), buttonEv.getDirection()));
 			} else {
 				elevator.getDestinations().add(buttonEv.getFloor());
 				// set the proper direction
 				if (buttonEv.getFloor() > elevator.getLocation()) {
 					toMove = DirectionType.UP;
-				} else  {
+				} else {
 					toMove = DirectionType.DOWN;
 				}
 				// update elevator states
@@ -198,68 +215,71 @@ public class Scheduler implements Runnable {
 				elevator.setDirection(toMove);
 				elevator.setWorkingDirection(buttonEv.getDirection());
 
-				//handle elevator car state update for car info view (GUI)
-				for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+				// handle elevator car state update for car info view (GUI)
+				for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 					schedulerViewListener.handleElevatorStateUpdate(elevator);
 				}
 
 				elevatorRequest = new ElevatorCallToMoveEvent(elevator.getId(), toMove);
 				elevatorQueue.addLast(elevatorRequest);
-				
+
 				// create and start a timer here (in case it doesnt get here)
-				timers[elevator.getId()] = new Thread(new ElevatorEventTimer(elevatorRequest, schedulerQueue, elevator.getId()));
+				timers[elevator.getId()] = new Thread(
+						new ElevatorEventTimer(elevatorRequest, schedulerQueue, elevator.getId()));
 				timers[elevator.getId()].start();
 			}
 			return;
 		}
 	}
-	
+
 	/**
-	 * Logic for handling elevatorbutton presses, this method goes through the options for scheduling,
-	 * updating scheduler elevator states, and passing the event appropriately to the elevator subsystem
+	 * Logic for handling elevatorbutton presses, this method goes through the
+	 * options for scheduling, updating scheduler elevator states, and passing the
+	 * event appropriately to the elevator subsystem
+	 * 
 	 * @param elevatorBEv - the event to handle
 	 */
 	private void handleElevatorButtonPressEvent(ElevatorButtonPressEvent elevatorBEv) {
-		
-		//Updating floor states
-		if(!elevatorBEv.getSeen()) {
+
+		// Updating floor states
+		if (!elevatorBEv.getSeen()) {
 			floors[elevatorBEv.getState().getFloorNum() - 1] = elevatorBEv.getState();
 		}
 
-		//handle ElevatorButtonPressEvent (GUI)
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle ElevatorButtonPressEvent (GUI)
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleElevatorButtonPressUpdate(elevatorBEv);
 		}
-		
+
 		ElevatorStatus elevator;
 		elevator = elevators.get(elevatorBEv.getCar());
 //		if (elevator.getStatus() == ElevatorJobState.EN_ROUTE) {
 //			// we have already left .. ignore this
 //			return;
 //		}
-		
+
 		// cancell timer if there is one for some reason
 		Thread timer = timers[elevatorBEv.getCar()];
 		if (timer != null) {
 			timer.interrupt();
 		}
-		
-		
+
 		ElevatorCallToMoveEvent elevatorRequest;
 		Object[] unscheduledEvents;
-		
-		String msg = "Adding elevator button presses: " + Arrays.toString(elevatorBEv.getButtons()) + " to elevator " + elevatorBEv.getCar();
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " + msg);
-		//Update Notification Events
+
+		String msg = "Adding elevator button presses: " + Arrays.toString(elevatorBEv.getButtons()) + " to elevator "
+				+ elevatorBEv.getCar();
+		System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+		// Update Notification Events
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
-		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); //add all new elevator destinations
-		//elevator.setDirection(elevatorBEv.getDirection());
-		
+		elevator.getDestinations().addAll(Arrays.asList(elevatorBEv.getButtons())); // add all new elevator destinations
+		// elevator.setDirection(elevatorBEv.getDirection());
+
 		if (elevator.isFaulty()) {
 			msg = "Elevator " + elevatorBEv.getCar() + " has stuck doors currently (will not tell it to go yet)";
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " + msg);
-			//Update Notification Events
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 		} else if (elevator.getDestinations().size() > 0) {
 			// update states
@@ -267,57 +287,59 @@ public class Scheduler implements Runnable {
 			elevator.setWorkingDirection(elevatorBEv.getDirection());
 			elevator.setDirection(elevatorBEv.getDirection());
 
-			//handle elevator car state update for car info view (GUI)
-			for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			// handle elevator car state update for car info view (GUI)
+			for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 				schedulerViewListener.handleElevatorStateUpdate(elevator);
 			}
 
 			// get the elevator moving
-			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection(), elevatorBEv.getButtons());
+			elevatorRequest = new ElevatorCallToMoveEvent(elevatorBEv.getCar(), elevator.getWorkingDirection(),
+					elevatorBEv.getButtons());
 			msg = "Sending event " + elevatorRequest + " to elevator";
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-			//Update Notification Events
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 			elevatorQueue.addLast(elevatorRequest);
-			
+
 			// create and start a timer here (in case it doesnt get here)
-			timers[elevator.getId()] = new Thread(new ElevatorEventTimer(elevatorRequest, schedulerQueue, elevator.getId()));
+			timers[elevator.getId()] = new Thread(
+					new ElevatorEventTimer(elevatorRequest, schedulerQueue, elevator.getId()));
 			timers[elevator.getId()].start();
-			
-			
+
 		} else {
 			elevator.setStatus(ElevatorJobState.IDLE);
 			elevator.setDirection(DirectionType.STILL);
 			elevator.setWorkingDirection(DirectionType.STILL);
-			//handle elevator car state update for car info view (GUI)
-			for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			// handle elevator car state update for car info view (GUI)
+			for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 				schedulerViewListener.handleElevatorStateUpdate(elevator);
 			}
 			msg = String.format("Elevator %d is now IDLE", elevator.getId());
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: "+msg);
-			//Update Notification Events
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
 			// since an elevator is now free, try and schedule the unassigned events
 			// call event handle with all unassigned to try and get them in
 			unscheduledEvents = unscheduled.toArray();
 			unscheduled.clear();
-			
+
 			if (unscheduledEvents.length > 0) {
 				msg = "Free elevator detected, trying to schedule " + unscheduledEvents.length + " unassigned events";
-				System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " + msg);
-				//Update Notification Events
+				System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+				// Update Notification Events
 				schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
-				for (Object e: unscheduledEvents) {
+				for (Object e : unscheduledEvents) {
 					handleEvent((Event) e);
 				}
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * Method to handle the elevator arrival sensor updates
+	 * 
 	 * @param easEvent - event to handle
 	 */
 	private void handleElevatorApproachSensorEvent(ElevatorApproachSensorEvent easEvent) {
@@ -325,14 +347,14 @@ public class Scheduler implements Runnable {
 		String msg;
 		if (elevator.isFaulty()) {
 			msg = String.format("Elevator %d is approaching but is in FAULT -->> Disregarding this", easEvent.getCar());
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-			//Update Notification Events
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 			return;
 		}
 		// STOP THE TIMER!!
 		timers[easEvent.getCar()].interrupt();
-		
+
 		ElevatorTripUpdateEvent etuEvent;
 		int floorToReach;
 		if (easEvent.getDirection() == DirectionType.DOWN) {
@@ -340,44 +362,48 @@ public class Scheduler implements Runnable {
 		} else {
 			floorToReach = elevator.getLocation() + 1;
 		}
-		msg = String.format("Elevator %d is approaching floor %d going %s", easEvent.getCar(), floorToReach, elevator.getDirection());
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-		//Update Notification Events
+		msg = String.format("Elevator %d is approaching floor %d going %s", easEvent.getCar(), floorToReach,
+				elevator.getDirection());
+		System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+		// Update Notification Events
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
 		// update the state
 		elevator.setLocation(floorToReach);
 
-		//handle elevator car state update for car info view (GUI)
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle elevator car state update for car info view (GUI)
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleElevatorStateUpdate(elevator);
 		}
 
-		// check if this floor in the destinations OR is one of the limits (avoid crashing out)
-		if (floorToReach == 1 || floorToReach == Configuration.NUM_FLOORS || elevator.getDestinations().contains(floorToReach)) {
+		// check if this floor in the destinations OR is one of the limits (avoid
+		// crashing out)
+		if (floorToReach == 1 || floorToReach == Configuration.NUM_FLOORS
+				|| elevator.getDestinations().contains(floorToReach)) {
 			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), floorToReach, ElevatorTripUpdate.STOP);
 		} else {
 			etuEvent = new ElevatorTripUpdateEvent(elevator.getId(), floorToReach, ElevatorTripUpdate.CONTINUE);
 		}
 		msg = String.format("Sending trip update %s to elevator %d", etuEvent.getUpdate(), etuEvent.getCar());
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-		//Update Notification Events
+		System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+		// Update Notification Events
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
-		//handle elevatortripupdateevent NOTE: CHANGE LATER
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle elevatortripupdateevent NOTE: CHANGE LATER
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleElevatorStatusUpdate(etuEvent);
 		}
-		
-		elevatorQueue.addLast(etuEvent); //add new ElevatorTripUpdateEvent to elevator's queue
-		
+
+		elevatorQueue.addLast(etuEvent); // add new ElevatorTripUpdateEvent to elevator's queue
+
 		// create and start a timer here (in case it doesnt get here)
 		timers[elevator.getId()] = new Thread(new ElevatorEventTimer(etuEvent, schedulerQueue, elevator.getId()));
 		timers[elevator.getId()].start();
 	}
-	
+
 	/**
 	 * Handle event when elevator arrives
+	 * 
 	 * @param eaEvent - event to handle
 	 */
 	private void handleElevatorArriveEvent(ElevatorArriveEvent eaEvent) {
@@ -385,25 +411,26 @@ public class Scheduler implements Runnable {
 		String msg;
 		if (elevator.isFaulty()) {
 			msg = String.format("Elevator %d is approaching but is in FAULT -->> Disregarding this", eaEvent.getCar());
-			System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-			//Update Notification Events
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
 			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 			return;
 		}
-		// STOP THE TIMER!! (may not be one in the case of elevator already on the floor it was called to)
+		// STOP THE TIMER!! (may not be one in the case of elevator already on the floor
+		// it was called to)
 		Thread timer = timers[eaEvent.getCar()];
 		if (timer != null) {
 			timer.interrupt();
 		}
 		msg = "Sending event " + eaEvent + " to floor";
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-		//Update Notification Events
+		System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+		// Update Notification Events
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
 		elevator.setDirection(DirectionType.STILL);
 
-		//handle elevator car state update for car info view (GUI)
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle elevator car state update for car info view (GUI)
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleElevatorStateUpdate(elevator);
 		}
 
@@ -415,33 +442,36 @@ public class Scheduler implements Runnable {
 		} else if (elevator.getLocation() == Configuration.NUM_FLOORS) {
 			elevator.setWorkingDirection(DirectionType.DOWN);
 		}
-		//handle elevator car state update for car info view (GUI)
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle elevator car state update for car info view (GUI)
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleElevatorStateUpdate(elevator);
 		}
 		// set proper working direction
-		ElevatorArriveEvent reply = new ElevatorArriveEvent(eaEvent.getCar(), eaEvent.getFloor(), elevator.getWorkingDirection());
-		
+		ElevatorArriveEvent reply = new ElevatorArriveEvent(eaEvent.getCar(), eaEvent.getFloor(),
+				elevator.getWorkingDirection());
+
 		floorQueue.addLast(reply);
 	}
-	
+
 	/**
 	 * Handle fault events
+	 * 
 	 * @param efuEvent - event to handle
 	 */
 	private void handleElevatorFaultUpdateEvent(ElevatorFaultUpdateEvent efuEvent) {
 		ElevatorStatus elevator = elevators.get(efuEvent.getCar());
 		elevator.setDirection(DirectionType.STILL);
-		//handle elevator car state update for car info view (GUI)
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle elevator car state update for car info view (GUI)
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleElevatorStateUpdate(elevator);
 		}
 		String msg = String.format("Elevator %d is in %s", efuEvent.getCar(), efuEvent.getStatus());
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-		
+		System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
-		
-		// STOP THE TIMER!! (may not be one in the case of elevator already on the floor it was called to)
+
+		// STOP THE TIMER!! (may not be one in the case of elevator already on the floor
+		// it was called to)
 		Thread timer = timers[efuEvent.getCar()];
 		if (timer != null) {
 			timer.interrupt();
@@ -456,14 +486,16 @@ public class Scheduler implements Runnable {
 		} else {
 			elevator.setStatus(ElevatorJobState.PICKING_UP);
 		}
-		//handle elevator car state update for car info view (GUI)
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle elevator car state update for car info view (GUI)
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleElevatorStateUpdate(elevator);
 		}
 	}
-	
+
 	/**
-	 * Handle timer going off (meaning elevator did not reach sensor or update us in reasonable time)
+	 * Handle timer going off (meaning elevator did not reach sensor or update us in
+	 * reasonable time)
+	 * 
 	 * @param ettEvent - event to handle
 	 */
 	public void handleElevatorTravelTimeout(ElevatorTravelTimeoutEvent ettEvent) {
@@ -472,167 +504,203 @@ public class Scheduler implements Runnable {
 		ElevatorStatus elevator = elevators.get(ettEvent.getCar());
 		elevator.setStatus(ElevatorJobState.FAULT);
 		String msg = "Elevator " + ettEvent.getCar() + " timed out! Sending fault";
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-		//Update Notification Events
+		System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+		// Update Notification Events
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 		Fault fault = new Fault(ettEvent.getCar(), FaultType.ARRIVAL_SENSOR_FAIL);
 		elevatorQueue.addLast(fault);
 
-		//handle elevator car state update for car info view (GUI)
-		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+		// handle elevator car state update for car info view (GUI)
+		for (SchedulerViewListener schedulerViewListener : schedulerViewListenersList) {
 			schedulerViewListener.handleElevatorStateUpdate(elevator);
 		}
 	}
-	
+
 	/**
-	 * General method to handle events on the scheduler, breaks off into specific event types
+	 * General method to handle events on the scheduler, breaks off into specific
+	 * event types
+	 * 
 	 * @param event - generic event pulled from scheduler bounded buffer queue
 	 */
 	private void handleEvent(Event event) {
-		String msg =  "Handling event " + event.getType();
-		System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER:" +msg);
-		//Update Notification Events
+		String msg = "Handling event " + event.getType();
+		System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER:" + msg);
+		// Update Notification Events
 		schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 
 		this.setState(State.HANDLING);
-		if(Configuration.VERBOSE) {
+		if (Configuration.VERBOSE) {
 			System.out.println("\t\tSCHEDULER: state change " + this.state + " ->HANDLING");
 		}
-		switch(event.getType()) {
-			case FLOOR_BUTTON: {
-				handleFloorButtonPressEvent((FloorButtonPressEvent) event);
-				break;
-			}
-			case ELEVATOR_BUTTONS: {
-				handleElevatorButtonPressEvent((ElevatorButtonPressEvent) event);
-				break;
-			}
-			case ELEVATOR_ARRIVED:
-				handleElevatorArriveEvent((ElevatorArriveEvent) event);
-				break;
-			case ELEVATOR_APPROACH_SENSOR: //Event sent from elevator informing of approach of a arrival sensor
-				handleElevatorApproachSensorEvent((ElevatorApproachSensorEvent) event);
-				break;
-			case FAULT:
-				// send faults to the elevator (this is unlogged because it should be as if the elevator)
-				// received the fault and then talks to the scheduler about it after (through other event types)
-				elevatorQueue.addLast(event);
-				break;
-			case ELEVATOR_FAULT_UPDATE:
-				handleElevatorFaultUpdateEvent((ElevatorFaultUpdateEvent) event);
-				break;
-			case ELEVATOR_TRAVEL_TIMEOUT:
-				handleElevatorTravelTimeout((ElevatorTravelTimeoutEvent) event);
-				break;
-			default:
-				msg = "Unhandled event " + event;
-				System.out.println("["+Event.getCurrentTime()+"]\tSCHEDULER: " +msg);
-				//Update Notification Events
-				schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
+		switch (event.getType()) {
+		case FLOOR_BUTTON: {
+			handleFloorButtonPressEvent((FloorButtonPressEvent) event);
+			break;
+		}
+		case ELEVATOR_BUTTONS: {
+			handleElevatorButtonPressEvent((ElevatorButtonPressEvent) event);
+			break;
+		}
+		case ELEVATOR_ARRIVED:
+			handleElevatorArriveEvent((ElevatorArriveEvent) event);
+			break;
+		case ELEVATOR_APPROACH_SENSOR: // Event sent from elevator informing of approach of a arrival sensor
+			handleElevatorApproachSensorEvent((ElevatorApproachSensorEvent) event);
+			break;
+		case FAULT:
+			// send faults to the elevator (this is unlogged because it should be as if the
+			// elevator)
+			// received the fault and then talks to the scheduler about it after (through
+			// other event types)
+			elevatorQueue.addLast(event);
+			break;
+		case ELEVATOR_FAULT_UPDATE:
+			handleElevatorFaultUpdateEvent((ElevatorFaultUpdateEvent) event);
+			break;
+		case ELEVATOR_TRAVEL_TIMEOUT:
+			handleElevatorTravelTimeout((ElevatorTravelTimeoutEvent) event);
+			break;
+		default:
+			msg = "Unhandled event " + event;
+			System.out.println("[" + Event.getCurrentTime() + "]\tSCHEDULER: " + msg);
+			// Update Notification Events
+			schedulerView.getNotificationView().notifyView(msg, Event.getCurrTime(), NotificationType.SCHEDULER);
 		}
 		event.setSeen();
-		
+
 		this.setState(State.WAITING);
-		if(Configuration.VERBOSE) {
+		if (Configuration.VERBOSE) {
 			System.out.println("\t\tSCHEDULER: state change " + this.state + " ->WAITING");
 		}
 	}
-	
+
 	/**
-	 * Set the new state for the elevator 
+	 * Set the new state for the elevator
+	 * 
 	 * @param newState State the elevator is in
 	 */
 	public void setState(State newState) {
 		this.state = newState;
 	}
+
 	/**
-	 * Getter method to get the current state of Scheduler.
-	 * i.e: WAITING, RECEIVING, SENDING or INVALID
+	 * Getter method to get the current state of Scheduler. i.e: WAITING, RECEIVING,
+	 * SENDING or INVALID
+	 * 
 	 * @return The schedulers current state
 	 */
 	public State getState() {
 		return state;
 	}
-	
+
 	/**
 	 * Return a string of current state
+	 * 
 	 * @return String representing the current State
 	 */
-	public String printState(){
+	public String printState() {
 		String s = "";
-		switch(state) {
-			case WAITING:
-				s = "Waiting State";
-				break;
-			case HANDLING:
-				s = "Event Handling State";
-				break;
-			default:
-				s = "Unknown State";
+		switch (state) {
+		case WAITING:
+			s = "Waiting State";
+			break;
+		case HANDLING:
+			s = "Event Handling State";
+			break;
+		default:
+			s = "Unknown State";
 		}
 		return s;
 	}
 
-	public ElevatorStatus getElevatorStatus(int carID){
+	public ElevatorStatus getElevatorStatus(int carID) {
 		return elevators.get(carID);
 	}
 
 	/**
 	 * Add a scheduler listener to a list of listeners
+	 * 
 	 * @param schedulerViewListener
 	 */
-	public void addSchedulerViewListeners(SchedulerViewListener schedulerViewListener){
+	public void addSchedulerViewListeners(SchedulerViewListener schedulerViewListener) {
 		schedulerViewListenersList.add(schedulerViewListener);
 	}
 
 	/**
 	 * Returns the scheduler view for GUI.
+	 * 
 	 * @return
 	 */
-	public SchedulerView getSchedulerView(){
+	public SchedulerView getSchedulerView() {
 		return schedulerView;
 	}
-	
+
 	@Override
 	public void run() {
 		Event event;
+		FileWriter reportW;
+		File reportF = new File("Reports/report.txt");
+		reportF.delete();
+		try {
+			reportF.createNewFile();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		// handle events forever
-		while(!Thread.interrupted()) {
-			event = (Event)schedulerQueue.removeFirst();
+		while (!Thread.interrupted()) {
+			event = (Event) schedulerQueue.removeFirst();
+			start = System.nanoTime();
 			handleEvent(event);
+			stop = System.nanoTime();
+			elapsedTime = stop - start;
+			samples.add(elapsedTime);
+			requestCount++;
+
+			if (requestCount == 10) {
+				try {
+					reportW = new FileWriter("Reports/report.txt");
+					for(Long l: samples) {
+						reportW.write(l.toString() + "\n");
+					}
+					reportW.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		// create boundedbuffers as normal
-    	BoundedBuffer floorQueue = new BoundedBuffer();
-    	BoundedBuffer schedulerQueue = new BoundedBuffer();
-    	BoundedBuffer elevatorQueue = new BoundedBuffer();
-    	
-    	// setup the out queues
-    	BoundedBuffer[] outQueues = new BoundedBuffer[2];
-    	outQueues[0] = floorQueue;
-    	outQueues[1] = elevatorQueue;
-    	
-    	// setup the out ports
-    	int[] portsToSend = new int[2];
-    	portsToSend[0] = Configuration.FLOOR_PORT;
-    	portsToSend[1] = Configuration.ELEVATOR_PORT;
-    	
-    	// setup the in ports
-    	int[] portsToReceive = new int[2];
-    	portsToReceive[0] = Configuration.SCHEDULER_LISTEN_FLOOR_PORT;
-    	portsToReceive[1] = Configuration.SCHEDULER_LISTEN_ELEVATOR_PORT;
-		
-        // scheduler needs a copy of all three queues
-        Thread scheduler = new Thread(new Scheduler(schedulerQueue, elevatorQueue, floorQueue));
-        
-        // get the rpc thread running
-        Thread rpcHandler = new Thread(new RpcHandler(schedulerQueue, outQueues, portsToSend, portsToReceive));
-		
-        scheduler.start();
-        rpcHandler.start();
+		BoundedBuffer floorQueue = new BoundedBuffer();
+		BoundedBuffer schedulerQueue = new BoundedBuffer();
+		BoundedBuffer elevatorQueue = new BoundedBuffer();
+
+		// setup the out queues
+		BoundedBuffer[] outQueues = new BoundedBuffer[2];
+		outQueues[0] = floorQueue;
+		outQueues[1] = elevatorQueue;
+
+		// setup the out ports
+		int[] portsToSend = new int[2];
+		portsToSend[0] = Configuration.FLOOR_PORT;
+		portsToSend[1] = Configuration.ELEVATOR_PORT;
+
+		// setup the in ports
+		int[] portsToReceive = new int[2];
+		portsToReceive[0] = Configuration.SCHEDULER_LISTEN_FLOOR_PORT;
+		portsToReceive[1] = Configuration.SCHEDULER_LISTEN_ELEVATOR_PORT;
+
+		// scheduler needs a copy of all three queues
+		Thread scheduler = new Thread(new Scheduler(schedulerQueue, elevatorQueue, floorQueue));
+
+		// get the rpc thread running
+		Thread rpcHandler = new Thread(new RpcHandler(schedulerQueue, outQueues, portsToSend, portsToReceive));
+
+		scheduler.start();
+		rpcHandler.start();
 	}
-	
+
 }
