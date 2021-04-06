@@ -14,7 +14,11 @@ Setup Instructions (processes created automatically):
 	To run the full elevator system from a single class, run ProjectUDP.java.
 	
 	This class will create separate processes for each of our components as described in the second setup instruction,
-	without all the extra work of starting 3 classes separately
+	without all the extra work of starting 3 classes separately. 
+	
+	NOTE: When running this way you stop all 3 processes by closing the GUI, not by stopping in Eclipse
+		stopping through eclipse may cause processes to linger and hog ports in the background,
+		if this happens they must be killed via the task manager
 	
 Setup Instructions (processes created manually):
 	To run iteration 4 elevator system there are 3 .java files which must be run in the following order:
