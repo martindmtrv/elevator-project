@@ -10,7 +10,7 @@ import floor.FloorSubsystem;
 
 /**
  * Class setup to run the system as seperate processes, by spawning them from a single process (like fork())
- * Useful for running the system with UDP without needing to start 3 processes
+ * Useful for running the system with UDP without needing to start 3 processes.
  * @author Martin Dimitrov
  */
 @SuppressWarnings("unused")
@@ -24,7 +24,7 @@ public class ProjectUDP {
 		
 		// set their stdin, stderr, stdout to the same as this process
 		// or to be a logfile
-		if (Configuration.outputLogFiles) {
+		if (Configuration.OUTPUT_LOG_FILE) {
 			File elOutput = new File("logs/elevatorLog.txt");
 			File flOutput = new File("logs/floorLog.txt");
 			File scOutput = new File("logs/schedulerLog.txt");

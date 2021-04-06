@@ -70,11 +70,11 @@ public class Scheduler implements Runnable {
 		schedulerView = new SchedulerView(this);
 		
 		//initialize IDLE elevators on GUI
-				for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
-					for(int i=0;i<Configuration.NUM_CARS;i++) {
-						schedulerViewListener.handleElevatorStateUpdate(elevators.get(i));
-					}
-				}
+		for(SchedulerViewListener schedulerViewListener : schedulerViewListenersList){
+			for(int i=0;i<Configuration.NUM_CARS;i++) {
+				schedulerViewListener.handleElevatorStateUpdate(elevators.get(i));
+			}
+		}
 	}
 	
 	/**
@@ -238,7 +238,7 @@ public class Scheduler implements Runnable {
 //			return;
 //		}
 		
-		// cancell timer if there is one for some reason
+		// cancel timer if there is one for some reason
 		Thread timer = timers[elevatorBEv.getCar()];
 		if (timer != null) {
 			timer.interrupt();
