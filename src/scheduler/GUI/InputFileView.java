@@ -18,13 +18,74 @@ import java.util.concurrent.Flow;
 public class InputFileView extends JPanel {
 
     private static final int COLUMNS = 20;
+    private static final int ROWS = 20;
     
     public InputFileView(){
         super();
         this.setLayout(new FlowLayout());
+        initTitleBar();
+        this.add(Box.createRigidArea(new Dimension(150,0))); //adding white space between views
         initInputFile();
-        this.add(Box.createRigidArea(new Dimension(300,0))); //adding white space between views
+        this.add(Box.createRigidArea(new Dimension(150,0))); //adding white space between views
         initConfigView();
+    }
+    
+    /**
+     * Initialize The legend view.
+     */
+    public void initTitleBar(){
+    		
+        JLabel titleLabel = new JLabel("Elevator Legend:");
+        titleLabel.setAlignmentX(CENTER_ALIGNMENT);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 30));
+        titleLabel.setForeground(Color.BLACK);
+        
+        //init legend panels & labels
+        JPanel legendPanel = new JPanel();
+        legendPanel.setLayout(new BoxLayout(legendPanel, BoxLayout.PAGE_AXIS));
+        legendPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        JLabel redLabel = new JLabel("Car Stopped");
+        redLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel greenLabel = new JLabel("Car Continuing");
+        greenLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel yellowLabel = new JLabel("Floor Pickup Request");
+        yellowLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel orangeLabel = new JLabel("Critical Error");
+        orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        JLabel purpleLabel = new JLabel("Transient Error");
+        orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        
+        //init the legend content panels
+        JPanel redPanel = new JPanel();
+        JPanel greenPanel = new JPanel();
+        JPanel yellowPanel = new JPanel();
+        JPanel orangePanel = new JPanel();
+        JPanel purplePanel = new JPanel();
+        
+        redPanel.setBackground(Color.red);
+        greenPanel.setBackground(Color.GREEN);
+        yellowPanel.setBackground(Color.YELLOW);
+        orangePanel.setBackground(Color.ORANGE);
+        purplePanel.setBackground(Color.magenta);
+
+        redPanel.add(redLabel);
+        greenPanel.add(greenLabel);
+        yellowPanel.add(yellowLabel);
+        orangePanel.add(orangeLabel);
+        purplePanel.add(purpleLabel);
+        
+        legendPanel.add(titleLabel);
+        legendPanel.add(redPanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(greenPanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(yellowPanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(orangePanel);
+        legendPanel.add(Box.createRigidArea(new Dimension(10,10))); //adding white space between views
+        legendPanel.add(purplePanel);
+        
+        this.add(legendPanel);
     }
 
     /**
@@ -39,12 +100,10 @@ public class InputFileView extends JPanel {
         inputLabel.setFont(new Font("Serif", Font.BOLD, 20));
 
         StringBuilder data = new StringBuilder();
-        int counter = 0; //how many lines to add to JTextare
         try {
             File myObj = new File("Test.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
-                counter++;
                 data.append(myReader.nextLine() + "\n");
             }
             myReader.close();
@@ -52,12 +111,15 @@ public class InputFileView extends JPanel {
             return;
         }
         //Jtextarea with input file data
-        JTextArea inputText = new JTextArea(data.toString(),counter-1,COLUMNS);
+        //JTextArea inputText = new JTextArea(data.toString(),ROWS,COLUMNS);
+        JTextArea inputText = new JTextArea(data.toString());
         inputText.setEditable(false);
         inputFilePanel.add(inputLabel);
         inputFilePanel.add(inputText);
-
-        this.add(inputFilePanel);
+    	JScrollPane scrollPane = new JScrollPane(inputFilePanel);
+    	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    	scrollPane.setPreferredSize(new Dimension(300,300));
+        this.add(scrollPane);
     }
 
     /**
