@@ -75,7 +75,12 @@ public class ProjectUDP {
 		
 		// make sure the processes get killed after (otherwise they will be stuck on the OS)
 		try {
+			// hit x on GUI to close all processes
 			processes[1].waitFor();
+			System.out.println("Making sure all processes are killed");
+			for (Process p: processes) {
+				p.destroy();
+			}
 		} catch (InterruptedException e) {
 			System.out.println("Making sure all processes are killed");
 			for (Process p: processes) {

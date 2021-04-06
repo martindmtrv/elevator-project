@@ -1,104 +1,13 @@
-[11:27:39]	ELEVATOR: Car 0 is IDLE, and currently on floor: 1
-[11:27:39]		ELEVATORMOTOR: starts running to move UP
-[11:27:39]	ELEVATOR: CAR 0: Sleep 4s
-[11:27:44]	ELEVATOR: Car 0 is MOVING_UP, and is approaching floor: 2
-[11:27:44]	ELEVATOR: CAR 0: Sleep 4s Arrival Sensor: STOP
-[11:27:44]	ELEVATOR: Car 1 is IDLE, and currently on floor: 1
-[11:27:44]		ELEVATORMOTOR: starts running to move UP
-[11:27:44]	ELEVATOR: CAR 1: Sleep 4s
-[11:27:47]	ELEVATOR: Car 2 is IDLE, and currently on floor: 1
-[11:27:47]		ELEVATORBUTTON: button 2 is pressed: true
-[11:27:47]		ELEVATORLAMP: lamp 2 is lit: true
-[11:27:47]		ELEVATORMOTOR: starts running to move UP
-[11:27:47]	ELEVATOR: CAR 2: Sleep 4s
-[11:27:48]	ELEVATOR: Car 0 has arrived floor 2
-[11:27:48]		ELEVATORMOTOR: stops running
-[11:27:48]		ELEVATORDOOR: is closing
-[11:27:48]		ELEVATORLAMP: lamp 2 is lit: false
-[11:27:48]		ELEVATORBUTTON: button 2 is pressed: false
-[11:27:48]	ELEVATOR: Car 0 is out of service for 3s before becoming operational.
-[11:27:48]	ELEVATOR: Car 1 is MOVING_UP, and is approaching floor: 2
-[11:27:48]	ELEVATOR CAR 1: Sleep 9 Arrival Sensor: CONTINUE
-[11:27:50]	ELEVATOR: Car 3 is IDLE, and currently on floor: 1
-[11:27:50]		ELEVATORMOTOR: starts running to move UP
-[11:27:50]	ELEVATOR: CAR 3: Sleep 4s
-[11:27:51]		ELEVATORDOOR: is opening
-[11:27:51]	CAR 0: Sleeping 1s for passengers to load.
-[11:27:52]	ELEVATOR: Car 2 is MOVING_UP, and is approaching floor: 2
-[11:27:52]	ELEVATOR: CAR 2: Sleep 4s Arrival Sensor: STOP
-[11:27:52]	ELEVATOR: Car 0 is IDLE, and currently on floor: 2
-[11:27:52]		ELEVATORBUTTON: button 4 is pressed: true
-[11:27:52]		ELEVATORLAMP: lamp 4 is lit: true
-[11:27:52]		ELEVATORDOOR: is closing
-[11:27:52]		ELEVATORMOTOR: starts running to move UP
-[11:27:52]	ELEVATOR: CAR 0: Sleep 4s
-[11:27:54]	ELEVATOR: Car 3 is MOVING_UP, and is approaching floor: 2
-[11:27:54]	ELEVATOR CAR 3: Sleep 9 Arrival Sensor: CONTINUE
-[11:27:56]	ELEVATOR: Car 2 has arrived floor 2
-[11:27:56]		ELEVATORMOTOR: stops running
-[11:27:56]		ELEVATORDOOR: is opening
-[11:27:56]		ELEVATORLAMP: lamp 2 is lit: false
-[11:27:56]		ELEVATORBUTTON: button 2 is pressed: false
-[11:27:56]	CAR 2: Sleeping 1s for passengers to load.
-[11:27:57]	ELEVATOR: Car 0 is MOVING_UP, and is approaching floor: 3
-[11:27:57]	ELEVATOR CAR 0: Sleep 9 Arrival Sensor: CONTINUE
-[11:27:57]	ELEVATOR: Car 2 is IDLE, and currently on floor: 2
-[11:27:57]		ELEVATORDOOR: is closing
-[11:27:57]		ELEVATORMOTOR: starts running to move UP
-[11:27:57]	ELEVATOR: CAR 2: Sleep 4s
-[11:27:58]	ELEVATOR: Car 1 is MOVING_UP, and is approaching floor: 3
-[11:27:58]	ELEVATOR: CAR 1: Sleep 4s Arrival Sensor: STOP
-[11:28:02]	ELEVATOR: Car 2 is MOVING_UP, and is approaching floor: 3
-[11:28:02]	ELEVATOR CAR 2: Sleep 9 Arrival Sensor: CONTINUE
-[11:28:03]	ELEVATOR: Car 1 has arrived floor 3
-[11:28:03]		ELEVATORMOTOR: stops running
-[11:28:03]		ELEVATORDOOR: is opening
-[11:28:03]		ELEVATORLAMP: lamp 3 is lit: false
-[11:28:03]		ELEVATORBUTTON: button 3 is pressed: false
-[11:28:03]	CAR 1: Sleeping 1s for passengers to load.
-[11:28:04]	ELEVATOR: CAR 1: FAULT TYPE: 'MOTOR FAILURE' 
-[11:28:04]		ELEVATORMOTOR: stops running
-[11:28:04]	ELEVATOR: Car 3 is MOVING_UP, and is approaching floor: 3
-[11:28:04]	ELEVATOR CAR 3: Sleep 9 Arrival Sensor: CONTINUE
-[11:28:07]	ELEVATOR: Car 0 is MOVING_UP, and is approaching floor: 4
-[11:28:07]	ELEVATOR: CAR 0: Sleep 4s Arrival Sensor: STOP
-[11:28:11]	ELEVATOR: Car 0 has arrived floor 4
-[11:28:11]		ELEVATORMOTOR: stops running
-[11:28:11]		ELEVATORDOOR: is opening
-[11:28:11]		ELEVATORLAMP: lamp 4 is lit: false
-[11:28:11]		ELEVATORBUTTON: button 4 is pressed: false
-[11:28:11]	CAR 0: Sleeping 1s for passengers to load.
-[11:28:12]	ELEVATOR: Car 2 is MOVING_UP, and is approaching floor: 4
-[11:28:12]	ELEVATOR CAR 2: Sleep 9 Arrival Sensor: CONTINUE
-[11:28:12]	ELEVATOR: Car 0 is IDLE, and currently on floor: 4
-[11:28:12]		ELEVATORDOOR: is closing
-[11:28:12]		ELEVATORMOTOR: starts running to move UP
-[11:28:12]	ELEVATOR: CAR 0: Sleep 4s
-[11:28:14]	ELEVATOR: Car 3 is MOVING_UP, and is approaching floor: 4
-[11:28:14]	ELEVATOR CAR 3: Sleep 9 Arrival Sensor: CONTINUE
-[11:28:17]	ELEVATOR: Car 0 is MOVING_UP, and is approaching floor: 5
-[11:28:17]	ELEVATOR CAR 0: Sleep 9 Arrival Sensor: CONTINUE
-[11:28:21]	ELEVATOR: Car 2 is MOVING_UP, and is approaching floor: 5
-[11:28:21]	ELEVATOR CAR 2: Sleep 9 Arrival Sensor: CONTINUE
-[11:28:23]	ELEVATOR: Car 3 is MOVING_UP, and is approaching floor: 5
-[11:28:23]	ELEVATOR: CAR 3: Sleep 4s Arrival Sensor: STOP
-[11:28:27]	ELEVATOR: Car 0 is MOVING_UP, and is approaching floor: 6
-[11:28:27]	ELEVATOR CAR 0: Sleep 9 Arrival Sensor: CONTINUE
-[11:28:28]	ELEVATOR: Car 3 has arrived floor 5
-[11:28:28]		ELEVATORMOTOR: stops running
-[11:28:28]		ELEVATORDOOR: is opening
-[11:28:28]		ELEVATORLAMP: lamp 5 is lit: false
-[11:28:28]		ELEVATORBUTTON: button 5 is pressed: false
-[11:28:28]	CAR 3: Sleeping 1s for passengers to load.
-[11:28:29]	ELEVATOR: Car 3 is IDLE, and currently on floor: 5
-[11:28:29]		ELEVATORBUTTON: button 1 is pressed: true
-[11:28:29]		ELEVATORLAMP: lamp 1 is lit: true
-[11:28:29]		ELEVATORBUTTON: button 4 is pressed: true
-[11:28:29]		ELEVATORLAMP: lamp 4 is lit: true
-[11:28:29]		ELEVATORDOOR: is closing
-[11:28:29]		ELEVATORMOTOR: starts running to move DOWN
-[11:28:29]	ELEVATOR: CAR 3: Sleep 4s
-[11:28:31]	ELEVATOR: Car 2 is MOVING_UP, and is approaching floor: 6
-[11:28:31]	ELEVATOR CAR 2: Sleep 9 Arrival Sensor: CONTINUE
-[11:28:34]	ELEVATOR: Car 3 is MOVING_DOWN, and is approaching floor: 4
-[11:28:34]	ELEVATOR: CAR 3: Sleep 4s Arrival Sensor: STOP
+[12:00:37]	ELEVATOR: Car 0 is IDLE, and currently on floor: 1
+[12:00:37]		ELEVATORMOTOR: starts running to move UP
+[12:00:37]	ELEVATOR: CAR 0: Sleep 4s
+[12:00:42]	ELEVATOR: Car 1 is IDLE, and currently on floor: 1
+[12:00:42]		ELEVATORMOTOR: starts running to move UP
+[12:00:42]	ELEVATOR: CAR 1: Sleep 4s
+[12:00:42]	ELEVATOR: Car 0 is MOVING_UP, and is approaching floor: 2
+[12:00:42]	ELEVATOR CAR 0: Sleep 9 Arrival Sensor: CONTINUE
+[12:00:47]	ELEVATOR: Car 1 is MOVING_UP, and is approaching floor: 2
+[12:00:47]	ELEVATOR: CAR 1: Sleep 4s Arrival Sensor: STOP
+[12:00:47]	ELEVATOR: Car 2 is IDLE, and currently on floor: 1
+[12:00:47]		ELEVATORMOTOR: starts running to move UP
+[12:00:47]	ELEVATOR: CAR 2: Sleep 4s
