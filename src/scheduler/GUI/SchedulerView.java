@@ -99,7 +99,7 @@ public class SchedulerView extends JFrame implements SchedulerViewListener {
         yellowLabel.setFont(new Font("Serif", Font.BOLD, 14));
         JLabel orangeLabel = new JLabel("Critical Error");
         orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
-        JLabel purpleLabel = new JLabel("Transcient Error");
+        JLabel purpleLabel = new JLabel("Transient Error");
         orangeLabel.setFont(new Font("Serif", Font.BOLD, 14));
         
         //init the legend content panels
