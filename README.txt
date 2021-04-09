@@ -8,7 +8,7 @@ Members:
  -> Alex Cameron - 101114698
  -> David Casciano - 101069255
 
-(final report has been submitted as a pdf alongside this iteration)
+(final report and demo video has been submitted as a pdf and .mp4 as a separate files alongside this iteration)
 
 Setup Instructions (processes created automatically):
 	To run the full elevator system from a single class, run ProjectUDP.java.
@@ -67,7 +67,10 @@ Contributions:
 	- Implemented Model, Controller, View software engineering strategy to display model data on a user interface.
 		
 	David Casciano 101069255
-		
+	- Implemented code for measuring samples
+	- Performed analysis on metrics for final report
+	- Edited demo video
+	
 		
 		
 Files:	
