@@ -71,19 +71,34 @@ Contributions:
 		
 		
 Files:	
-TODO UPDATE THIS
+	README.txt	Test.txt	TestComm.txt
+	
+	Reports:
+	report.txt
+	
+	UML Diagrams:
+	EventTypes-Class-UML.png	UML_Sequence_Diagram.drawio
+	EventTypes-Class-UML.ucls	UML_Sequence_Diagram_I3.png
+	UML_Object_Diagram.png
+	
+	
+	logs:
+	elevatorLog.txt		floorLog.txt		schedulerLog.txt
+	
 	src/elevator:
-	Box.java		ElevatorButton.java	ElevatorLamp.java	ElevatorState.java
-	Elevator.java		ElevatorDoor.java	ElevatorMotor.java	ElevatorSubsystem.java
+	Box.java		ElevatorDoor.java	ElevatorState.java
+	Elevator.java		ElevatorLamp.java	ElevatorSubsystem.java
+	ElevatorButton.java	ElevatorMotor.java
 	
 	src/event:
-	DirectionType.java			ElevatorTripUpdateEvent.java
-	ElevatorApproachSensorEvent.java	Event.java
-	ElevatorArriveEvent.java		EventType.java
-	ElevatorButtonPressEvent.java		Fault.java
-	ElevatorCallToMoveEvent.java		FaultType.java
-	ElevatorFaultUpdateEvent.java		FloorButtonPressEvent.java
-	ElevatorTravelTimeoutEvent.java
+	DirectionType.java			Event.java
+	ElevatorApproachSensorEvent.java	EventType.java
+	ElevatorArriveEvent.java		Fault.java
+	ElevatorButtonPressEvent.java		FaultType.java
+	ElevatorCallToMoveEvent.java		FloorButtonPressEvent.java
+	ElevatorFaultUpdateEvent.java		NotificationEvent.java
+	ElevatorTravelTimeoutEvent.java		NotificationEventType.java
+	ElevatorTripUpdateEvent.java
 	
 	src/floor:
 	Floor.java		FloorLamp.java		InputStream.java
@@ -93,32 +108,35 @@ TODO UPDATE THIS
 	Configuration.java	ProjectUDP.java
 	
 	src/rpc:
-	RpcHandler.java		RpcWorker.java		RpcWorkerType.java	SerializationUtils.java
+	RpcHandler.java		RpcWorkerType.java
+	RpcWorker.java		SerializationUtils.java
 	
 	src/scheduler:
-	BoundedBuffer.java	ElevatorJobState.java	ElevatorTripUpdate.java	State.java
-	ElevatorEventTimer.java	ElevatorStatus.java	Scheduler.java
+	BoundedBuffer.java	ElevatorStatus.java	Scheduler.java
+	ElevatorEventTimer.java	ElevatorTripUpdate.java	State.java
+	ElevatorJobState.java	GUI
 	
 	src/scheduler/GUI:
-	CarView.java	ElevatorInfoView.java	inputFileView.java
-	Notification.java	NotificationController.java	NotificationModel.java
-	NotificationPanel.java	NotificationType.java	NotifciationView.java
-	NotificationViewListener.java	SchedulerController.java	SchedulerView.java
-	SchedulerViewListener.java
+	CarView.java			NotificationType.java
+	ElevatorInfoView.java		NotificationView.java
+	InputFileView.java		NotificationViewListener.java
+	Notification.java		SchedulerController.java
+	NotificationController.java	SchedulerView.java
+	NotificationModel.java		SchedulerViewListener.java
+	NotificationPanel.java
 	
 	src/test:
-	ElevatorSubsystemTest.java	FloorSubsystemTest.java		TestSuite.java
-	ElevatorTimerTest.java		SerializationTest.java
-	FaultEventTest.java		StateMachineTest.java
-	
-	UML Diagrams:
-	EventTypes-Class-UML.png	UML_Object_Diagram.png		UML_Sequence_Diagram_I3.png
-	EventTypes-Class-UML.ucls	UML_Sequence_Diagram.drawio
+	ElevatorSubsystemTest.java	SerializationTest.java
+	ElevatorTimerTest.java		StateMachineTest.java
+	FaultEventTest.java		TestSuite.java
+	FloorSubsystemTest.java
 	
 	state_machine_diagrams:
-	ElevatorStateMachineDiagram.drawio		iteration2_scheduler_state_diagram.drawio
-	ElevatorStateMachineDiagram.png			scheduler_state_diagram.png
+	ElevatorStateMachineDiagram.drawio
+	ElevatorStateMachineDiagram.png
 	ElevatorStateMachineDiagram_ITER4.png
+	iteration2_scheduler_state_diagram.drawio
+	scheduler_state_diagram.png
 	
 	timing_diagrams:
 	ARRIVAL_SENSOR_FAIL_TimingDiagram.pdf	MOTOR_FAIL_TimingDiagram.png
@@ -126,9 +144,4 @@ TODO UPDATE THIS
 	DOOR_STUCK_TimingDiagram.pdf		NormalWorkingTimingDiagram.png
 	DOOR_STUCK_TimingDiagram.png		TimingDiagrams.xlsx
 	MOTOR_FAIL_TimingDiagram.pdf
-	
-
-	README.txt	
-	Test.txt	
-	TestComm.txt
 
